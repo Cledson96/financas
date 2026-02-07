@@ -1,0 +1,39 @@
+Original URL: postgres://postgres.rhuqnoyhsahcptkbqrnn:ESwxweuXE...
+Modified URL: postgres://postgres.rhuqnoyhsahcptkbqrnn:ESwxweuXE...
+Creating adapter with rejectUnauthorized: false...
+Creating PrismaClient...
+Fetching users...
+Error: PrismaClientKnownRequestError: 
+Invalid `prisma.user.findMany()` invocation in
+C:\projetos\financas\test-prisma.ts:26:37
+
+  23 
+  24 console.log("Fetching users...");
+  25 try {
+→ 26   const users = await prisma.user.findMany(
+Database `postgres&pgbouncer=true` does not exist on the database server
+    at Vr.handleRequestError (C:\projetos\financas\node_modules\@prisma\client\src\runtime\RequestHandler.ts:228:13)
+    at Vr.handleAndLogRequestError (C:\projetos\financas\node_modules\@prisma\client\src\runtime\RequestHandler.ts:174:12)
+    at Vr.request (C:\projetos\financas\node_modules\@prisma\client\src\runtime\RequestHandler.ts:143:12)
+    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+    at async a (C:\projetos\financas\node_modules\@prisma\client\src\runtime\getPrismaClient.ts:805:24)
+    at async main (C:\projetos\financas\test-prisma.ts:26:19) {
+  code: 'P1003',
+  meta: {
+    modelName: 'User',
+    driverAdapterError: DriverAdapterError: DatabaseDoesNotExist
+        at PrismaPgAdapter.onError (file:///C:/projetos/financas/node_modules/@prisma/adapter-pg/dist/index.mjs:651:11)
+        at PrismaPgAdapter.performIO (file:///C:/projetos/financas/node_modules/@prisma/adapter-pg/dist/index.mjs:646:12)
+        at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+        at async PrismaPgAdapter.queryRaw (file:///C:/projetos/financas/node_modules/@prisma/adapter-pg/dist/index.mjs:566:30)
+        at async e.interpretNode (C:\projetos\financas\node_modules\@prisma\client-engine-runtime\src\interpreter\query-interpreter.ts:182:26)
+        at async e.interpretNode (C:\projetos\financas\node_modules\@prisma\client-engine-runtime\src\interpreter\query-interpreter.ts:268:41)
+        at async e.run (C:\projetos\financas\node_modules\@prisma\client-engine-runtime\src\interpreter\query-interpreter.ts:93:23)
+        at async e.execute (C:\projetos\financas\node_modules\@prisma\client\src\runtime\core\engines\client\LocalExecutor.ts:81:12)
+        at async Dt.request (C:\projetos\financas\node_modules\@prisma\client\src\runtime\core\engines\client\ClientEngine.ts:461:22)
+        at async Object.singleLoader (C:\projetos\financas\node_modules\@prisma\client\src\runtime\RequestHandler.ts:112:26) {
+      cause: [Object]
+    }
+  },
+  clientVersion: '7.3.0'
+}

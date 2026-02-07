@@ -1,0 +1,52 @@
+{
+  "name": "Account",
+  "type": "object",
+  "properties": {
+    "name": {
+      "type": "string",
+      "description": "Nome da conta"
+    },
+    "type": {
+      "type": "string",
+      "enum": [
+        "CREDIT_CARD",
+        "CHECKING_ACCOUNT",
+        "CASH"
+      ],
+      "description": "Tipo da conta"
+    },
+    "bankName": {
+      "type": "string",
+      "description": "Nome do banco"
+    },
+    "balance": {
+      "type": "number",
+      "default": 0,
+      "description": "Saldo atual"
+    },
+    "limit": {
+      "type": "number",
+      "description": "Limite do cart\u00e3o"
+    },
+    "dueDay": {
+      "type": "number",
+      "description": "Dia de vencimento"
+    },
+    "closingDay": {
+      "type": "number",
+      "description": "Dia de fechamento"
+    },
+    "owner": {
+      "type": "string",
+      "description": "Dono da conta (user id)"
+    },
+    "color": {
+      "type": "string",
+      "description": "Cor da conta para identifica\u00e7\u00e3o visual"
+    }
+  },
+  "required": [
+    "name",
+    "type"
+  ]
+}

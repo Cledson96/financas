@@ -1,0 +1,288 @@
+import { useState, useEffect } from "react";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import { Switch } from "@/components/ui/switch";
+import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Calendar } from "@/components/ui/calendar";
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/popover";
+import { CalendarIcon, Loader2 } from "lucide-react";
+import { format } from "date-fns";
+import { ptBR } from "date-fns/locale";
+import { cn } from "@/lib/utils";
+
+export default function TransactionModal({
+  open,
+  onOpenChange,
+  onSubmit,
+  categories = [],
+  accounts = [],
+  members = [],
+  editData = null,
+  isLoading = false,
+}) {
+  const [type, setType] = useState("EXPENSE");
+  const [description, setDescription] = useState("");
+  const [amount, setAmount] = useState("");
+  const [purchaseDate, setPurchaseDate] = useState(new Date());
+  const [categoryId, setCategoryId] = useState("");
+  const [accountId, setAccountId] = useState("");
+  const [payerId, setPayerId] = useState("");
+  const [isShared, setIsShared] = useState(true);
+
+  useEffect(() => {
+    if (editData) {
+      setType(editData.type || "EXPENSE");
+      setDescription(editData.description || "");
+      setAmount(editData.amount?.toString() || "");
+      setPurchaseDate(
+        editData.purchaseDate ? new Date(editData.purchaseDate) : new Date(),
+      );
+      setCategoryId(editData.categoryId || "");
+      setAccountId(editData.accountId || "");
+      setPayerId(editData.payerId || "");
+      setIsShared(editData.splitType === "SHARED");
+    } else {
+      resetForm();
+    }
+  }, [editData, open]);
+
+  const resetForm = () => {
+    setType("EXPENSE");
+    setDescription("");
+    setAmount("");
+    setPurchaseDate(new Date());
+    setCategoryId("");
+    setAccountId("");
+    setPayerId("");
+    setIsShared(true);
+  };
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+
+    const selectedCategory = categories.find((c) => c.id === categoryId);
+    const selectedAccount = accounts.find((a) => a.id === accountId);
+    const selectedPayer = members.find((m) => m.id === payerId);
+
+    onSubmit({
+      description,
+      amount: parseFloat(amount),
+      purchaseDate: format(purchaseDate, "yyyy-MM-dd"),
+      type,
+      categoryId,
+      categoryName: selectedCategory?.name || "",
+      accountId,
+      accountName: selectedAccount?.name || "",
+      payerId,
+      payerName: selectedPayer?.name || "",
+      splitType: isShared ? "SHARED" : "INDIVIDUAL",
+      ownerId: !isShared ? payerId : null,
+      status: "PENDING",
+    });
+  };
+
+  const filteredCategories = categories.filter(
+    (c) =>
+      (type === "EXPENSE" && c.type === "EXPENSE") ||
+      (type === "INCOME" && c.type === "INCOME"),
+  );
+
+  return (
+    <Dialog open={open} onOpenChange={onOpenChange}>
+      <DialogContent className="sm:max-w-[480px] bg-white dark:bg-zinc-900 border-zinc-200 dark:border-zinc-800">
+        <DialogHeader>
+          <DialogTitle className="text-xl font-semibold text-zinc-900 dark:text-zinc-100">
+            {editData ? "Editar Transação" : "Nova Transação"}
+          </DialogTitle>
+        </DialogHeader>
+
+        <form onSubmit={handleSubmit} className="space-y-5">
+          <Tabs value={type} onValueChange={setType} className="w-full">
+            <TabsList className="grid w-full grid-cols-2 bg-zinc-100 dark:bg-zinc-800">
+              <TabsTrigger
+                value="EXPENSE"
+                className="data-[state=active]:bg-rose-500 data-[state=active]:text-white"
+              >
+                Despesa
+              </TabsTrigger>
+              <TabsTrigger
+                value="INCOME"
+                className="data-[state=active]:bg-emerald-500 data-[state=active]:text-white"
+              >
+                Receita
+              </TabsTrigger>
+            </TabsList>
+          </Tabs>
+
+          <div className="space-y-2">
+            <Label htmlFor="description">Descrição</Label>
+            <Input
+              id="description"
+              value={description}
+              onChange={(e) => setDescription(e.target.value)}
+              placeholder="Ex: Supermercado, Salário..."
+              className="bg-zinc-50 dark:bg-zinc-800 border-zinc-200 dark:border-zinc-700"
+              required
+            />
+          </div>
+
+          <div className="grid grid-cols-2 gap-4">
+            <div className="space-y-2">
+              <Label htmlFor="amount">Valor (R$)</Label>
+              <Input
+                id="amount"
+                type="number"
+                step="0.01"
+                value={amount}
+                onChange={(e) => setAmount(e.target.value)}
+                placeholder="0,00"
+                className="bg-zinc-50 dark:bg-zinc-800 border-zinc-200 dark:border-zinc-700"
+                required
+              />
+            </div>
+
+            <div className="space-y-2">
+              <Label>Data</Label>
+              <Popover>
+                <PopoverTrigger asChild>
+                  <Button
+                    variant="outline"
+                    className={cn(
+                      "w-full justify-start text-left font-normal bg-zinc-50 dark:bg-zinc-800 border-zinc-200 dark:border-zinc-700",
+                      !purchaseDate && "text-muted-foreground",
+                    )}
+                  >
+                    <CalendarIcon className="mr-2 h-4 w-4" />
+                    {purchaseDate
+                      ? format(purchaseDate, "dd/MM/yyyy", { locale: ptBR })
+                      : "Selecione"}
+                  </Button>
+                </PopoverTrigger>
+                <PopoverContent className="w-auto p-0">
+                  <Calendar
+                    mode="single"
+                    selected={purchaseDate}
+                    onSelect={setPurchaseDate}
+                    locale={ptBR}
+                    initialFocus
+                  />
+                </PopoverContent>
+              </Popover>
+            </div>
+          </div>
+
+          <div className="grid grid-cols-2 gap-4">
+            <div className="space-y-2">
+              <Label>Categoria</Label>
+              <Select value={categoryId} onValueChange={setCategoryId} required>
+                <SelectTrigger className="bg-zinc-50 dark:bg-zinc-800 border-zinc-200 dark:border-zinc-700">
+                  <SelectValue placeholder="Selecione" />
+                </SelectTrigger>
+                <SelectContent>
+                  {filteredCategories.map((cat) => (
+                    <SelectItem key={cat.id} value={cat.id}>
+                      <span className="flex items-center gap-2">
+                        {cat.icon && <span>{cat.icon}</span>}
+                        {cat.name}
+                      </span>
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </div>
+
+            <div className="space-y-2">
+              <Label>Conta</Label>
+              <Select value={accountId} onValueChange={setAccountId} required>
+                <SelectTrigger className="bg-zinc-50 dark:bg-zinc-800 border-zinc-200 dark:border-zinc-700">
+                  <SelectValue placeholder="Selecione" />
+                </SelectTrigger>
+                <SelectContent>
+                  {accounts.map((acc) => (
+                    <SelectItem key={acc.id} value={acc.id}>
+                      {acc.name}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </div>
+          </div>
+
+          <div className="space-y-2">
+            <Label>Quem Pagou</Label>
+            <Select value={payerId} onValueChange={setPayerId} required>
+              <SelectTrigger className="bg-zinc-50 dark:bg-zinc-800 border-zinc-200 dark:border-zinc-700">
+                <SelectValue placeholder="Selecione" />
+              </SelectTrigger>
+              <SelectContent>
+                {members.map((member) => (
+                  <SelectItem key={member.id} value={member.id}>
+                    {member.name}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+          </div>
+
+          <div className="flex items-center justify-between p-4 rounded-lg bg-zinc-50 dark:bg-zinc-800">
+            <div>
+              <Label htmlFor="shared" className="text-sm font-medium">
+                Dividir com o Casal?
+              </Label>
+              <p className="text-xs text-zinc-500 dark:text-zinc-400">
+                {isShared ? "Será dividido 50/50" : "Conta individual"}
+              </p>
+            </div>
+            <Switch
+              id="shared"
+              checked={isShared}
+              onCheckedChange={setIsShared}
+            />
+          </div>
+
+          <div className="flex gap-3 pt-2">
+            <Button
+              type="button"
+              variant="outline"
+              onClick={() => onOpenChange(false)}
+              className="flex-1"
+            >
+              Cancelar
+            </Button>
+            <Button
+              type="submit"
+              disabled={isLoading}
+              className={cn(
+                "flex-1",
+                type === "EXPENSE"
+                  ? "bg-rose-500 hover:bg-rose-600"
+                  : "bg-emerald-500 hover:bg-emerald-600",
+              )}
+            >
+              {isLoading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
+              {editData ? "Salvar" : "Adicionar"}
+            </Button>
+          </div>
+        </form>
+      </DialogContent>
+    </Dialog>
+  );
+}

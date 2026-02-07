@@ -1,0 +1,25 @@
+{
+  "name": "FamilyMember",
+  "type": "object",
+  "properties": {
+    "name": {
+      "type": "string",
+      "description": "Nome do membro"
+    },
+    "email": {
+      "type": "string",
+      "description": "Email do membro"
+    },
+    "avatar": {
+      "type": "string",
+      "description": "URL do avatar"
+    },
+    "color": {
+      "type": "string",
+      "description": "Cor para identifica\u00e7\u00e3o"
+    }
+  },
+  "required": [
+    "name"
+  ]
+}

@@ -1,0 +1,101 @@
+generator client {
+  provider = "prisma-client"
+  output   = "./generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+model Account {
+  id          String        @id
+  name        String
+  type        String
+  userId      String?
+  balance     Decimal       @default(0) @db.Decimal(10, 2)
+  bankName    String?
+  createdAt   DateTime      @default(now())
+  limit       Decimal?      @db.Decimal(10, 2)
+  closingDay  Int?
+  dueDay      Int?
+  User        User?         @relation(fields: [userId], references: [id])
+  Invoice     Invoice[]
+  Transaction Transaction[]
+}
+
+model Category {
+  id           String         @id
+  name         String         @unique
+  type         String
+  icon         String?
+  FixedExpense FixedExpense[]
+  Transaction  Transaction[]
+}
+
+model FixedExpense {
+  id          String   @id
+  description String
+  amount      Decimal  @db.Decimal(10, 2)
+  dueDay      Int
+  categoryId  String
+  splitType   String   @default("SHARED")
+  ownerId     String?
+  active      Boolean  @default(true)
+  Category    Category @relation(fields: [categoryId], references: [id])
+  User        User?    @relation(fields: [ownerId], references: [id])
+}
+
+model Invoice {
+  id          String        @id
+  month       Int
+  year        Int
+  dueDate     DateTime
+  closingDate DateTime
+  status      String        @default("OPEN")
+  amount      Decimal       @default(0) @db.Decimal(10, 2)
+  accountId   String
+  createdAt   DateTime      @default(now())
+  Account     Account       @relation(fields: [accountId], references: [id])
+  Transaction Transaction[]
+
+  @@unique([accountId, month, year])
+}
+
+model Transaction {
+  id                             String    @id
+  description                    String
+  amount                         Decimal   @db.Decimal(10, 2)
+  categoryId                     String
+  accountId                      String
+  splitType                      String    @default("EQUAL")
+  createdAt                      DateTime  @default(now())
+  updatedAt                      DateTime
+  installment                    Int?      @default(1)
+  installmentId                  String?
+  invoiceId                      String?
+  isManual                       Boolean   @default(true)
+  isReconciled                   Boolean   @default(false)
+  originalDesc                   String?
+  ownerId                        String?
+  payerId                        String
+  paymentDate                    DateTime?
+  purchaseDate                   DateTime
+  settled                        Boolean   @default(false)
+  totalInstallments              Int?      @default(1)
+  type                           String
+  Account                        Account   @relation(fields: [accountId], references: [id])
+  Category                       Category  @relation(fields: [categoryId], references: [id])
+  Invoice                        Invoice?  @relation(fields: [invoiceId], references: [id])
+  User_Transaction_ownerIdToUser User?     @relation("Transaction_ownerIdToUser", fields: [ownerId], references: [id])
+  User_Transaction_payerIdToUser User      @relation("Transaction_payerIdToUser", fields: [payerId], references: [id])
+}
+
+model User {
+  id                                    String         @id
+  name                                  String
+  email                                 String?        @unique
+  Account                               Account[]
+  FixedExpense                          FixedExpense[]
+  Transaction_Transaction_ownerIdToUser Transaction[]  @relation("Transaction_ownerIdToUser")
+  Transaction_Transaction_payerIdToUser Transaction[]  @relation("Transaction_payerIdToUser")
+}
