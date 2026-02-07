@@ -30,84 +30,95 @@ export type TransactionAvgAggregateOutputType = {
   amount: runtime.Decimal | null
   installment: number | null
   totalInstallments: number | null
+  splitShare: runtime.Decimal | null
 }
 
 export type TransactionSumAggregateOutputType = {
   amount: runtime.Decimal | null
   installment: number | null
   totalInstallments: number | null
+  splitShare: runtime.Decimal | null
 }
 
 export type TransactionMinAggregateOutputType = {
   id: string | null
   description: string | null
+  originalDesc: string | null
   amount: runtime.Decimal | null
+  purchaseDate: Date | null
+  paymentDate: Date | null
+  type: $Enums.TransactionType | null
+  installment: number | null
+  totalInstallments: number | null
+  installmentId: string | null
+  isReconciled: boolean | null
+  isManual: boolean | null
   categoryId: string | null
   accountId: string | null
-  splitType: string | null
+  invoiceId: string | null
+  payerId: string | null
+  splitType: $Enums.SplitMethod | null
+  ownerId: string | null
+  settled: boolean | null
+  receiverAccountId: string | null
+  isArchived: boolean | null
   createdAt: Date | null
   updatedAt: Date | null
-  installment: number | null
-  installmentId: string | null
-  invoiceId: string | null
-  isManual: boolean | null
-  isReconciled: boolean | null
-  originalDesc: string | null
-  ownerId: string | null
-  payerId: string | null
-  paymentDate: Date | null
-  purchaseDate: Date | null
-  settled: boolean | null
-  totalInstallments: number | null
-  type: string | null
+  splitShare: runtime.Decimal | null
 }
 
 export type TransactionMaxAggregateOutputType = {
   id: string | null
   description: string | null
+  originalDesc: string | null
   amount: runtime.Decimal | null
+  purchaseDate: Date | null
+  paymentDate: Date | null
+  type: $Enums.TransactionType | null
+  installment: number | null
+  totalInstallments: number | null
+  installmentId: string | null
+  isReconciled: boolean | null
+  isManual: boolean | null
   categoryId: string | null
   accountId: string | null
-  splitType: string | null
+  invoiceId: string | null
+  payerId: string | null
+  splitType: $Enums.SplitMethod | null
+  ownerId: string | null
+  settled: boolean | null
+  receiverAccountId: string | null
+  isArchived: boolean | null
   createdAt: Date | null
   updatedAt: Date | null
-  installment: number | null
-  installmentId: string | null
-  invoiceId: string | null
-  isManual: boolean | null
-  isReconciled: boolean | null
-  originalDesc: string | null
-  ownerId: string | null
-  payerId: string | null
-  paymentDate: Date | null
-  purchaseDate: Date | null
-  settled: boolean | null
-  totalInstallments: number | null
-  type: string | null
+  splitShare: runtime.Decimal | null
 }
 
 export type TransactionCountAggregateOutputType = {
   id: number
   description: number
+  originalDesc: number
   amount: number
+  purchaseDate: number
+  paymentDate: number
+  type: number
+  installment: number
+  totalInstallments: number
+  installmentId: number
+  isReconciled: number
+  isManual: number
   categoryId: number
   accountId: number
+  invoiceId: number
+  payerId: number
   splitType: number
+  ownerId: number
+  settled: number
+  receiverAccountId: number
+  isArchived: number
   createdAt: number
   updatedAt: number
-  installment: number
-  installmentId: number
-  invoiceId: number
-  isManual: number
-  isReconciled: number
-  originalDesc: number
-  ownerId: number
-  payerId: number
-  paymentDate: number
-  purchaseDate: number
-  settled: number
-  totalInstallments: number
-  type: number
+  splitShare: number
   _all: number
 }
 
@@ -116,84 +127,95 @@ export type TransactionAvgAggregateInputType = {
   amount?: true
   installment?: true
   totalInstallments?: true
+  splitShare?: true
 }
 
 export type TransactionSumAggregateInputType = {
   amount?: true
   installment?: true
   totalInstallments?: true
+  splitShare?: true
 }
 
 export type TransactionMinAggregateInputType = {
   id?: true
   description?: true
+  originalDesc?: true
   amount?: true
+  purchaseDate?: true
+  paymentDate?: true
+  type?: true
+  installment?: true
+  totalInstallments?: true
+  installmentId?: true
+  isReconciled?: true
+  isManual?: true
   categoryId?: true
   accountId?: true
+  invoiceId?: true
+  payerId?: true
   splitType?: true
+  ownerId?: true
+  settled?: true
+  receiverAccountId?: true
+  isArchived?: true
   createdAt?: true
   updatedAt?: true
-  installment?: true
-  installmentId?: true
-  invoiceId?: true
-  isManual?: true
-  isReconciled?: true
-  originalDesc?: true
-  ownerId?: true
-  payerId?: true
-  paymentDate?: true
-  purchaseDate?: true
-  settled?: true
-  totalInstallments?: true
-  type?: true
+  splitShare?: true
 }
 
 export type TransactionMaxAggregateInputType = {
   id?: true
   description?: true
+  originalDesc?: true
   amount?: true
+  purchaseDate?: true
+  paymentDate?: true
+  type?: true
+  installment?: true
+  totalInstallments?: true
+  installmentId?: true
+  isReconciled?: true
+  isManual?: true
   categoryId?: true
   accountId?: true
+  invoiceId?: true
+  payerId?: true
   splitType?: true
+  ownerId?: true
+  settled?: true
+  receiverAccountId?: true
+  isArchived?: true
   createdAt?: true
   updatedAt?: true
-  installment?: true
-  installmentId?: true
-  invoiceId?: true
-  isManual?: true
-  isReconciled?: true
-  originalDesc?: true
-  ownerId?: true
-  payerId?: true
-  paymentDate?: true
-  purchaseDate?: true
-  settled?: true
-  totalInstallments?: true
-  type?: true
+  splitShare?: true
 }
 
 export type TransactionCountAggregateInputType = {
   id?: true
   description?: true
+  originalDesc?: true
   amount?: true
+  purchaseDate?: true
+  paymentDate?: true
+  type?: true
+  installment?: true
+  totalInstallments?: true
+  installmentId?: true
+  isReconciled?: true
+  isManual?: true
   categoryId?: true
   accountId?: true
+  invoiceId?: true
+  payerId?: true
   splitType?: true
+  ownerId?: true
+  settled?: true
+  receiverAccountId?: true
+  isArchived?: true
   createdAt?: true
   updatedAt?: true
-  installment?: true
-  installmentId?: true
-  invoiceId?: true
-  isManual?: true
-  isReconciled?: true
-  originalDesc?: true
-  ownerId?: true
-  payerId?: true
-  paymentDate?: true
-  purchaseDate?: true
-  settled?: true
-  totalInstallments?: true
-  type?: true
+  splitShare?: true
   _all?: true
 }
 
@@ -286,25 +308,28 @@ export type TransactionGroupByArgs<ExtArgs extends runtime.Types.Extensions.Inte
 export type TransactionGroupByOutputType = {
   id: string
   description: string
+  originalDesc: string | null
   amount: runtime.Decimal
+  purchaseDate: Date
+  paymentDate: Date | null
+  type: $Enums.TransactionType
+  installment: number | null
+  totalInstallments: number | null
+  installmentId: string | null
+  isReconciled: boolean
+  isManual: boolean
   categoryId: string
   accountId: string
-  splitType: string
+  invoiceId: string | null
+  payerId: string
+  splitType: $Enums.SplitMethod
+  ownerId: string | null
+  settled: boolean
+  receiverAccountId: string | null
+  isArchived: boolean
   createdAt: Date
   updatedAt: Date
-  installment: number | null
-  installmentId: string | null
-  invoiceId: string | null
-  isManual: boolean
-  isReconciled: boolean
-  originalDesc: string | null
-  ownerId: string | null
-  payerId: string
-  paymentDate: Date | null
-  purchaseDate: Date
-  settled: boolean
-  totalInstallments: number | null
-  type: string
+  splitShare: runtime.Decimal | null
   _count: TransactionCountAggregateOutputType | null
   _avg: TransactionAvgAggregateOutputType | null
   _sum: TransactionSumAggregateOutputType | null
@@ -333,59 +358,67 @@ export type TransactionWhereInput = {
   NOT?: Prisma.TransactionWhereInput | Prisma.TransactionWhereInput[]
   id?: Prisma.StringFilter<"Transaction"> | string
   description?: Prisma.StringFilter<"Transaction"> | string
+  originalDesc?: Prisma.StringNullableFilter<"Transaction"> | string | null
   amount?: Prisma.DecimalFilter<"Transaction"> | runtime.Decimal | runtime.DecimalJsLike | number | string
+  purchaseDate?: Prisma.DateTimeFilter<"Transaction"> | Date | string
+  paymentDate?: Prisma.DateTimeNullableFilter<"Transaction"> | Date | string | null
+  type?: Prisma.EnumTransactionTypeFilter<"Transaction"> | $Enums.TransactionType
+  installment?: Prisma.IntNullableFilter<"Transaction"> | number | null
+  totalInstallments?: Prisma.IntNullableFilter<"Transaction"> | number | null
+  installmentId?: Prisma.StringNullableFilter<"Transaction"> | string | null
+  isReconciled?: Prisma.BoolFilter<"Transaction"> | boolean
+  isManual?: Prisma.BoolFilter<"Transaction"> | boolean
   categoryId?: Prisma.StringFilter<"Transaction"> | string
   accountId?: Prisma.StringFilter<"Transaction"> | string
-  splitType?: Prisma.StringFilter<"Transaction"> | string
+  invoiceId?: Prisma.StringNullableFilter<"Transaction"> | string | null
+  payerId?: Prisma.StringFilter<"Transaction"> | string
+  splitType?: Prisma.EnumSplitMethodFilter<"Transaction"> | $Enums.SplitMethod
+  ownerId?: Prisma.StringNullableFilter<"Transaction"> | string | null
+  settled?: Prisma.BoolFilter<"Transaction"> | boolean
+  receiverAccountId?: Prisma.StringNullableFilter<"Transaction"> | string | null
+  isArchived?: Prisma.BoolFilter<"Transaction"> | boolean
   createdAt?: Prisma.DateTimeFilter<"Transaction"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Transaction"> | Date | string
-  installment?: Prisma.IntNullableFilter<"Transaction"> | number | null
-  installmentId?: Prisma.StringNullableFilter<"Transaction"> | string | null
-  invoiceId?: Prisma.StringNullableFilter<"Transaction"> | string | null
-  isManual?: Prisma.BoolFilter<"Transaction"> | boolean
-  isReconciled?: Prisma.BoolFilter<"Transaction"> | boolean
-  originalDesc?: Prisma.StringNullableFilter<"Transaction"> | string | null
-  ownerId?: Prisma.StringNullableFilter<"Transaction"> | string | null
-  payerId?: Prisma.StringFilter<"Transaction"> | string
-  paymentDate?: Prisma.DateTimeNullableFilter<"Transaction"> | Date | string | null
-  purchaseDate?: Prisma.DateTimeFilter<"Transaction"> | Date | string
-  settled?: Prisma.BoolFilter<"Transaction"> | boolean
-  totalInstallments?: Prisma.IntNullableFilter<"Transaction"> | number | null
-  type?: Prisma.StringFilter<"Transaction"> | string
+  splitShare?: Prisma.DecimalNullableFilter<"Transaction"> | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   Account?: Prisma.XOR<Prisma.AccountScalarRelationFilter, Prisma.AccountWhereInput>
   Category?: Prisma.XOR<Prisma.CategoryScalarRelationFilter, Prisma.CategoryWhereInput>
   Invoice?: Prisma.XOR<Prisma.InvoiceNullableScalarRelationFilter, Prisma.InvoiceWhereInput> | null
   User_Transaction_ownerIdToUser?: Prisma.XOR<Prisma.UserNullableScalarRelationFilter, Prisma.UserWhereInput> | null
   User_Transaction_payerIdToUser?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
+  Account_Transaction_receiverAccountIdToAccount?: Prisma.XOR<Prisma.AccountNullableScalarRelationFilter, Prisma.AccountWhereInput> | null
 }
 
 export type TransactionOrderByWithRelationInput = {
   id?: Prisma.SortOrder
   description?: Prisma.SortOrder
+  originalDesc?: Prisma.SortOrderInput | Prisma.SortOrder
   amount?: Prisma.SortOrder
+  purchaseDate?: Prisma.SortOrder
+  paymentDate?: Prisma.SortOrderInput | Prisma.SortOrder
+  type?: Prisma.SortOrder
+  installment?: Prisma.SortOrderInput | Prisma.SortOrder
+  totalInstallments?: Prisma.SortOrderInput | Prisma.SortOrder
+  installmentId?: Prisma.SortOrderInput | Prisma.SortOrder
+  isReconciled?: Prisma.SortOrder
+  isManual?: Prisma.SortOrder
   categoryId?: Prisma.SortOrder
   accountId?: Prisma.SortOrder
+  invoiceId?: Prisma.SortOrderInput | Prisma.SortOrder
+  payerId?: Prisma.SortOrder
   splitType?: Prisma.SortOrder
+  ownerId?: Prisma.SortOrderInput | Prisma.SortOrder
+  settled?: Prisma.SortOrder
+  receiverAccountId?: Prisma.SortOrderInput | Prisma.SortOrder
+  isArchived?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
-  installment?: Prisma.SortOrderInput | Prisma.SortOrder
-  installmentId?: Prisma.SortOrderInput | Prisma.SortOrder
-  invoiceId?: Prisma.SortOrderInput | Prisma.SortOrder
-  isManual?: Prisma.SortOrder
-  isReconciled?: Prisma.SortOrder
-  originalDesc?: Prisma.SortOrderInput | Prisma.SortOrder
-  ownerId?: Prisma.SortOrderInput | Prisma.SortOrder
-  payerId?: Prisma.SortOrder
-  paymentDate?: Prisma.SortOrderInput | Prisma.SortOrder
-  purchaseDate?: Prisma.SortOrder
-  settled?: Prisma.SortOrder
-  totalInstallments?: Prisma.SortOrderInput | Prisma.SortOrder
-  type?: Prisma.SortOrder
+  splitShare?: Prisma.SortOrderInput | Prisma.SortOrder
   Account?: Prisma.AccountOrderByWithRelationInput
   Category?: Prisma.CategoryOrderByWithRelationInput
   Invoice?: Prisma.InvoiceOrderByWithRelationInput
   User_Transaction_ownerIdToUser?: Prisma.UserOrderByWithRelationInput
   User_Transaction_payerIdToUser?: Prisma.UserOrderByWithRelationInput
+  Account_Transaction_receiverAccountIdToAccount?: Prisma.AccountOrderByWithRelationInput
 }
 
 export type TransactionWhereUniqueInput = Prisma.AtLeast<{
@@ -394,54 +427,61 @@ export type TransactionWhereUniqueInput = Prisma.AtLeast<{
   OR?: Prisma.TransactionWhereInput[]
   NOT?: Prisma.TransactionWhereInput | Prisma.TransactionWhereInput[]
   description?: Prisma.StringFilter<"Transaction"> | string
+  originalDesc?: Prisma.StringNullableFilter<"Transaction"> | string | null
   amount?: Prisma.DecimalFilter<"Transaction"> | runtime.Decimal | runtime.DecimalJsLike | number | string
+  purchaseDate?: Prisma.DateTimeFilter<"Transaction"> | Date | string
+  paymentDate?: Prisma.DateTimeNullableFilter<"Transaction"> | Date | string | null
+  type?: Prisma.EnumTransactionTypeFilter<"Transaction"> | $Enums.TransactionType
+  installment?: Prisma.IntNullableFilter<"Transaction"> | number | null
+  totalInstallments?: Prisma.IntNullableFilter<"Transaction"> | number | null
+  installmentId?: Prisma.StringNullableFilter<"Transaction"> | string | null
+  isReconciled?: Prisma.BoolFilter<"Transaction"> | boolean
+  isManual?: Prisma.BoolFilter<"Transaction"> | boolean
   categoryId?: Prisma.StringFilter<"Transaction"> | string
   accountId?: Prisma.StringFilter<"Transaction"> | string
-  splitType?: Prisma.StringFilter<"Transaction"> | string
+  invoiceId?: Prisma.StringNullableFilter<"Transaction"> | string | null
+  payerId?: Prisma.StringFilter<"Transaction"> | string
+  splitType?: Prisma.EnumSplitMethodFilter<"Transaction"> | $Enums.SplitMethod
+  ownerId?: Prisma.StringNullableFilter<"Transaction"> | string | null
+  settled?: Prisma.BoolFilter<"Transaction"> | boolean
+  receiverAccountId?: Prisma.StringNullableFilter<"Transaction"> | string | null
+  isArchived?: Prisma.BoolFilter<"Transaction"> | boolean
   createdAt?: Prisma.DateTimeFilter<"Transaction"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Transaction"> | Date | string
-  installment?: Prisma.IntNullableFilter<"Transaction"> | number | null
-  installmentId?: Prisma.StringNullableFilter<"Transaction"> | string | null
-  invoiceId?: Prisma.StringNullableFilter<"Transaction"> | string | null
-  isManual?: Prisma.BoolFilter<"Transaction"> | boolean
-  isReconciled?: Prisma.BoolFilter<"Transaction"> | boolean
-  originalDesc?: Prisma.StringNullableFilter<"Transaction"> | string | null
-  ownerId?: Prisma.StringNullableFilter<"Transaction"> | string | null
-  payerId?: Prisma.StringFilter<"Transaction"> | string
-  paymentDate?: Prisma.DateTimeNullableFilter<"Transaction"> | Date | string | null
-  purchaseDate?: Prisma.DateTimeFilter<"Transaction"> | Date | string
-  settled?: Prisma.BoolFilter<"Transaction"> | boolean
-  totalInstallments?: Prisma.IntNullableFilter<"Transaction"> | number | null
-  type?: Prisma.StringFilter<"Transaction"> | string
+  splitShare?: Prisma.DecimalNullableFilter<"Transaction"> | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   Account?: Prisma.XOR<Prisma.AccountScalarRelationFilter, Prisma.AccountWhereInput>
   Category?: Prisma.XOR<Prisma.CategoryScalarRelationFilter, Prisma.CategoryWhereInput>
   Invoice?: Prisma.XOR<Prisma.InvoiceNullableScalarRelationFilter, Prisma.InvoiceWhereInput> | null
   User_Transaction_ownerIdToUser?: Prisma.XOR<Prisma.UserNullableScalarRelationFilter, Prisma.UserWhereInput> | null
   User_Transaction_payerIdToUser?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
+  Account_Transaction_receiverAccountIdToAccount?: Prisma.XOR<Prisma.AccountNullableScalarRelationFilter, Prisma.AccountWhereInput> | null
 }, "id">
 
 export type TransactionOrderByWithAggregationInput = {
   id?: Prisma.SortOrder
   description?: Prisma.SortOrder
+  originalDesc?: Prisma.SortOrderInput | Prisma.SortOrder
   amount?: Prisma.SortOrder
+  purchaseDate?: Prisma.SortOrder
+  paymentDate?: Prisma.SortOrderInput | Prisma.SortOrder
+  type?: Prisma.SortOrder
+  installment?: Prisma.SortOrderInput | Prisma.SortOrder
+  totalInstallments?: Prisma.SortOrderInput | Prisma.SortOrder
+  installmentId?: Prisma.SortOrderInput | Prisma.SortOrder
+  isReconciled?: Prisma.SortOrder
+  isManual?: Prisma.SortOrder
   categoryId?: Prisma.SortOrder
   accountId?: Prisma.SortOrder
+  invoiceId?: Prisma.SortOrderInput | Prisma.SortOrder
+  payerId?: Prisma.SortOrder
   splitType?: Prisma.SortOrder
+  ownerId?: Prisma.SortOrderInput | Prisma.SortOrder
+  settled?: Prisma.SortOrder
+  receiverAccountId?: Prisma.SortOrderInput | Prisma.SortOrder
+  isArchived?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
-  installment?: Prisma.SortOrderInput | Prisma.SortOrder
-  installmentId?: Prisma.SortOrderInput | Prisma.SortOrder
-  invoiceId?: Prisma.SortOrderInput | Prisma.SortOrder
-  isManual?: Prisma.SortOrder
-  isReconciled?: Prisma.SortOrder
-  originalDesc?: Prisma.SortOrderInput | Prisma.SortOrder
-  ownerId?: Prisma.SortOrderInput | Prisma.SortOrder
-  payerId?: Prisma.SortOrder
-  paymentDate?: Prisma.SortOrderInput | Prisma.SortOrder
-  purchaseDate?: Prisma.SortOrder
-  settled?: Prisma.SortOrder
-  totalInstallments?: Prisma.SortOrderInput | Prisma.SortOrder
-  type?: Prisma.SortOrder
+  splitShare?: Prisma.SortOrderInput | Prisma.SortOrder
   _count?: Prisma.TransactionCountOrderByAggregateInput
   _avg?: Prisma.TransactionAvgOrderByAggregateInput
   _max?: Prisma.TransactionMaxOrderByAggregateInput
@@ -455,188 +495,211 @@ export type TransactionScalarWhereWithAggregatesInput = {
   NOT?: Prisma.TransactionScalarWhereWithAggregatesInput | Prisma.TransactionScalarWhereWithAggregatesInput[]
   id?: Prisma.StringWithAggregatesFilter<"Transaction"> | string
   description?: Prisma.StringWithAggregatesFilter<"Transaction"> | string
+  originalDesc?: Prisma.StringNullableWithAggregatesFilter<"Transaction"> | string | null
   amount?: Prisma.DecimalWithAggregatesFilter<"Transaction"> | runtime.Decimal | runtime.DecimalJsLike | number | string
+  purchaseDate?: Prisma.DateTimeWithAggregatesFilter<"Transaction"> | Date | string
+  paymentDate?: Prisma.DateTimeNullableWithAggregatesFilter<"Transaction"> | Date | string | null
+  type?: Prisma.EnumTransactionTypeWithAggregatesFilter<"Transaction"> | $Enums.TransactionType
+  installment?: Prisma.IntNullableWithAggregatesFilter<"Transaction"> | number | null
+  totalInstallments?: Prisma.IntNullableWithAggregatesFilter<"Transaction"> | number | null
+  installmentId?: Prisma.StringNullableWithAggregatesFilter<"Transaction"> | string | null
+  isReconciled?: Prisma.BoolWithAggregatesFilter<"Transaction"> | boolean
+  isManual?: Prisma.BoolWithAggregatesFilter<"Transaction"> | boolean
   categoryId?: Prisma.StringWithAggregatesFilter<"Transaction"> | string
   accountId?: Prisma.StringWithAggregatesFilter<"Transaction"> | string
-  splitType?: Prisma.StringWithAggregatesFilter<"Transaction"> | string
+  invoiceId?: Prisma.StringNullableWithAggregatesFilter<"Transaction"> | string | null
+  payerId?: Prisma.StringWithAggregatesFilter<"Transaction"> | string
+  splitType?: Prisma.EnumSplitMethodWithAggregatesFilter<"Transaction"> | $Enums.SplitMethod
+  ownerId?: Prisma.StringNullableWithAggregatesFilter<"Transaction"> | string | null
+  settled?: Prisma.BoolWithAggregatesFilter<"Transaction"> | boolean
+  receiverAccountId?: Prisma.StringNullableWithAggregatesFilter<"Transaction"> | string | null
+  isArchived?: Prisma.BoolWithAggregatesFilter<"Transaction"> | boolean
   createdAt?: Prisma.DateTimeWithAggregatesFilter<"Transaction"> | Date | string
   updatedAt?: Prisma.DateTimeWithAggregatesFilter<"Transaction"> | Date | string
-  installment?: Prisma.IntNullableWithAggregatesFilter<"Transaction"> | number | null
-  installmentId?: Prisma.StringNullableWithAggregatesFilter<"Transaction"> | string | null
-  invoiceId?: Prisma.StringNullableWithAggregatesFilter<"Transaction"> | string | null
-  isManual?: Prisma.BoolWithAggregatesFilter<"Transaction"> | boolean
-  isReconciled?: Prisma.BoolWithAggregatesFilter<"Transaction"> | boolean
-  originalDesc?: Prisma.StringNullableWithAggregatesFilter<"Transaction"> | string | null
-  ownerId?: Prisma.StringNullableWithAggregatesFilter<"Transaction"> | string | null
-  payerId?: Prisma.StringWithAggregatesFilter<"Transaction"> | string
-  paymentDate?: Prisma.DateTimeNullableWithAggregatesFilter<"Transaction"> | Date | string | null
-  purchaseDate?: Prisma.DateTimeWithAggregatesFilter<"Transaction"> | Date | string
-  settled?: Prisma.BoolWithAggregatesFilter<"Transaction"> | boolean
-  totalInstallments?: Prisma.IntNullableWithAggregatesFilter<"Transaction"> | number | null
-  type?: Prisma.StringWithAggregatesFilter<"Transaction"> | string
+  splitShare?: Prisma.DecimalNullableWithAggregatesFilter<"Transaction"> | runtime.Decimal | runtime.DecimalJsLike | number | string | null
 }
 
 export type TransactionCreateInput = {
   id: string
   description: string
+  originalDesc?: string | null
   amount: runtime.Decimal | runtime.DecimalJsLike | number | string
-  splitType?: string
+  purchaseDate: Date | string
+  paymentDate?: Date | string | null
+  type: $Enums.TransactionType
+  installment?: number | null
+  totalInstallments?: number | null
+  installmentId?: string | null
+  isReconciled?: boolean
+  isManual?: boolean
+  splitType?: $Enums.SplitMethod
+  settled?: boolean
+  isArchived?: boolean
   createdAt?: Date | string
   updatedAt: Date | string
-  installment?: number | null
-  installmentId?: string | null
-  isManual?: boolean
-  isReconciled?: boolean
-  originalDesc?: string | null
-  paymentDate?: Date | string | null
-  purchaseDate: Date | string
-  settled?: boolean
-  totalInstallments?: number | null
-  type: string
+  splitShare?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
   Account: Prisma.AccountCreateNestedOneWithoutTransactionInput
   Category: Prisma.CategoryCreateNestedOneWithoutTransactionInput
   Invoice?: Prisma.InvoiceCreateNestedOneWithoutTransactionInput
   User_Transaction_ownerIdToUser?: Prisma.UserCreateNestedOneWithoutTransaction_Transaction_ownerIdToUserInput
   User_Transaction_payerIdToUser: Prisma.UserCreateNestedOneWithoutTransaction_Transaction_payerIdToUserInput
+  Account_Transaction_receiverAccountIdToAccount?: Prisma.AccountCreateNestedOneWithoutTransaction_Transaction_receiverAccountIdToAccountInput
 }
 
 export type TransactionUncheckedCreateInput = {
   id: string
   description: string
+  originalDesc?: string | null
   amount: runtime.Decimal | runtime.DecimalJsLike | number | string
+  purchaseDate: Date | string
+  paymentDate?: Date | string | null
+  type: $Enums.TransactionType
+  installment?: number | null
+  totalInstallments?: number | null
+  installmentId?: string | null
+  isReconciled?: boolean
+  isManual?: boolean
   categoryId: string
   accountId: string
-  splitType?: string
+  invoiceId?: string | null
+  payerId: string
+  splitType?: $Enums.SplitMethod
+  ownerId?: string | null
+  settled?: boolean
+  receiverAccountId?: string | null
+  isArchived?: boolean
   createdAt?: Date | string
   updatedAt: Date | string
-  installment?: number | null
-  installmentId?: string | null
-  invoiceId?: string | null
-  isManual?: boolean
-  isReconciled?: boolean
-  originalDesc?: string | null
-  ownerId?: string | null
-  payerId: string
-  paymentDate?: Date | string | null
-  purchaseDate: Date | string
-  settled?: boolean
-  totalInstallments?: number | null
-  type: string
+  splitShare?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
 }
 
 export type TransactionUpdateInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.StringFieldUpdateOperationsInput | string
+  originalDesc?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   amount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
-  splitType?: Prisma.StringFieldUpdateOperationsInput | string
+  purchaseDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  paymentDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  type?: Prisma.EnumTransactionTypeFieldUpdateOperationsInput | $Enums.TransactionType
+  installment?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  totalInstallments?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  installmentId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  isReconciled?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  isManual?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  splitType?: Prisma.EnumSplitMethodFieldUpdateOperationsInput | $Enums.SplitMethod
+  settled?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  isArchived?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  installment?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
-  installmentId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  isManual?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  isReconciled?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  originalDesc?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  paymentDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  purchaseDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  settled?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  totalInstallments?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
-  type?: Prisma.StringFieldUpdateOperationsInput | string
+  splitShare?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   Account?: Prisma.AccountUpdateOneRequiredWithoutTransactionNestedInput
   Category?: Prisma.CategoryUpdateOneRequiredWithoutTransactionNestedInput
   Invoice?: Prisma.InvoiceUpdateOneWithoutTransactionNestedInput
   User_Transaction_ownerIdToUser?: Prisma.UserUpdateOneWithoutTransaction_Transaction_ownerIdToUserNestedInput
   User_Transaction_payerIdToUser?: Prisma.UserUpdateOneRequiredWithoutTransaction_Transaction_payerIdToUserNestedInput
+  Account_Transaction_receiverAccountIdToAccount?: Prisma.AccountUpdateOneWithoutTransaction_Transaction_receiverAccountIdToAccountNestedInput
 }
 
 export type TransactionUncheckedUpdateInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.StringFieldUpdateOperationsInput | string
+  originalDesc?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   amount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  purchaseDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  paymentDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  type?: Prisma.EnumTransactionTypeFieldUpdateOperationsInput | $Enums.TransactionType
+  installment?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  totalInstallments?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  installmentId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  isReconciled?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  isManual?: Prisma.BoolFieldUpdateOperationsInput | boolean
   categoryId?: Prisma.StringFieldUpdateOperationsInput | string
   accountId?: Prisma.StringFieldUpdateOperationsInput | string
-  splitType?: Prisma.StringFieldUpdateOperationsInput | string
+  invoiceId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  payerId?: Prisma.StringFieldUpdateOperationsInput | string
+  splitType?: Prisma.EnumSplitMethodFieldUpdateOperationsInput | $Enums.SplitMethod
+  ownerId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  settled?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  receiverAccountId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  isArchived?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  installment?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
-  installmentId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  invoiceId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  isManual?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  isReconciled?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  originalDesc?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  ownerId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  payerId?: Prisma.StringFieldUpdateOperationsInput | string
-  paymentDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  purchaseDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  settled?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  totalInstallments?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
-  type?: Prisma.StringFieldUpdateOperationsInput | string
+  splitShare?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
 }
 
 export type TransactionCreateManyInput = {
   id: string
   description: string
+  originalDesc?: string | null
   amount: runtime.Decimal | runtime.DecimalJsLike | number | string
+  purchaseDate: Date | string
+  paymentDate?: Date | string | null
+  type: $Enums.TransactionType
+  installment?: number | null
+  totalInstallments?: number | null
+  installmentId?: string | null
+  isReconciled?: boolean
+  isManual?: boolean
   categoryId: string
   accountId: string
-  splitType?: string
+  invoiceId?: string | null
+  payerId: string
+  splitType?: $Enums.SplitMethod
+  ownerId?: string | null
+  settled?: boolean
+  receiverAccountId?: string | null
+  isArchived?: boolean
   createdAt?: Date | string
   updatedAt: Date | string
-  installment?: number | null
-  installmentId?: string | null
-  invoiceId?: string | null
-  isManual?: boolean
-  isReconciled?: boolean
-  originalDesc?: string | null
-  ownerId?: string | null
-  payerId: string
-  paymentDate?: Date | string | null
-  purchaseDate: Date | string
-  settled?: boolean
-  totalInstallments?: number | null
-  type: string
+  splitShare?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
 }
 
 export type TransactionUpdateManyMutationInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.StringFieldUpdateOperationsInput | string
+  originalDesc?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   amount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
-  splitType?: Prisma.StringFieldUpdateOperationsInput | string
+  purchaseDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  paymentDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  type?: Prisma.EnumTransactionTypeFieldUpdateOperationsInput | $Enums.TransactionType
+  installment?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  totalInstallments?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  installmentId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  isReconciled?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  isManual?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  splitType?: Prisma.EnumSplitMethodFieldUpdateOperationsInput | $Enums.SplitMethod
+  settled?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  isArchived?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  installment?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
-  installmentId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  isManual?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  isReconciled?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  originalDesc?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  paymentDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  purchaseDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  settled?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  totalInstallments?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
-  type?: Prisma.StringFieldUpdateOperationsInput | string
+  splitShare?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
 }
 
 export type TransactionUncheckedUpdateManyInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.StringFieldUpdateOperationsInput | string
+  originalDesc?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   amount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  purchaseDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  paymentDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  type?: Prisma.EnumTransactionTypeFieldUpdateOperationsInput | $Enums.TransactionType
+  installment?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  totalInstallments?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  installmentId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  isReconciled?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  isManual?: Prisma.BoolFieldUpdateOperationsInput | boolean
   categoryId?: Prisma.StringFieldUpdateOperationsInput | string
   accountId?: Prisma.StringFieldUpdateOperationsInput | string
-  splitType?: Prisma.StringFieldUpdateOperationsInput | string
+  invoiceId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  payerId?: Prisma.StringFieldUpdateOperationsInput | string
+  splitType?: Prisma.EnumSplitMethodFieldUpdateOperationsInput | $Enums.SplitMethod
+  ownerId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  settled?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  receiverAccountId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  isArchived?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  installment?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
-  installmentId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  invoiceId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  isManual?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  isReconciled?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  originalDesc?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  ownerId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  payerId?: Prisma.StringFieldUpdateOperationsInput | string
-  paymentDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  purchaseDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  settled?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  totalInstallments?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
-  type?: Prisma.StringFieldUpdateOperationsInput | string
+  splitShare?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
 }
 
 export type TransactionListRelationFilter = {
@@ -652,85 +715,96 @@ export type TransactionOrderByRelationAggregateInput = {
 export type TransactionCountOrderByAggregateInput = {
   id?: Prisma.SortOrder
   description?: Prisma.SortOrder
+  originalDesc?: Prisma.SortOrder
   amount?: Prisma.SortOrder
+  purchaseDate?: Prisma.SortOrder
+  paymentDate?: Prisma.SortOrder
+  type?: Prisma.SortOrder
+  installment?: Prisma.SortOrder
+  totalInstallments?: Prisma.SortOrder
+  installmentId?: Prisma.SortOrder
+  isReconciled?: Prisma.SortOrder
+  isManual?: Prisma.SortOrder
   categoryId?: Prisma.SortOrder
   accountId?: Prisma.SortOrder
+  invoiceId?: Prisma.SortOrder
+  payerId?: Prisma.SortOrder
   splitType?: Prisma.SortOrder
+  ownerId?: Prisma.SortOrder
+  settled?: Prisma.SortOrder
+  receiverAccountId?: Prisma.SortOrder
+  isArchived?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
-  installment?: Prisma.SortOrder
-  installmentId?: Prisma.SortOrder
-  invoiceId?: Prisma.SortOrder
-  isManual?: Prisma.SortOrder
-  isReconciled?: Prisma.SortOrder
-  originalDesc?: Prisma.SortOrder
-  ownerId?: Prisma.SortOrder
-  payerId?: Prisma.SortOrder
-  paymentDate?: Prisma.SortOrder
-  purchaseDate?: Prisma.SortOrder
-  settled?: Prisma.SortOrder
-  totalInstallments?: Prisma.SortOrder
-  type?: Prisma.SortOrder
+  splitShare?: Prisma.SortOrder
 }
 
 export type TransactionAvgOrderByAggregateInput = {
   amount?: Prisma.SortOrder
   installment?: Prisma.SortOrder
   totalInstallments?: Prisma.SortOrder
+  splitShare?: Prisma.SortOrder
 }
 
 export type TransactionMaxOrderByAggregateInput = {
   id?: Prisma.SortOrder
   description?: Prisma.SortOrder
+  originalDesc?: Prisma.SortOrder
   amount?: Prisma.SortOrder
+  purchaseDate?: Prisma.SortOrder
+  paymentDate?: Prisma.SortOrder
+  type?: Prisma.SortOrder
+  installment?: Prisma.SortOrder
+  totalInstallments?: Prisma.SortOrder
+  installmentId?: Prisma.SortOrder
+  isReconciled?: Prisma.SortOrder
+  isManual?: Prisma.SortOrder
   categoryId?: Prisma.SortOrder
   accountId?: Prisma.SortOrder
+  invoiceId?: Prisma.SortOrder
+  payerId?: Prisma.SortOrder
   splitType?: Prisma.SortOrder
+  ownerId?: Prisma.SortOrder
+  settled?: Prisma.SortOrder
+  receiverAccountId?: Prisma.SortOrder
+  isArchived?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
-  installment?: Prisma.SortOrder
-  installmentId?: Prisma.SortOrder
-  invoiceId?: Prisma.SortOrder
-  isManual?: Prisma.SortOrder
-  isReconciled?: Prisma.SortOrder
-  originalDesc?: Prisma.SortOrder
-  ownerId?: Prisma.SortOrder
-  payerId?: Prisma.SortOrder
-  paymentDate?: Prisma.SortOrder
-  purchaseDate?: Prisma.SortOrder
-  settled?: Prisma.SortOrder
-  totalInstallments?: Prisma.SortOrder
-  type?: Prisma.SortOrder
+  splitShare?: Prisma.SortOrder
 }
 
 export type TransactionMinOrderByAggregateInput = {
   id?: Prisma.SortOrder
   description?: Prisma.SortOrder
+  originalDesc?: Prisma.SortOrder
   amount?: Prisma.SortOrder
+  purchaseDate?: Prisma.SortOrder
+  paymentDate?: Prisma.SortOrder
+  type?: Prisma.SortOrder
+  installment?: Prisma.SortOrder
+  totalInstallments?: Prisma.SortOrder
+  installmentId?: Prisma.SortOrder
+  isReconciled?: Prisma.SortOrder
+  isManual?: Prisma.SortOrder
   categoryId?: Prisma.SortOrder
   accountId?: Prisma.SortOrder
+  invoiceId?: Prisma.SortOrder
+  payerId?: Prisma.SortOrder
   splitType?: Prisma.SortOrder
+  ownerId?: Prisma.SortOrder
+  settled?: Prisma.SortOrder
+  receiverAccountId?: Prisma.SortOrder
+  isArchived?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
-  installment?: Prisma.SortOrder
-  installmentId?: Prisma.SortOrder
-  invoiceId?: Prisma.SortOrder
-  isManual?: Prisma.SortOrder
-  isReconciled?: Prisma.SortOrder
-  originalDesc?: Prisma.SortOrder
-  ownerId?: Prisma.SortOrder
-  payerId?: Prisma.SortOrder
-  paymentDate?: Prisma.SortOrder
-  purchaseDate?: Prisma.SortOrder
-  settled?: Prisma.SortOrder
-  totalInstallments?: Prisma.SortOrder
-  type?: Prisma.SortOrder
+  splitShare?: Prisma.SortOrder
 }
 
 export type TransactionSumOrderByAggregateInput = {
   amount?: Prisma.SortOrder
   installment?: Prisma.SortOrder
   totalInstallments?: Prisma.SortOrder
+  splitShare?: Prisma.SortOrder
 }
 
 export type TransactionCreateNestedManyWithoutAccountInput = {
@@ -740,10 +814,24 @@ export type TransactionCreateNestedManyWithoutAccountInput = {
   connect?: Prisma.TransactionWhereUniqueInput | Prisma.TransactionWhereUniqueInput[]
 }
 
+export type TransactionCreateNestedManyWithoutAccount_Transaction_receiverAccountIdToAccountInput = {
+  create?: Prisma.XOR<Prisma.TransactionCreateWithoutAccount_Transaction_receiverAccountIdToAccountInput, Prisma.TransactionUncheckedCreateWithoutAccount_Transaction_receiverAccountIdToAccountInput> | Prisma.TransactionCreateWithoutAccount_Transaction_receiverAccountIdToAccountInput[] | Prisma.TransactionUncheckedCreateWithoutAccount_Transaction_receiverAccountIdToAccountInput[]
+  connectOrCreate?: Prisma.TransactionCreateOrConnectWithoutAccount_Transaction_receiverAccountIdToAccountInput | Prisma.TransactionCreateOrConnectWithoutAccount_Transaction_receiverAccountIdToAccountInput[]
+  createMany?: Prisma.TransactionCreateManyAccount_Transaction_receiverAccountIdToAccountInputEnvelope
+  connect?: Prisma.TransactionWhereUniqueInput | Prisma.TransactionWhereUniqueInput[]
+}
+
 export type TransactionUncheckedCreateNestedManyWithoutAccountInput = {
   create?: Prisma.XOR<Prisma.TransactionCreateWithoutAccountInput, Prisma.TransactionUncheckedCreateWithoutAccountInput> | Prisma.TransactionCreateWithoutAccountInput[] | Prisma.TransactionUncheckedCreateWithoutAccountInput[]
   connectOrCreate?: Prisma.TransactionCreateOrConnectWithoutAccountInput | Prisma.TransactionCreateOrConnectWithoutAccountInput[]
   createMany?: Prisma.TransactionCreateManyAccountInputEnvelope
+  connect?: Prisma.TransactionWhereUniqueInput | Prisma.TransactionWhereUniqueInput[]
+}
+
+export type TransactionUncheckedCreateNestedManyWithoutAccount_Transaction_receiverAccountIdToAccountInput = {
+  create?: Prisma.XOR<Prisma.TransactionCreateWithoutAccount_Transaction_receiverAccountIdToAccountInput, Prisma.TransactionUncheckedCreateWithoutAccount_Transaction_receiverAccountIdToAccountInput> | Prisma.TransactionCreateWithoutAccount_Transaction_receiverAccountIdToAccountInput[] | Prisma.TransactionUncheckedCreateWithoutAccount_Transaction_receiverAccountIdToAccountInput[]
+  connectOrCreate?: Prisma.TransactionCreateOrConnectWithoutAccount_Transaction_receiverAccountIdToAccountInput | Prisma.TransactionCreateOrConnectWithoutAccount_Transaction_receiverAccountIdToAccountInput[]
+  createMany?: Prisma.TransactionCreateManyAccount_Transaction_receiverAccountIdToAccountInputEnvelope
   connect?: Prisma.TransactionWhereUniqueInput | Prisma.TransactionWhereUniqueInput[]
 }
 
@@ -761,6 +849,20 @@ export type TransactionUpdateManyWithoutAccountNestedInput = {
   deleteMany?: Prisma.TransactionScalarWhereInput | Prisma.TransactionScalarWhereInput[]
 }
 
+export type TransactionUpdateManyWithoutAccount_Transaction_receiverAccountIdToAccountNestedInput = {
+  create?: Prisma.XOR<Prisma.TransactionCreateWithoutAccount_Transaction_receiverAccountIdToAccountInput, Prisma.TransactionUncheckedCreateWithoutAccount_Transaction_receiverAccountIdToAccountInput> | Prisma.TransactionCreateWithoutAccount_Transaction_receiverAccountIdToAccountInput[] | Prisma.TransactionUncheckedCreateWithoutAccount_Transaction_receiverAccountIdToAccountInput[]
+  connectOrCreate?: Prisma.TransactionCreateOrConnectWithoutAccount_Transaction_receiverAccountIdToAccountInput | Prisma.TransactionCreateOrConnectWithoutAccount_Transaction_receiverAccountIdToAccountInput[]
+  upsert?: Prisma.TransactionUpsertWithWhereUniqueWithoutAccount_Transaction_receiverAccountIdToAccountInput | Prisma.TransactionUpsertWithWhereUniqueWithoutAccount_Transaction_receiverAccountIdToAccountInput[]
+  createMany?: Prisma.TransactionCreateManyAccount_Transaction_receiverAccountIdToAccountInputEnvelope
+  set?: Prisma.TransactionWhereUniqueInput | Prisma.TransactionWhereUniqueInput[]
+  disconnect?: Prisma.TransactionWhereUniqueInput | Prisma.TransactionWhereUniqueInput[]
+  delete?: Prisma.TransactionWhereUniqueInput | Prisma.TransactionWhereUniqueInput[]
+  connect?: Prisma.TransactionWhereUniqueInput | Prisma.TransactionWhereUniqueInput[]
+  update?: Prisma.TransactionUpdateWithWhereUniqueWithoutAccount_Transaction_receiverAccountIdToAccountInput | Prisma.TransactionUpdateWithWhereUniqueWithoutAccount_Transaction_receiverAccountIdToAccountInput[]
+  updateMany?: Prisma.TransactionUpdateManyWithWhereWithoutAccount_Transaction_receiverAccountIdToAccountInput | Prisma.TransactionUpdateManyWithWhereWithoutAccount_Transaction_receiverAccountIdToAccountInput[]
+  deleteMany?: Prisma.TransactionScalarWhereInput | Prisma.TransactionScalarWhereInput[]
+}
+
 export type TransactionUncheckedUpdateManyWithoutAccountNestedInput = {
   create?: Prisma.XOR<Prisma.TransactionCreateWithoutAccountInput, Prisma.TransactionUncheckedCreateWithoutAccountInput> | Prisma.TransactionCreateWithoutAccountInput[] | Prisma.TransactionUncheckedCreateWithoutAccountInput[]
   connectOrCreate?: Prisma.TransactionCreateOrConnectWithoutAccountInput | Prisma.TransactionCreateOrConnectWithoutAccountInput[]
@@ -772,6 +874,20 @@ export type TransactionUncheckedUpdateManyWithoutAccountNestedInput = {
   connect?: Prisma.TransactionWhereUniqueInput | Prisma.TransactionWhereUniqueInput[]
   update?: Prisma.TransactionUpdateWithWhereUniqueWithoutAccountInput | Prisma.TransactionUpdateWithWhereUniqueWithoutAccountInput[]
   updateMany?: Prisma.TransactionUpdateManyWithWhereWithoutAccountInput | Prisma.TransactionUpdateManyWithWhereWithoutAccountInput[]
+  deleteMany?: Prisma.TransactionScalarWhereInput | Prisma.TransactionScalarWhereInput[]
+}
+
+export type TransactionUncheckedUpdateManyWithoutAccount_Transaction_receiverAccountIdToAccountNestedInput = {
+  create?: Prisma.XOR<Prisma.TransactionCreateWithoutAccount_Transaction_receiverAccountIdToAccountInput, Prisma.TransactionUncheckedCreateWithoutAccount_Transaction_receiverAccountIdToAccountInput> | Prisma.TransactionCreateWithoutAccount_Transaction_receiverAccountIdToAccountInput[] | Prisma.TransactionUncheckedCreateWithoutAccount_Transaction_receiverAccountIdToAccountInput[]
+  connectOrCreate?: Prisma.TransactionCreateOrConnectWithoutAccount_Transaction_receiverAccountIdToAccountInput | Prisma.TransactionCreateOrConnectWithoutAccount_Transaction_receiverAccountIdToAccountInput[]
+  upsert?: Prisma.TransactionUpsertWithWhereUniqueWithoutAccount_Transaction_receiverAccountIdToAccountInput | Prisma.TransactionUpsertWithWhereUniqueWithoutAccount_Transaction_receiverAccountIdToAccountInput[]
+  createMany?: Prisma.TransactionCreateManyAccount_Transaction_receiverAccountIdToAccountInputEnvelope
+  set?: Prisma.TransactionWhereUniqueInput | Prisma.TransactionWhereUniqueInput[]
+  disconnect?: Prisma.TransactionWhereUniqueInput | Prisma.TransactionWhereUniqueInput[]
+  delete?: Prisma.TransactionWhereUniqueInput | Prisma.TransactionWhereUniqueInput[]
+  connect?: Prisma.TransactionWhereUniqueInput | Prisma.TransactionWhereUniqueInput[]
+  update?: Prisma.TransactionUpdateWithWhereUniqueWithoutAccount_Transaction_receiverAccountIdToAccountInput | Prisma.TransactionUpdateWithWhereUniqueWithoutAccount_Transaction_receiverAccountIdToAccountInput[]
+  updateMany?: Prisma.TransactionUpdateManyWithWhereWithoutAccount_Transaction_receiverAccountIdToAccountInput | Prisma.TransactionUpdateManyWithWhereWithoutAccount_Transaction_receiverAccountIdToAccountInput[]
   deleteMany?: Prisma.TransactionScalarWhereInput | Prisma.TransactionScalarWhereInput[]
 }
 
@@ -950,47 +1066,53 @@ export type TransactionUncheckedUpdateManyWithoutUser_Transaction_payerIdToUserN
 export type TransactionCreateWithoutAccountInput = {
   id: string
   description: string
+  originalDesc?: string | null
   amount: runtime.Decimal | runtime.DecimalJsLike | number | string
-  splitType?: string
+  purchaseDate: Date | string
+  paymentDate?: Date | string | null
+  type: $Enums.TransactionType
+  installment?: number | null
+  totalInstallments?: number | null
+  installmentId?: string | null
+  isReconciled?: boolean
+  isManual?: boolean
+  splitType?: $Enums.SplitMethod
+  settled?: boolean
+  isArchived?: boolean
   createdAt?: Date | string
   updatedAt: Date | string
-  installment?: number | null
-  installmentId?: string | null
-  isManual?: boolean
-  isReconciled?: boolean
-  originalDesc?: string | null
-  paymentDate?: Date | string | null
-  purchaseDate: Date | string
-  settled?: boolean
-  totalInstallments?: number | null
-  type: string
+  splitShare?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
   Category: Prisma.CategoryCreateNestedOneWithoutTransactionInput
   Invoice?: Prisma.InvoiceCreateNestedOneWithoutTransactionInput
   User_Transaction_ownerIdToUser?: Prisma.UserCreateNestedOneWithoutTransaction_Transaction_ownerIdToUserInput
   User_Transaction_payerIdToUser: Prisma.UserCreateNestedOneWithoutTransaction_Transaction_payerIdToUserInput
+  Account_Transaction_receiverAccountIdToAccount?: Prisma.AccountCreateNestedOneWithoutTransaction_Transaction_receiverAccountIdToAccountInput
 }
 
 export type TransactionUncheckedCreateWithoutAccountInput = {
   id: string
   description: string
+  originalDesc?: string | null
   amount: runtime.Decimal | runtime.DecimalJsLike | number | string
+  purchaseDate: Date | string
+  paymentDate?: Date | string | null
+  type: $Enums.TransactionType
+  installment?: number | null
+  totalInstallments?: number | null
+  installmentId?: string | null
+  isReconciled?: boolean
+  isManual?: boolean
   categoryId: string
-  splitType?: string
+  invoiceId?: string | null
+  payerId: string
+  splitType?: $Enums.SplitMethod
+  ownerId?: string | null
+  settled?: boolean
+  receiverAccountId?: string | null
+  isArchived?: boolean
   createdAt?: Date | string
   updatedAt: Date | string
-  installment?: number | null
-  installmentId?: string | null
-  invoiceId?: string | null
-  isManual?: boolean
-  isReconciled?: boolean
-  originalDesc?: string | null
-  ownerId?: string | null
-  payerId: string
-  paymentDate?: Date | string | null
-  purchaseDate: Date | string
-  settled?: boolean
-  totalInstallments?: number | null
-  type: string
+  splitShare?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
 }
 
 export type TransactionCreateOrConnectWithoutAccountInput = {
@@ -1000,6 +1122,68 @@ export type TransactionCreateOrConnectWithoutAccountInput = {
 
 export type TransactionCreateManyAccountInputEnvelope = {
   data: Prisma.TransactionCreateManyAccountInput | Prisma.TransactionCreateManyAccountInput[]
+  skipDuplicates?: boolean
+}
+
+export type TransactionCreateWithoutAccount_Transaction_receiverAccountIdToAccountInput = {
+  id: string
+  description: string
+  originalDesc?: string | null
+  amount: runtime.Decimal | runtime.DecimalJsLike | number | string
+  purchaseDate: Date | string
+  paymentDate?: Date | string | null
+  type: $Enums.TransactionType
+  installment?: number | null
+  totalInstallments?: number | null
+  installmentId?: string | null
+  isReconciled?: boolean
+  isManual?: boolean
+  splitType?: $Enums.SplitMethod
+  settled?: boolean
+  isArchived?: boolean
+  createdAt?: Date | string
+  updatedAt: Date | string
+  splitShare?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  Account: Prisma.AccountCreateNestedOneWithoutTransactionInput
+  Category: Prisma.CategoryCreateNestedOneWithoutTransactionInput
+  Invoice?: Prisma.InvoiceCreateNestedOneWithoutTransactionInput
+  User_Transaction_ownerIdToUser?: Prisma.UserCreateNestedOneWithoutTransaction_Transaction_ownerIdToUserInput
+  User_Transaction_payerIdToUser: Prisma.UserCreateNestedOneWithoutTransaction_Transaction_payerIdToUserInput
+}
+
+export type TransactionUncheckedCreateWithoutAccount_Transaction_receiverAccountIdToAccountInput = {
+  id: string
+  description: string
+  originalDesc?: string | null
+  amount: runtime.Decimal | runtime.DecimalJsLike | number | string
+  purchaseDate: Date | string
+  paymentDate?: Date | string | null
+  type: $Enums.TransactionType
+  installment?: number | null
+  totalInstallments?: number | null
+  installmentId?: string | null
+  isReconciled?: boolean
+  isManual?: boolean
+  categoryId: string
+  accountId: string
+  invoiceId?: string | null
+  payerId: string
+  splitType?: $Enums.SplitMethod
+  ownerId?: string | null
+  settled?: boolean
+  isArchived?: boolean
+  createdAt?: Date | string
+  updatedAt: Date | string
+  splitShare?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
+}
+
+export type TransactionCreateOrConnectWithoutAccount_Transaction_receiverAccountIdToAccountInput = {
+  where: Prisma.TransactionWhereUniqueInput
+  create: Prisma.XOR<Prisma.TransactionCreateWithoutAccount_Transaction_receiverAccountIdToAccountInput, Prisma.TransactionUncheckedCreateWithoutAccount_Transaction_receiverAccountIdToAccountInput>
+}
+
+export type TransactionCreateManyAccount_Transaction_receiverAccountIdToAccountInputEnvelope = {
+  data: Prisma.TransactionCreateManyAccount_Transaction_receiverAccountIdToAccountInput | Prisma.TransactionCreateManyAccount_Transaction_receiverAccountIdToAccountInput[]
   skipDuplicates?: boolean
 }
 
@@ -1025,71 +1209,96 @@ export type TransactionScalarWhereInput = {
   NOT?: Prisma.TransactionScalarWhereInput | Prisma.TransactionScalarWhereInput[]
   id?: Prisma.StringFilter<"Transaction"> | string
   description?: Prisma.StringFilter<"Transaction"> | string
+  originalDesc?: Prisma.StringNullableFilter<"Transaction"> | string | null
   amount?: Prisma.DecimalFilter<"Transaction"> | runtime.Decimal | runtime.DecimalJsLike | number | string
+  purchaseDate?: Prisma.DateTimeFilter<"Transaction"> | Date | string
+  paymentDate?: Prisma.DateTimeNullableFilter<"Transaction"> | Date | string | null
+  type?: Prisma.EnumTransactionTypeFilter<"Transaction"> | $Enums.TransactionType
+  installment?: Prisma.IntNullableFilter<"Transaction"> | number | null
+  totalInstallments?: Prisma.IntNullableFilter<"Transaction"> | number | null
+  installmentId?: Prisma.StringNullableFilter<"Transaction"> | string | null
+  isReconciled?: Prisma.BoolFilter<"Transaction"> | boolean
+  isManual?: Prisma.BoolFilter<"Transaction"> | boolean
   categoryId?: Prisma.StringFilter<"Transaction"> | string
   accountId?: Prisma.StringFilter<"Transaction"> | string
-  splitType?: Prisma.StringFilter<"Transaction"> | string
+  invoiceId?: Prisma.StringNullableFilter<"Transaction"> | string | null
+  payerId?: Prisma.StringFilter<"Transaction"> | string
+  splitType?: Prisma.EnumSplitMethodFilter<"Transaction"> | $Enums.SplitMethod
+  ownerId?: Prisma.StringNullableFilter<"Transaction"> | string | null
+  settled?: Prisma.BoolFilter<"Transaction"> | boolean
+  receiverAccountId?: Prisma.StringNullableFilter<"Transaction"> | string | null
+  isArchived?: Prisma.BoolFilter<"Transaction"> | boolean
   createdAt?: Prisma.DateTimeFilter<"Transaction"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Transaction"> | Date | string
-  installment?: Prisma.IntNullableFilter<"Transaction"> | number | null
-  installmentId?: Prisma.StringNullableFilter<"Transaction"> | string | null
-  invoiceId?: Prisma.StringNullableFilter<"Transaction"> | string | null
-  isManual?: Prisma.BoolFilter<"Transaction"> | boolean
-  isReconciled?: Prisma.BoolFilter<"Transaction"> | boolean
-  originalDesc?: Prisma.StringNullableFilter<"Transaction"> | string | null
-  ownerId?: Prisma.StringNullableFilter<"Transaction"> | string | null
-  payerId?: Prisma.StringFilter<"Transaction"> | string
-  paymentDate?: Prisma.DateTimeNullableFilter<"Transaction"> | Date | string | null
-  purchaseDate?: Prisma.DateTimeFilter<"Transaction"> | Date | string
-  settled?: Prisma.BoolFilter<"Transaction"> | boolean
-  totalInstallments?: Prisma.IntNullableFilter<"Transaction"> | number | null
-  type?: Prisma.StringFilter<"Transaction"> | string
+  splitShare?: Prisma.DecimalNullableFilter<"Transaction"> | runtime.Decimal | runtime.DecimalJsLike | number | string | null
+}
+
+export type TransactionUpsertWithWhereUniqueWithoutAccount_Transaction_receiverAccountIdToAccountInput = {
+  where: Prisma.TransactionWhereUniqueInput
+  update: Prisma.XOR<Prisma.TransactionUpdateWithoutAccount_Transaction_receiverAccountIdToAccountInput, Prisma.TransactionUncheckedUpdateWithoutAccount_Transaction_receiverAccountIdToAccountInput>
+  create: Prisma.XOR<Prisma.TransactionCreateWithoutAccount_Transaction_receiverAccountIdToAccountInput, Prisma.TransactionUncheckedCreateWithoutAccount_Transaction_receiverAccountIdToAccountInput>
+}
+
+export type TransactionUpdateWithWhereUniqueWithoutAccount_Transaction_receiverAccountIdToAccountInput = {
+  where: Prisma.TransactionWhereUniqueInput
+  data: Prisma.XOR<Prisma.TransactionUpdateWithoutAccount_Transaction_receiverAccountIdToAccountInput, Prisma.TransactionUncheckedUpdateWithoutAccount_Transaction_receiverAccountIdToAccountInput>
+}
+
+export type TransactionUpdateManyWithWhereWithoutAccount_Transaction_receiverAccountIdToAccountInput = {
+  where: Prisma.TransactionScalarWhereInput
+  data: Prisma.XOR<Prisma.TransactionUpdateManyMutationInput, Prisma.TransactionUncheckedUpdateManyWithoutAccount_Transaction_receiverAccountIdToAccountInput>
 }
 
 export type TransactionCreateWithoutCategoryInput = {
   id: string
   description: string
+  originalDesc?: string | null
   amount: runtime.Decimal | runtime.DecimalJsLike | number | string
-  splitType?: string
+  purchaseDate: Date | string
+  paymentDate?: Date | string | null
+  type: $Enums.TransactionType
+  installment?: number | null
+  totalInstallments?: number | null
+  installmentId?: string | null
+  isReconciled?: boolean
+  isManual?: boolean
+  splitType?: $Enums.SplitMethod
+  settled?: boolean
+  isArchived?: boolean
   createdAt?: Date | string
   updatedAt: Date | string
-  installment?: number | null
-  installmentId?: string | null
-  isManual?: boolean
-  isReconciled?: boolean
-  originalDesc?: string | null
-  paymentDate?: Date | string | null
-  purchaseDate: Date | string
-  settled?: boolean
-  totalInstallments?: number | null
-  type: string
+  splitShare?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
   Account: Prisma.AccountCreateNestedOneWithoutTransactionInput
   Invoice?: Prisma.InvoiceCreateNestedOneWithoutTransactionInput
   User_Transaction_ownerIdToUser?: Prisma.UserCreateNestedOneWithoutTransaction_Transaction_ownerIdToUserInput
   User_Transaction_payerIdToUser: Prisma.UserCreateNestedOneWithoutTransaction_Transaction_payerIdToUserInput
+  Account_Transaction_receiverAccountIdToAccount?: Prisma.AccountCreateNestedOneWithoutTransaction_Transaction_receiverAccountIdToAccountInput
 }
 
 export type TransactionUncheckedCreateWithoutCategoryInput = {
   id: string
   description: string
+  originalDesc?: string | null
   amount: runtime.Decimal | runtime.DecimalJsLike | number | string
+  purchaseDate: Date | string
+  paymentDate?: Date | string | null
+  type: $Enums.TransactionType
+  installment?: number | null
+  totalInstallments?: number | null
+  installmentId?: string | null
+  isReconciled?: boolean
+  isManual?: boolean
   accountId: string
-  splitType?: string
+  invoiceId?: string | null
+  payerId: string
+  splitType?: $Enums.SplitMethod
+  ownerId?: string | null
+  settled?: boolean
+  receiverAccountId?: string | null
+  isArchived?: boolean
   createdAt?: Date | string
   updatedAt: Date | string
-  installment?: number | null
-  installmentId?: string | null
-  invoiceId?: string | null
-  isManual?: boolean
-  isReconciled?: boolean
-  originalDesc?: string | null
-  ownerId?: string | null
-  payerId: string
-  paymentDate?: Date | string | null
-  purchaseDate: Date | string
-  settled?: boolean
-  totalInstallments?: number | null
-  type: string
+  splitShare?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
 }
 
 export type TransactionCreateOrConnectWithoutCategoryInput = {
@@ -1121,47 +1330,53 @@ export type TransactionUpdateManyWithWhereWithoutCategoryInput = {
 export type TransactionCreateWithoutInvoiceInput = {
   id: string
   description: string
+  originalDesc?: string | null
   amount: runtime.Decimal | runtime.DecimalJsLike | number | string
-  splitType?: string
+  purchaseDate: Date | string
+  paymentDate?: Date | string | null
+  type: $Enums.TransactionType
+  installment?: number | null
+  totalInstallments?: number | null
+  installmentId?: string | null
+  isReconciled?: boolean
+  isManual?: boolean
+  splitType?: $Enums.SplitMethod
+  settled?: boolean
+  isArchived?: boolean
   createdAt?: Date | string
   updatedAt: Date | string
-  installment?: number | null
-  installmentId?: string | null
-  isManual?: boolean
-  isReconciled?: boolean
-  originalDesc?: string | null
-  paymentDate?: Date | string | null
-  purchaseDate: Date | string
-  settled?: boolean
-  totalInstallments?: number | null
-  type: string
+  splitShare?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
   Account: Prisma.AccountCreateNestedOneWithoutTransactionInput
   Category: Prisma.CategoryCreateNestedOneWithoutTransactionInput
   User_Transaction_ownerIdToUser?: Prisma.UserCreateNestedOneWithoutTransaction_Transaction_ownerIdToUserInput
   User_Transaction_payerIdToUser: Prisma.UserCreateNestedOneWithoutTransaction_Transaction_payerIdToUserInput
+  Account_Transaction_receiverAccountIdToAccount?: Prisma.AccountCreateNestedOneWithoutTransaction_Transaction_receiverAccountIdToAccountInput
 }
 
 export type TransactionUncheckedCreateWithoutInvoiceInput = {
   id: string
   description: string
+  originalDesc?: string | null
   amount: runtime.Decimal | runtime.DecimalJsLike | number | string
+  purchaseDate: Date | string
+  paymentDate?: Date | string | null
+  type: $Enums.TransactionType
+  installment?: number | null
+  totalInstallments?: number | null
+  installmentId?: string | null
+  isReconciled?: boolean
+  isManual?: boolean
   categoryId: string
   accountId: string
-  splitType?: string
+  payerId: string
+  splitType?: $Enums.SplitMethod
+  ownerId?: string | null
+  settled?: boolean
+  receiverAccountId?: string | null
+  isArchived?: boolean
   createdAt?: Date | string
   updatedAt: Date | string
-  installment?: number | null
-  installmentId?: string | null
-  isManual?: boolean
-  isReconciled?: boolean
-  originalDesc?: string | null
-  ownerId?: string | null
-  payerId: string
-  paymentDate?: Date | string | null
-  purchaseDate: Date | string
-  settled?: boolean
-  totalInstallments?: number | null
-  type: string
+  splitShare?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
 }
 
 export type TransactionCreateOrConnectWithoutInvoiceInput = {
@@ -1193,47 +1408,53 @@ export type TransactionUpdateManyWithWhereWithoutInvoiceInput = {
 export type TransactionCreateWithoutUser_Transaction_ownerIdToUserInput = {
   id: string
   description: string
+  originalDesc?: string | null
   amount: runtime.Decimal | runtime.DecimalJsLike | number | string
-  splitType?: string
+  purchaseDate: Date | string
+  paymentDate?: Date | string | null
+  type: $Enums.TransactionType
+  installment?: number | null
+  totalInstallments?: number | null
+  installmentId?: string | null
+  isReconciled?: boolean
+  isManual?: boolean
+  splitType?: $Enums.SplitMethod
+  settled?: boolean
+  isArchived?: boolean
   createdAt?: Date | string
   updatedAt: Date | string
-  installment?: number | null
-  installmentId?: string | null
-  isManual?: boolean
-  isReconciled?: boolean
-  originalDesc?: string | null
-  paymentDate?: Date | string | null
-  purchaseDate: Date | string
-  settled?: boolean
-  totalInstallments?: number | null
-  type: string
+  splitShare?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
   Account: Prisma.AccountCreateNestedOneWithoutTransactionInput
   Category: Prisma.CategoryCreateNestedOneWithoutTransactionInput
   Invoice?: Prisma.InvoiceCreateNestedOneWithoutTransactionInput
   User_Transaction_payerIdToUser: Prisma.UserCreateNestedOneWithoutTransaction_Transaction_payerIdToUserInput
+  Account_Transaction_receiverAccountIdToAccount?: Prisma.AccountCreateNestedOneWithoutTransaction_Transaction_receiverAccountIdToAccountInput
 }
 
 export type TransactionUncheckedCreateWithoutUser_Transaction_ownerIdToUserInput = {
   id: string
   description: string
+  originalDesc?: string | null
   amount: runtime.Decimal | runtime.DecimalJsLike | number | string
+  purchaseDate: Date | string
+  paymentDate?: Date | string | null
+  type: $Enums.TransactionType
+  installment?: number | null
+  totalInstallments?: number | null
+  installmentId?: string | null
+  isReconciled?: boolean
+  isManual?: boolean
   categoryId: string
   accountId: string
-  splitType?: string
+  invoiceId?: string | null
+  payerId: string
+  splitType?: $Enums.SplitMethod
+  settled?: boolean
+  receiverAccountId?: string | null
+  isArchived?: boolean
   createdAt?: Date | string
   updatedAt: Date | string
-  installment?: number | null
-  installmentId?: string | null
-  invoiceId?: string | null
-  isManual?: boolean
-  isReconciled?: boolean
-  originalDesc?: string | null
-  payerId: string
-  paymentDate?: Date | string | null
-  purchaseDate: Date | string
-  settled?: boolean
-  totalInstallments?: number | null
-  type: string
+  splitShare?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
 }
 
 export type TransactionCreateOrConnectWithoutUser_Transaction_ownerIdToUserInput = {
@@ -1249,47 +1470,53 @@ export type TransactionCreateManyUser_Transaction_ownerIdToUserInputEnvelope = {
 export type TransactionCreateWithoutUser_Transaction_payerIdToUserInput = {
   id: string
   description: string
+  originalDesc?: string | null
   amount: runtime.Decimal | runtime.DecimalJsLike | number | string
-  splitType?: string
+  purchaseDate: Date | string
+  paymentDate?: Date | string | null
+  type: $Enums.TransactionType
+  installment?: number | null
+  totalInstallments?: number | null
+  installmentId?: string | null
+  isReconciled?: boolean
+  isManual?: boolean
+  splitType?: $Enums.SplitMethod
+  settled?: boolean
+  isArchived?: boolean
   createdAt?: Date | string
   updatedAt: Date | string
-  installment?: number | null
-  installmentId?: string | null
-  isManual?: boolean
-  isReconciled?: boolean
-  originalDesc?: string | null
-  paymentDate?: Date | string | null
-  purchaseDate: Date | string
-  settled?: boolean
-  totalInstallments?: number | null
-  type: string
+  splitShare?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
   Account: Prisma.AccountCreateNestedOneWithoutTransactionInput
   Category: Prisma.CategoryCreateNestedOneWithoutTransactionInput
   Invoice?: Prisma.InvoiceCreateNestedOneWithoutTransactionInput
   User_Transaction_ownerIdToUser?: Prisma.UserCreateNestedOneWithoutTransaction_Transaction_ownerIdToUserInput
+  Account_Transaction_receiverAccountIdToAccount?: Prisma.AccountCreateNestedOneWithoutTransaction_Transaction_receiverAccountIdToAccountInput
 }
 
 export type TransactionUncheckedCreateWithoutUser_Transaction_payerIdToUserInput = {
   id: string
   description: string
+  originalDesc?: string | null
   amount: runtime.Decimal | runtime.DecimalJsLike | number | string
+  purchaseDate: Date | string
+  paymentDate?: Date | string | null
+  type: $Enums.TransactionType
+  installment?: number | null
+  totalInstallments?: number | null
+  installmentId?: string | null
+  isReconciled?: boolean
+  isManual?: boolean
   categoryId: string
   accountId: string
-  splitType?: string
+  invoiceId?: string | null
+  splitType?: $Enums.SplitMethod
+  ownerId?: string | null
+  settled?: boolean
+  receiverAccountId?: string | null
+  isArchived?: boolean
   createdAt?: Date | string
   updatedAt: Date | string
-  installment?: number | null
-  installmentId?: string | null
-  invoiceId?: string | null
-  isManual?: boolean
-  isReconciled?: boolean
-  originalDesc?: string | null
-  ownerId?: string | null
-  paymentDate?: Date | string | null
-  purchaseDate: Date | string
-  settled?: boolean
-  totalInstallments?: number | null
-  type: string
+  splitShare?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
 }
 
 export type TransactionCreateOrConnectWithoutUser_Transaction_payerIdToUserInput = {
@@ -1337,461 +1564,625 @@ export type TransactionUpdateManyWithWhereWithoutUser_Transaction_payerIdToUserI
 export type TransactionCreateManyAccountInput = {
   id: string
   description: string
+  originalDesc?: string | null
   amount: runtime.Decimal | runtime.DecimalJsLike | number | string
+  purchaseDate: Date | string
+  paymentDate?: Date | string | null
+  type: $Enums.TransactionType
+  installment?: number | null
+  totalInstallments?: number | null
+  installmentId?: string | null
+  isReconciled?: boolean
+  isManual?: boolean
   categoryId: string
-  splitType?: string
+  invoiceId?: string | null
+  payerId: string
+  splitType?: $Enums.SplitMethod
+  ownerId?: string | null
+  settled?: boolean
+  receiverAccountId?: string | null
+  isArchived?: boolean
   createdAt?: Date | string
   updatedAt: Date | string
-  installment?: number | null
-  installmentId?: string | null
-  invoiceId?: string | null
-  isManual?: boolean
-  isReconciled?: boolean
+  splitShare?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
+}
+
+export type TransactionCreateManyAccount_Transaction_receiverAccountIdToAccountInput = {
+  id: string
+  description: string
   originalDesc?: string | null
-  ownerId?: string | null
-  payerId: string
-  paymentDate?: Date | string | null
+  amount: runtime.Decimal | runtime.DecimalJsLike | number | string
   purchaseDate: Date | string
-  settled?: boolean
+  paymentDate?: Date | string | null
+  type: $Enums.TransactionType
+  installment?: number | null
   totalInstallments?: number | null
-  type: string
+  installmentId?: string | null
+  isReconciled?: boolean
+  isManual?: boolean
+  categoryId: string
+  accountId: string
+  invoiceId?: string | null
+  payerId: string
+  splitType?: $Enums.SplitMethod
+  ownerId?: string | null
+  settled?: boolean
+  isArchived?: boolean
+  createdAt?: Date | string
+  updatedAt: Date | string
+  splitShare?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
 }
 
 export type TransactionUpdateWithoutAccountInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.StringFieldUpdateOperationsInput | string
+  originalDesc?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   amount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
-  splitType?: Prisma.StringFieldUpdateOperationsInput | string
+  purchaseDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  paymentDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  type?: Prisma.EnumTransactionTypeFieldUpdateOperationsInput | $Enums.TransactionType
+  installment?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  totalInstallments?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  installmentId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  isReconciled?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  isManual?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  splitType?: Prisma.EnumSplitMethodFieldUpdateOperationsInput | $Enums.SplitMethod
+  settled?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  isArchived?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  installment?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
-  installmentId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  isManual?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  isReconciled?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  originalDesc?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  paymentDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  purchaseDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  settled?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  totalInstallments?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
-  type?: Prisma.StringFieldUpdateOperationsInput | string
+  splitShare?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   Category?: Prisma.CategoryUpdateOneRequiredWithoutTransactionNestedInput
   Invoice?: Prisma.InvoiceUpdateOneWithoutTransactionNestedInput
   User_Transaction_ownerIdToUser?: Prisma.UserUpdateOneWithoutTransaction_Transaction_ownerIdToUserNestedInput
   User_Transaction_payerIdToUser?: Prisma.UserUpdateOneRequiredWithoutTransaction_Transaction_payerIdToUserNestedInput
+  Account_Transaction_receiverAccountIdToAccount?: Prisma.AccountUpdateOneWithoutTransaction_Transaction_receiverAccountIdToAccountNestedInput
 }
 
 export type TransactionUncheckedUpdateWithoutAccountInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.StringFieldUpdateOperationsInput | string
+  originalDesc?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   amount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  purchaseDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  paymentDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  type?: Prisma.EnumTransactionTypeFieldUpdateOperationsInput | $Enums.TransactionType
+  installment?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  totalInstallments?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  installmentId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  isReconciled?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  isManual?: Prisma.BoolFieldUpdateOperationsInput | boolean
   categoryId?: Prisma.StringFieldUpdateOperationsInput | string
-  splitType?: Prisma.StringFieldUpdateOperationsInput | string
+  invoiceId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  payerId?: Prisma.StringFieldUpdateOperationsInput | string
+  splitType?: Prisma.EnumSplitMethodFieldUpdateOperationsInput | $Enums.SplitMethod
+  ownerId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  settled?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  receiverAccountId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  isArchived?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  installment?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
-  installmentId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  invoiceId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  isManual?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  isReconciled?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  originalDesc?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  ownerId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  payerId?: Prisma.StringFieldUpdateOperationsInput | string
-  paymentDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  purchaseDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  settled?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  totalInstallments?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
-  type?: Prisma.StringFieldUpdateOperationsInput | string
+  splitShare?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
 }
 
 export type TransactionUncheckedUpdateManyWithoutAccountInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.StringFieldUpdateOperationsInput | string
+  originalDesc?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   amount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  purchaseDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  paymentDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  type?: Prisma.EnumTransactionTypeFieldUpdateOperationsInput | $Enums.TransactionType
+  installment?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  totalInstallments?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  installmentId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  isReconciled?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  isManual?: Prisma.BoolFieldUpdateOperationsInput | boolean
   categoryId?: Prisma.StringFieldUpdateOperationsInput | string
-  splitType?: Prisma.StringFieldUpdateOperationsInput | string
+  invoiceId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  payerId?: Prisma.StringFieldUpdateOperationsInput | string
+  splitType?: Prisma.EnumSplitMethodFieldUpdateOperationsInput | $Enums.SplitMethod
+  ownerId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  settled?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  receiverAccountId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  isArchived?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  installment?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
-  installmentId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  invoiceId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  isManual?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  isReconciled?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  splitShare?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
+}
+
+export type TransactionUpdateWithoutAccount_Transaction_receiverAccountIdToAccountInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  description?: Prisma.StringFieldUpdateOperationsInput | string
   originalDesc?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  ownerId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  payerId?: Prisma.StringFieldUpdateOperationsInput | string
-  paymentDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  amount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   purchaseDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  settled?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  paymentDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  type?: Prisma.EnumTransactionTypeFieldUpdateOperationsInput | $Enums.TransactionType
+  installment?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   totalInstallments?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
-  type?: Prisma.StringFieldUpdateOperationsInput | string
+  installmentId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  isReconciled?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  isManual?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  splitType?: Prisma.EnumSplitMethodFieldUpdateOperationsInput | $Enums.SplitMethod
+  settled?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  isArchived?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  splitShare?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  Account?: Prisma.AccountUpdateOneRequiredWithoutTransactionNestedInput
+  Category?: Prisma.CategoryUpdateOneRequiredWithoutTransactionNestedInput
+  Invoice?: Prisma.InvoiceUpdateOneWithoutTransactionNestedInput
+  User_Transaction_ownerIdToUser?: Prisma.UserUpdateOneWithoutTransaction_Transaction_ownerIdToUserNestedInput
+  User_Transaction_payerIdToUser?: Prisma.UserUpdateOneRequiredWithoutTransaction_Transaction_payerIdToUserNestedInput
+}
+
+export type TransactionUncheckedUpdateWithoutAccount_Transaction_receiverAccountIdToAccountInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  description?: Prisma.StringFieldUpdateOperationsInput | string
+  originalDesc?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  amount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  purchaseDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  paymentDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  type?: Prisma.EnumTransactionTypeFieldUpdateOperationsInput | $Enums.TransactionType
+  installment?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  totalInstallments?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  installmentId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  isReconciled?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  isManual?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  categoryId?: Prisma.StringFieldUpdateOperationsInput | string
+  accountId?: Prisma.StringFieldUpdateOperationsInput | string
+  invoiceId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  payerId?: Prisma.StringFieldUpdateOperationsInput | string
+  splitType?: Prisma.EnumSplitMethodFieldUpdateOperationsInput | $Enums.SplitMethod
+  ownerId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  settled?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  isArchived?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  splitShare?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
+}
+
+export type TransactionUncheckedUpdateManyWithoutAccount_Transaction_receiverAccountIdToAccountInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  description?: Prisma.StringFieldUpdateOperationsInput | string
+  originalDesc?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  amount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  purchaseDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  paymentDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  type?: Prisma.EnumTransactionTypeFieldUpdateOperationsInput | $Enums.TransactionType
+  installment?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  totalInstallments?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  installmentId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  isReconciled?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  isManual?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  categoryId?: Prisma.StringFieldUpdateOperationsInput | string
+  accountId?: Prisma.StringFieldUpdateOperationsInput | string
+  invoiceId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  payerId?: Prisma.StringFieldUpdateOperationsInput | string
+  splitType?: Prisma.EnumSplitMethodFieldUpdateOperationsInput | $Enums.SplitMethod
+  ownerId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  settled?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  isArchived?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  splitShare?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
 }
 
 export type TransactionCreateManyCategoryInput = {
   id: string
   description: string
+  originalDesc?: string | null
   amount: runtime.Decimal | runtime.DecimalJsLike | number | string
+  purchaseDate: Date | string
+  paymentDate?: Date | string | null
+  type: $Enums.TransactionType
+  installment?: number | null
+  totalInstallments?: number | null
+  installmentId?: string | null
+  isReconciled?: boolean
+  isManual?: boolean
   accountId: string
-  splitType?: string
+  invoiceId?: string | null
+  payerId: string
+  splitType?: $Enums.SplitMethod
+  ownerId?: string | null
+  settled?: boolean
+  receiverAccountId?: string | null
+  isArchived?: boolean
   createdAt?: Date | string
   updatedAt: Date | string
-  installment?: number | null
-  installmentId?: string | null
-  invoiceId?: string | null
-  isManual?: boolean
-  isReconciled?: boolean
-  originalDesc?: string | null
-  ownerId?: string | null
-  payerId: string
-  paymentDate?: Date | string | null
-  purchaseDate: Date | string
-  settled?: boolean
-  totalInstallments?: number | null
-  type: string
+  splitShare?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
 }
 
 export type TransactionUpdateWithoutCategoryInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.StringFieldUpdateOperationsInput | string
+  originalDesc?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   amount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
-  splitType?: Prisma.StringFieldUpdateOperationsInput | string
+  purchaseDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  paymentDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  type?: Prisma.EnumTransactionTypeFieldUpdateOperationsInput | $Enums.TransactionType
+  installment?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  totalInstallments?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  installmentId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  isReconciled?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  isManual?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  splitType?: Prisma.EnumSplitMethodFieldUpdateOperationsInput | $Enums.SplitMethod
+  settled?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  isArchived?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  installment?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
-  installmentId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  isManual?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  isReconciled?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  originalDesc?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  paymentDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  purchaseDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  settled?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  totalInstallments?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
-  type?: Prisma.StringFieldUpdateOperationsInput | string
+  splitShare?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   Account?: Prisma.AccountUpdateOneRequiredWithoutTransactionNestedInput
   Invoice?: Prisma.InvoiceUpdateOneWithoutTransactionNestedInput
   User_Transaction_ownerIdToUser?: Prisma.UserUpdateOneWithoutTransaction_Transaction_ownerIdToUserNestedInput
   User_Transaction_payerIdToUser?: Prisma.UserUpdateOneRequiredWithoutTransaction_Transaction_payerIdToUserNestedInput
+  Account_Transaction_receiverAccountIdToAccount?: Prisma.AccountUpdateOneWithoutTransaction_Transaction_receiverAccountIdToAccountNestedInput
 }
 
 export type TransactionUncheckedUpdateWithoutCategoryInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.StringFieldUpdateOperationsInput | string
+  originalDesc?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   amount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  purchaseDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  paymentDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  type?: Prisma.EnumTransactionTypeFieldUpdateOperationsInput | $Enums.TransactionType
+  installment?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  totalInstallments?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  installmentId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  isReconciled?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  isManual?: Prisma.BoolFieldUpdateOperationsInput | boolean
   accountId?: Prisma.StringFieldUpdateOperationsInput | string
-  splitType?: Prisma.StringFieldUpdateOperationsInput | string
+  invoiceId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  payerId?: Prisma.StringFieldUpdateOperationsInput | string
+  splitType?: Prisma.EnumSplitMethodFieldUpdateOperationsInput | $Enums.SplitMethod
+  ownerId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  settled?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  receiverAccountId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  isArchived?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  installment?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
-  installmentId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  invoiceId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  isManual?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  isReconciled?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  originalDesc?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  ownerId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  payerId?: Prisma.StringFieldUpdateOperationsInput | string
-  paymentDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  purchaseDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  settled?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  totalInstallments?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
-  type?: Prisma.StringFieldUpdateOperationsInput | string
+  splitShare?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
 }
 
 export type TransactionUncheckedUpdateManyWithoutCategoryInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.StringFieldUpdateOperationsInput | string
+  originalDesc?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   amount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  purchaseDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  paymentDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  type?: Prisma.EnumTransactionTypeFieldUpdateOperationsInput | $Enums.TransactionType
+  installment?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  totalInstallments?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  installmentId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  isReconciled?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  isManual?: Prisma.BoolFieldUpdateOperationsInput | boolean
   accountId?: Prisma.StringFieldUpdateOperationsInput | string
-  splitType?: Prisma.StringFieldUpdateOperationsInput | string
+  invoiceId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  payerId?: Prisma.StringFieldUpdateOperationsInput | string
+  splitType?: Prisma.EnumSplitMethodFieldUpdateOperationsInput | $Enums.SplitMethod
+  ownerId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  settled?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  receiverAccountId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  isArchived?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  installment?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
-  installmentId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  invoiceId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  isManual?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  isReconciled?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  originalDesc?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  ownerId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  payerId?: Prisma.StringFieldUpdateOperationsInput | string
-  paymentDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  purchaseDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  settled?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  totalInstallments?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
-  type?: Prisma.StringFieldUpdateOperationsInput | string
+  splitShare?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
 }
 
 export type TransactionCreateManyInvoiceInput = {
   id: string
   description: string
+  originalDesc?: string | null
   amount: runtime.Decimal | runtime.DecimalJsLike | number | string
+  purchaseDate: Date | string
+  paymentDate?: Date | string | null
+  type: $Enums.TransactionType
+  installment?: number | null
+  totalInstallments?: number | null
+  installmentId?: string | null
+  isReconciled?: boolean
+  isManual?: boolean
   categoryId: string
   accountId: string
-  splitType?: string
+  payerId: string
+  splitType?: $Enums.SplitMethod
+  ownerId?: string | null
+  settled?: boolean
+  receiverAccountId?: string | null
+  isArchived?: boolean
   createdAt?: Date | string
   updatedAt: Date | string
-  installment?: number | null
-  installmentId?: string | null
-  isManual?: boolean
-  isReconciled?: boolean
-  originalDesc?: string | null
-  ownerId?: string | null
-  payerId: string
-  paymentDate?: Date | string | null
-  purchaseDate: Date | string
-  settled?: boolean
-  totalInstallments?: number | null
-  type: string
+  splitShare?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
 }
 
 export type TransactionUpdateWithoutInvoiceInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.StringFieldUpdateOperationsInput | string
+  originalDesc?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   amount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
-  splitType?: Prisma.StringFieldUpdateOperationsInput | string
+  purchaseDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  paymentDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  type?: Prisma.EnumTransactionTypeFieldUpdateOperationsInput | $Enums.TransactionType
+  installment?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  totalInstallments?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  installmentId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  isReconciled?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  isManual?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  splitType?: Prisma.EnumSplitMethodFieldUpdateOperationsInput | $Enums.SplitMethod
+  settled?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  isArchived?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  installment?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
-  installmentId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  isManual?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  isReconciled?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  originalDesc?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  paymentDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  purchaseDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  settled?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  totalInstallments?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
-  type?: Prisma.StringFieldUpdateOperationsInput | string
+  splitShare?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   Account?: Prisma.AccountUpdateOneRequiredWithoutTransactionNestedInput
   Category?: Prisma.CategoryUpdateOneRequiredWithoutTransactionNestedInput
   User_Transaction_ownerIdToUser?: Prisma.UserUpdateOneWithoutTransaction_Transaction_ownerIdToUserNestedInput
   User_Transaction_payerIdToUser?: Prisma.UserUpdateOneRequiredWithoutTransaction_Transaction_payerIdToUserNestedInput
+  Account_Transaction_receiverAccountIdToAccount?: Prisma.AccountUpdateOneWithoutTransaction_Transaction_receiverAccountIdToAccountNestedInput
 }
 
 export type TransactionUncheckedUpdateWithoutInvoiceInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.StringFieldUpdateOperationsInput | string
+  originalDesc?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   amount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  purchaseDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  paymentDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  type?: Prisma.EnumTransactionTypeFieldUpdateOperationsInput | $Enums.TransactionType
+  installment?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  totalInstallments?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  installmentId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  isReconciled?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  isManual?: Prisma.BoolFieldUpdateOperationsInput | boolean
   categoryId?: Prisma.StringFieldUpdateOperationsInput | string
   accountId?: Prisma.StringFieldUpdateOperationsInput | string
-  splitType?: Prisma.StringFieldUpdateOperationsInput | string
+  payerId?: Prisma.StringFieldUpdateOperationsInput | string
+  splitType?: Prisma.EnumSplitMethodFieldUpdateOperationsInput | $Enums.SplitMethod
+  ownerId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  settled?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  receiverAccountId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  isArchived?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  installment?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
-  installmentId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  isManual?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  isReconciled?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  originalDesc?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  ownerId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  payerId?: Prisma.StringFieldUpdateOperationsInput | string
-  paymentDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  purchaseDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  settled?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  totalInstallments?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
-  type?: Prisma.StringFieldUpdateOperationsInput | string
+  splitShare?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
 }
 
 export type TransactionUncheckedUpdateManyWithoutInvoiceInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.StringFieldUpdateOperationsInput | string
+  originalDesc?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   amount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  purchaseDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  paymentDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  type?: Prisma.EnumTransactionTypeFieldUpdateOperationsInput | $Enums.TransactionType
+  installment?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  totalInstallments?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  installmentId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  isReconciled?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  isManual?: Prisma.BoolFieldUpdateOperationsInput | boolean
   categoryId?: Prisma.StringFieldUpdateOperationsInput | string
   accountId?: Prisma.StringFieldUpdateOperationsInput | string
-  splitType?: Prisma.StringFieldUpdateOperationsInput | string
+  payerId?: Prisma.StringFieldUpdateOperationsInput | string
+  splitType?: Prisma.EnumSplitMethodFieldUpdateOperationsInput | $Enums.SplitMethod
+  ownerId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  settled?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  receiverAccountId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  isArchived?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  installment?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
-  installmentId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  isManual?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  isReconciled?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  originalDesc?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  ownerId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  payerId?: Prisma.StringFieldUpdateOperationsInput | string
-  paymentDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  purchaseDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  settled?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  totalInstallments?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
-  type?: Prisma.StringFieldUpdateOperationsInput | string
+  splitShare?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
 }
 
 export type TransactionCreateManyUser_Transaction_ownerIdToUserInput = {
   id: string
   description: string
+  originalDesc?: string | null
   amount: runtime.Decimal | runtime.DecimalJsLike | number | string
+  purchaseDate: Date | string
+  paymentDate?: Date | string | null
+  type: $Enums.TransactionType
+  installment?: number | null
+  totalInstallments?: number | null
+  installmentId?: string | null
+  isReconciled?: boolean
+  isManual?: boolean
   categoryId: string
   accountId: string
-  splitType?: string
+  invoiceId?: string | null
+  payerId: string
+  splitType?: $Enums.SplitMethod
+  settled?: boolean
+  receiverAccountId?: string | null
+  isArchived?: boolean
   createdAt?: Date | string
   updatedAt: Date | string
-  installment?: number | null
-  installmentId?: string | null
-  invoiceId?: string | null
-  isManual?: boolean
-  isReconciled?: boolean
-  originalDesc?: string | null
-  payerId: string
-  paymentDate?: Date | string | null
-  purchaseDate: Date | string
-  settled?: boolean
-  totalInstallments?: number | null
-  type: string
+  splitShare?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
 }
 
 export type TransactionCreateManyUser_Transaction_payerIdToUserInput = {
   id: string
   description: string
+  originalDesc?: string | null
   amount: runtime.Decimal | runtime.DecimalJsLike | number | string
+  purchaseDate: Date | string
+  paymentDate?: Date | string | null
+  type: $Enums.TransactionType
+  installment?: number | null
+  totalInstallments?: number | null
+  installmentId?: string | null
+  isReconciled?: boolean
+  isManual?: boolean
   categoryId: string
   accountId: string
-  splitType?: string
+  invoiceId?: string | null
+  splitType?: $Enums.SplitMethod
+  ownerId?: string | null
+  settled?: boolean
+  receiverAccountId?: string | null
+  isArchived?: boolean
   createdAt?: Date | string
   updatedAt: Date | string
-  installment?: number | null
-  installmentId?: string | null
-  invoiceId?: string | null
-  isManual?: boolean
-  isReconciled?: boolean
-  originalDesc?: string | null
-  ownerId?: string | null
-  paymentDate?: Date | string | null
-  purchaseDate: Date | string
-  settled?: boolean
-  totalInstallments?: number | null
-  type: string
+  splitShare?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
 }
 
 export type TransactionUpdateWithoutUser_Transaction_ownerIdToUserInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.StringFieldUpdateOperationsInput | string
+  originalDesc?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   amount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
-  splitType?: Prisma.StringFieldUpdateOperationsInput | string
+  purchaseDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  paymentDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  type?: Prisma.EnumTransactionTypeFieldUpdateOperationsInput | $Enums.TransactionType
+  installment?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  totalInstallments?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  installmentId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  isReconciled?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  isManual?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  splitType?: Prisma.EnumSplitMethodFieldUpdateOperationsInput | $Enums.SplitMethod
+  settled?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  isArchived?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  installment?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
-  installmentId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  isManual?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  isReconciled?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  originalDesc?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  paymentDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  purchaseDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  settled?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  totalInstallments?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
-  type?: Prisma.StringFieldUpdateOperationsInput | string
+  splitShare?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   Account?: Prisma.AccountUpdateOneRequiredWithoutTransactionNestedInput
   Category?: Prisma.CategoryUpdateOneRequiredWithoutTransactionNestedInput
   Invoice?: Prisma.InvoiceUpdateOneWithoutTransactionNestedInput
   User_Transaction_payerIdToUser?: Prisma.UserUpdateOneRequiredWithoutTransaction_Transaction_payerIdToUserNestedInput
+  Account_Transaction_receiverAccountIdToAccount?: Prisma.AccountUpdateOneWithoutTransaction_Transaction_receiverAccountIdToAccountNestedInput
 }
 
 export type TransactionUncheckedUpdateWithoutUser_Transaction_ownerIdToUserInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.StringFieldUpdateOperationsInput | string
+  originalDesc?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   amount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  purchaseDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  paymentDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  type?: Prisma.EnumTransactionTypeFieldUpdateOperationsInput | $Enums.TransactionType
+  installment?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  totalInstallments?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  installmentId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  isReconciled?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  isManual?: Prisma.BoolFieldUpdateOperationsInput | boolean
   categoryId?: Prisma.StringFieldUpdateOperationsInput | string
   accountId?: Prisma.StringFieldUpdateOperationsInput | string
-  splitType?: Prisma.StringFieldUpdateOperationsInput | string
+  invoiceId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  payerId?: Prisma.StringFieldUpdateOperationsInput | string
+  splitType?: Prisma.EnumSplitMethodFieldUpdateOperationsInput | $Enums.SplitMethod
+  settled?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  receiverAccountId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  isArchived?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  installment?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
-  installmentId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  invoiceId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  isManual?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  isReconciled?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  originalDesc?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  payerId?: Prisma.StringFieldUpdateOperationsInput | string
-  paymentDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  purchaseDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  settled?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  totalInstallments?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
-  type?: Prisma.StringFieldUpdateOperationsInput | string
+  splitShare?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
 }
 
 export type TransactionUncheckedUpdateManyWithoutUser_Transaction_ownerIdToUserInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.StringFieldUpdateOperationsInput | string
+  originalDesc?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   amount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  purchaseDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  paymentDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  type?: Prisma.EnumTransactionTypeFieldUpdateOperationsInput | $Enums.TransactionType
+  installment?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  totalInstallments?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  installmentId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  isReconciled?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  isManual?: Prisma.BoolFieldUpdateOperationsInput | boolean
   categoryId?: Prisma.StringFieldUpdateOperationsInput | string
   accountId?: Prisma.StringFieldUpdateOperationsInput | string
-  splitType?: Prisma.StringFieldUpdateOperationsInput | string
+  invoiceId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  payerId?: Prisma.StringFieldUpdateOperationsInput | string
+  splitType?: Prisma.EnumSplitMethodFieldUpdateOperationsInput | $Enums.SplitMethod
+  settled?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  receiverAccountId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  isArchived?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  installment?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
-  installmentId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  invoiceId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  isManual?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  isReconciled?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  originalDesc?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  payerId?: Prisma.StringFieldUpdateOperationsInput | string
-  paymentDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  purchaseDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  settled?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  totalInstallments?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
-  type?: Prisma.StringFieldUpdateOperationsInput | string
+  splitShare?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
 }
 
 export type TransactionUpdateWithoutUser_Transaction_payerIdToUserInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.StringFieldUpdateOperationsInput | string
+  originalDesc?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   amount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
-  splitType?: Prisma.StringFieldUpdateOperationsInput | string
+  purchaseDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  paymentDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  type?: Prisma.EnumTransactionTypeFieldUpdateOperationsInput | $Enums.TransactionType
+  installment?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  totalInstallments?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  installmentId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  isReconciled?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  isManual?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  splitType?: Prisma.EnumSplitMethodFieldUpdateOperationsInput | $Enums.SplitMethod
+  settled?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  isArchived?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  installment?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
-  installmentId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  isManual?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  isReconciled?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  originalDesc?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  paymentDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  purchaseDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  settled?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  totalInstallments?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
-  type?: Prisma.StringFieldUpdateOperationsInput | string
+  splitShare?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   Account?: Prisma.AccountUpdateOneRequiredWithoutTransactionNestedInput
   Category?: Prisma.CategoryUpdateOneRequiredWithoutTransactionNestedInput
   Invoice?: Prisma.InvoiceUpdateOneWithoutTransactionNestedInput
   User_Transaction_ownerIdToUser?: Prisma.UserUpdateOneWithoutTransaction_Transaction_ownerIdToUserNestedInput
+  Account_Transaction_receiverAccountIdToAccount?: Prisma.AccountUpdateOneWithoutTransaction_Transaction_receiverAccountIdToAccountNestedInput
 }
 
 export type TransactionUncheckedUpdateWithoutUser_Transaction_payerIdToUserInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.StringFieldUpdateOperationsInput | string
+  originalDesc?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   amount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  purchaseDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  paymentDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  type?: Prisma.EnumTransactionTypeFieldUpdateOperationsInput | $Enums.TransactionType
+  installment?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  totalInstallments?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  installmentId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  isReconciled?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  isManual?: Prisma.BoolFieldUpdateOperationsInput | boolean
   categoryId?: Prisma.StringFieldUpdateOperationsInput | string
   accountId?: Prisma.StringFieldUpdateOperationsInput | string
-  splitType?: Prisma.StringFieldUpdateOperationsInput | string
+  invoiceId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  splitType?: Prisma.EnumSplitMethodFieldUpdateOperationsInput | $Enums.SplitMethod
+  ownerId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  settled?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  receiverAccountId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  isArchived?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  installment?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
-  installmentId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  invoiceId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  isManual?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  isReconciled?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  originalDesc?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  ownerId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  paymentDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  purchaseDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  settled?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  totalInstallments?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
-  type?: Prisma.StringFieldUpdateOperationsInput | string
+  splitShare?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
 }
 
 export type TransactionUncheckedUpdateManyWithoutUser_Transaction_payerIdToUserInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.StringFieldUpdateOperationsInput | string
+  originalDesc?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   amount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  purchaseDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  paymentDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  type?: Prisma.EnumTransactionTypeFieldUpdateOperationsInput | $Enums.TransactionType
+  installment?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  totalInstallments?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  installmentId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  isReconciled?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  isManual?: Prisma.BoolFieldUpdateOperationsInput | boolean
   categoryId?: Prisma.StringFieldUpdateOperationsInput | string
   accountId?: Prisma.StringFieldUpdateOperationsInput | string
-  splitType?: Prisma.StringFieldUpdateOperationsInput | string
+  invoiceId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  splitType?: Prisma.EnumSplitMethodFieldUpdateOperationsInput | $Enums.SplitMethod
+  ownerId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  settled?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  receiverAccountId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  isArchived?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  installment?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
-  installmentId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  invoiceId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  isManual?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  isReconciled?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  originalDesc?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  ownerId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  paymentDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  purchaseDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  settled?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  totalInstallments?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
-  type?: Prisma.StringFieldUpdateOperationsInput | string
+  splitShare?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
 }
 
 
@@ -1799,121 +2190,137 @@ export type TransactionUncheckedUpdateManyWithoutUser_Transaction_payerIdToUserI
 export type TransactionSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
   description?: boolean
+  originalDesc?: boolean
   amount?: boolean
+  purchaseDate?: boolean
+  paymentDate?: boolean
+  type?: boolean
+  installment?: boolean
+  totalInstallments?: boolean
+  installmentId?: boolean
+  isReconciled?: boolean
+  isManual?: boolean
   categoryId?: boolean
   accountId?: boolean
+  invoiceId?: boolean
+  payerId?: boolean
   splitType?: boolean
+  ownerId?: boolean
+  settled?: boolean
+  receiverAccountId?: boolean
+  isArchived?: boolean
   createdAt?: boolean
   updatedAt?: boolean
-  installment?: boolean
-  installmentId?: boolean
-  invoiceId?: boolean
-  isManual?: boolean
-  isReconciled?: boolean
-  originalDesc?: boolean
-  ownerId?: boolean
-  payerId?: boolean
-  paymentDate?: boolean
-  purchaseDate?: boolean
-  settled?: boolean
-  totalInstallments?: boolean
-  type?: boolean
+  splitShare?: boolean
   Account?: boolean | Prisma.AccountDefaultArgs<ExtArgs>
   Category?: boolean | Prisma.CategoryDefaultArgs<ExtArgs>
   Invoice?: boolean | Prisma.Transaction$InvoiceArgs<ExtArgs>
   User_Transaction_ownerIdToUser?: boolean | Prisma.Transaction$User_Transaction_ownerIdToUserArgs<ExtArgs>
   User_Transaction_payerIdToUser?: boolean | Prisma.UserDefaultArgs<ExtArgs>
+  Account_Transaction_receiverAccountIdToAccount?: boolean | Prisma.Transaction$Account_Transaction_receiverAccountIdToAccountArgs<ExtArgs>
 }, ExtArgs["result"]["transaction"]>
 
 export type TransactionSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
   description?: boolean
+  originalDesc?: boolean
   amount?: boolean
+  purchaseDate?: boolean
+  paymentDate?: boolean
+  type?: boolean
+  installment?: boolean
+  totalInstallments?: boolean
+  installmentId?: boolean
+  isReconciled?: boolean
+  isManual?: boolean
   categoryId?: boolean
   accountId?: boolean
+  invoiceId?: boolean
+  payerId?: boolean
   splitType?: boolean
+  ownerId?: boolean
+  settled?: boolean
+  receiverAccountId?: boolean
+  isArchived?: boolean
   createdAt?: boolean
   updatedAt?: boolean
-  installment?: boolean
-  installmentId?: boolean
-  invoiceId?: boolean
-  isManual?: boolean
-  isReconciled?: boolean
-  originalDesc?: boolean
-  ownerId?: boolean
-  payerId?: boolean
-  paymentDate?: boolean
-  purchaseDate?: boolean
-  settled?: boolean
-  totalInstallments?: boolean
-  type?: boolean
+  splitShare?: boolean
   Account?: boolean | Prisma.AccountDefaultArgs<ExtArgs>
   Category?: boolean | Prisma.CategoryDefaultArgs<ExtArgs>
   Invoice?: boolean | Prisma.Transaction$InvoiceArgs<ExtArgs>
   User_Transaction_ownerIdToUser?: boolean | Prisma.Transaction$User_Transaction_ownerIdToUserArgs<ExtArgs>
   User_Transaction_payerIdToUser?: boolean | Prisma.UserDefaultArgs<ExtArgs>
+  Account_Transaction_receiverAccountIdToAccount?: boolean | Prisma.Transaction$Account_Transaction_receiverAccountIdToAccountArgs<ExtArgs>
 }, ExtArgs["result"]["transaction"]>
 
 export type TransactionSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
   description?: boolean
+  originalDesc?: boolean
   amount?: boolean
+  purchaseDate?: boolean
+  paymentDate?: boolean
+  type?: boolean
+  installment?: boolean
+  totalInstallments?: boolean
+  installmentId?: boolean
+  isReconciled?: boolean
+  isManual?: boolean
   categoryId?: boolean
   accountId?: boolean
+  invoiceId?: boolean
+  payerId?: boolean
   splitType?: boolean
+  ownerId?: boolean
+  settled?: boolean
+  receiverAccountId?: boolean
+  isArchived?: boolean
   createdAt?: boolean
   updatedAt?: boolean
-  installment?: boolean
-  installmentId?: boolean
-  invoiceId?: boolean
-  isManual?: boolean
-  isReconciled?: boolean
-  originalDesc?: boolean
-  ownerId?: boolean
-  payerId?: boolean
-  paymentDate?: boolean
-  purchaseDate?: boolean
-  settled?: boolean
-  totalInstallments?: boolean
-  type?: boolean
+  splitShare?: boolean
   Account?: boolean | Prisma.AccountDefaultArgs<ExtArgs>
   Category?: boolean | Prisma.CategoryDefaultArgs<ExtArgs>
   Invoice?: boolean | Prisma.Transaction$InvoiceArgs<ExtArgs>
   User_Transaction_ownerIdToUser?: boolean | Prisma.Transaction$User_Transaction_ownerIdToUserArgs<ExtArgs>
   User_Transaction_payerIdToUser?: boolean | Prisma.UserDefaultArgs<ExtArgs>
+  Account_Transaction_receiverAccountIdToAccount?: boolean | Prisma.Transaction$Account_Transaction_receiverAccountIdToAccountArgs<ExtArgs>
 }, ExtArgs["result"]["transaction"]>
 
 export type TransactionSelectScalar = {
   id?: boolean
   description?: boolean
+  originalDesc?: boolean
   amount?: boolean
+  purchaseDate?: boolean
+  paymentDate?: boolean
+  type?: boolean
+  installment?: boolean
+  totalInstallments?: boolean
+  installmentId?: boolean
+  isReconciled?: boolean
+  isManual?: boolean
   categoryId?: boolean
   accountId?: boolean
+  invoiceId?: boolean
+  payerId?: boolean
   splitType?: boolean
+  ownerId?: boolean
+  settled?: boolean
+  receiverAccountId?: boolean
+  isArchived?: boolean
   createdAt?: boolean
   updatedAt?: boolean
-  installment?: boolean
-  installmentId?: boolean
-  invoiceId?: boolean
-  isManual?: boolean
-  isReconciled?: boolean
-  originalDesc?: boolean
-  ownerId?: boolean
-  payerId?: boolean
-  paymentDate?: boolean
-  purchaseDate?: boolean
-  settled?: boolean
-  totalInstallments?: boolean
-  type?: boolean
+  splitShare?: boolean
 }
 
-export type TransactionOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "description" | "amount" | "categoryId" | "accountId" | "splitType" | "createdAt" | "updatedAt" | "installment" | "installmentId" | "invoiceId" | "isManual" | "isReconciled" | "originalDesc" | "ownerId" | "payerId" | "paymentDate" | "purchaseDate" | "settled" | "totalInstallments" | "type", ExtArgs["result"]["transaction"]>
+export type TransactionOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "description" | "originalDesc" | "amount" | "purchaseDate" | "paymentDate" | "type" | "installment" | "totalInstallments" | "installmentId" | "isReconciled" | "isManual" | "categoryId" | "accountId" | "invoiceId" | "payerId" | "splitType" | "ownerId" | "settled" | "receiverAccountId" | "isArchived" | "createdAt" | "updatedAt" | "splitShare", ExtArgs["result"]["transaction"]>
 export type TransactionInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   Account?: boolean | Prisma.AccountDefaultArgs<ExtArgs>
   Category?: boolean | Prisma.CategoryDefaultArgs<ExtArgs>
   Invoice?: boolean | Prisma.Transaction$InvoiceArgs<ExtArgs>
   User_Transaction_ownerIdToUser?: boolean | Prisma.Transaction$User_Transaction_ownerIdToUserArgs<ExtArgs>
   User_Transaction_payerIdToUser?: boolean | Prisma.UserDefaultArgs<ExtArgs>
+  Account_Transaction_receiverAccountIdToAccount?: boolean | Prisma.Transaction$Account_Transaction_receiverAccountIdToAccountArgs<ExtArgs>
 }
 export type TransactionIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   Account?: boolean | Prisma.AccountDefaultArgs<ExtArgs>
@@ -1921,6 +2328,7 @@ export type TransactionIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.
   Invoice?: boolean | Prisma.Transaction$InvoiceArgs<ExtArgs>
   User_Transaction_ownerIdToUser?: boolean | Prisma.Transaction$User_Transaction_ownerIdToUserArgs<ExtArgs>
   User_Transaction_payerIdToUser?: boolean | Prisma.UserDefaultArgs<ExtArgs>
+  Account_Transaction_receiverAccountIdToAccount?: boolean | Prisma.Transaction$Account_Transaction_receiverAccountIdToAccountArgs<ExtArgs>
 }
 export type TransactionIncludeUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   Account?: boolean | Prisma.AccountDefaultArgs<ExtArgs>
@@ -1928,6 +2336,7 @@ export type TransactionIncludeUpdateManyAndReturn<ExtArgs extends runtime.Types.
   Invoice?: boolean | Prisma.Transaction$InvoiceArgs<ExtArgs>
   User_Transaction_ownerIdToUser?: boolean | Prisma.Transaction$User_Transaction_ownerIdToUserArgs<ExtArgs>
   User_Transaction_payerIdToUser?: boolean | Prisma.UserDefaultArgs<ExtArgs>
+  Account_Transaction_receiverAccountIdToAccount?: boolean | Prisma.Transaction$Account_Transaction_receiverAccountIdToAccountArgs<ExtArgs>
 }
 
 export type $TransactionPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
@@ -1938,29 +2347,33 @@ export type $TransactionPayload<ExtArgs extends runtime.Types.Extensions.Interna
     Invoice: Prisma.$InvoicePayload<ExtArgs> | null
     User_Transaction_ownerIdToUser: Prisma.$UserPayload<ExtArgs> | null
     User_Transaction_payerIdToUser: Prisma.$UserPayload<ExtArgs>
+    Account_Transaction_receiverAccountIdToAccount: Prisma.$AccountPayload<ExtArgs> | null
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
     description: string
+    originalDesc: string | null
     amount: runtime.Decimal
+    purchaseDate: Date
+    paymentDate: Date | null
+    type: $Enums.TransactionType
+    installment: number | null
+    totalInstallments: number | null
+    installmentId: string | null
+    isReconciled: boolean
+    isManual: boolean
     categoryId: string
     accountId: string
-    splitType: string
+    invoiceId: string | null
+    payerId: string
+    splitType: $Enums.SplitMethod
+    ownerId: string | null
+    settled: boolean
+    receiverAccountId: string | null
+    isArchived: boolean
     createdAt: Date
     updatedAt: Date
-    installment: number | null
-    installmentId: string | null
-    invoiceId: string | null
-    isManual: boolean
-    isReconciled: boolean
-    originalDesc: string | null
-    ownerId: string | null
-    payerId: string
-    paymentDate: Date | null
-    purchaseDate: Date
-    settled: boolean
-    totalInstallments: number | null
-    type: string
+    splitShare: runtime.Decimal | null
   }, ExtArgs["result"]["transaction"]>
   composites: {}
 }
@@ -2360,6 +2773,7 @@ export interface Prisma__TransactionClient<T, Null = never, ExtArgs extends runt
   Invoice<T extends Prisma.Transaction$InvoiceArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Transaction$InvoiceArgs<ExtArgs>>): Prisma.Prisma__InvoiceClient<runtime.Types.Result.GetResult<Prisma.$InvoicePayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
   User_Transaction_ownerIdToUser<T extends Prisma.Transaction$User_Transaction_ownerIdToUserArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Transaction$User_Transaction_ownerIdToUserArgs<ExtArgs>>): Prisma.Prisma__UserClient<runtime.Types.Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
   User_Transaction_payerIdToUser<T extends Prisma.UserDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.UserDefaultArgs<ExtArgs>>): Prisma.Prisma__UserClient<runtime.Types.Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+  Account_Transaction_receiverAccountIdToAccount<T extends Prisma.Transaction$Account_Transaction_receiverAccountIdToAccountArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Transaction$Account_Transaction_receiverAccountIdToAccountArgs<ExtArgs>>): Prisma.Prisma__AccountClient<runtime.Types.Result.GetResult<Prisma.$AccountPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -2391,25 +2805,28 @@ export interface Prisma__TransactionClient<T, Null = never, ExtArgs extends runt
 export interface TransactionFieldRefs {
   readonly id: Prisma.FieldRef<"Transaction", 'String'>
   readonly description: Prisma.FieldRef<"Transaction", 'String'>
+  readonly originalDesc: Prisma.FieldRef<"Transaction", 'String'>
   readonly amount: Prisma.FieldRef<"Transaction", 'Decimal'>
+  readonly purchaseDate: Prisma.FieldRef<"Transaction", 'DateTime'>
+  readonly paymentDate: Prisma.FieldRef<"Transaction", 'DateTime'>
+  readonly type: Prisma.FieldRef<"Transaction", 'TransactionType'>
+  readonly installment: Prisma.FieldRef<"Transaction", 'Int'>
+  readonly totalInstallments: Prisma.FieldRef<"Transaction", 'Int'>
+  readonly installmentId: Prisma.FieldRef<"Transaction", 'String'>
+  readonly isReconciled: Prisma.FieldRef<"Transaction", 'Boolean'>
+  readonly isManual: Prisma.FieldRef<"Transaction", 'Boolean'>
   readonly categoryId: Prisma.FieldRef<"Transaction", 'String'>
   readonly accountId: Prisma.FieldRef<"Transaction", 'String'>
-  readonly splitType: Prisma.FieldRef<"Transaction", 'String'>
+  readonly invoiceId: Prisma.FieldRef<"Transaction", 'String'>
+  readonly payerId: Prisma.FieldRef<"Transaction", 'String'>
+  readonly splitType: Prisma.FieldRef<"Transaction", 'SplitMethod'>
+  readonly ownerId: Prisma.FieldRef<"Transaction", 'String'>
+  readonly settled: Prisma.FieldRef<"Transaction", 'Boolean'>
+  readonly receiverAccountId: Prisma.FieldRef<"Transaction", 'String'>
+  readonly isArchived: Prisma.FieldRef<"Transaction", 'Boolean'>
   readonly createdAt: Prisma.FieldRef<"Transaction", 'DateTime'>
   readonly updatedAt: Prisma.FieldRef<"Transaction", 'DateTime'>
-  readonly installment: Prisma.FieldRef<"Transaction", 'Int'>
-  readonly installmentId: Prisma.FieldRef<"Transaction", 'String'>
-  readonly invoiceId: Prisma.FieldRef<"Transaction", 'String'>
-  readonly isManual: Prisma.FieldRef<"Transaction", 'Boolean'>
-  readonly isReconciled: Prisma.FieldRef<"Transaction", 'Boolean'>
-  readonly originalDesc: Prisma.FieldRef<"Transaction", 'String'>
-  readonly ownerId: Prisma.FieldRef<"Transaction", 'String'>
-  readonly payerId: Prisma.FieldRef<"Transaction", 'String'>
-  readonly paymentDate: Prisma.FieldRef<"Transaction", 'DateTime'>
-  readonly purchaseDate: Prisma.FieldRef<"Transaction", 'DateTime'>
-  readonly settled: Prisma.FieldRef<"Transaction", 'Boolean'>
-  readonly totalInstallments: Prisma.FieldRef<"Transaction", 'Int'>
-  readonly type: Prisma.FieldRef<"Transaction", 'String'>
+  readonly splitShare: Prisma.FieldRef<"Transaction", 'Decimal'>
 }
     
 
@@ -2841,6 +3258,25 @@ export type Transaction$User_Transaction_ownerIdToUserArgs<ExtArgs extends runti
    */
   include?: Prisma.UserInclude<ExtArgs> | null
   where?: Prisma.UserWhereInput
+}
+
+/**
+ * Transaction.Account_Transaction_receiverAccountIdToAccount
+ */
+export type Transaction$Account_Transaction_receiverAccountIdToAccountArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the Account
+   */
+  select?: Prisma.AccountSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the Account
+   */
+  omit?: Prisma.AccountOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.AccountInclude<ExtArgs> | null
+  where?: Prisma.AccountWhereInput
 }
 
 /**

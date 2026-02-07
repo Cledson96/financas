@@ -27,14 +27,14 @@ export type AggregateCategory = {
 export type CategoryMinAggregateOutputType = {
   id: string | null
   name: string | null
-  type: string | null
+  type: $Enums.TransactionType | null
   icon: string | null
 }
 
 export type CategoryMaxAggregateOutputType = {
   id: string | null
   name: string | null
-  type: string | null
+  type: $Enums.TransactionType | null
   icon: string | null
 }
 
@@ -144,7 +144,7 @@ export type CategoryGroupByArgs<ExtArgs extends runtime.Types.Extensions.Interna
 export type CategoryGroupByOutputType = {
   id: string
   name: string
-  type: string
+  type: $Enums.TransactionType
   icon: string | null
   _count: CategoryCountAggregateOutputType | null
   _min: CategoryMinAggregateOutputType | null
@@ -172,7 +172,7 @@ export type CategoryWhereInput = {
   NOT?: Prisma.CategoryWhereInput | Prisma.CategoryWhereInput[]
   id?: Prisma.StringFilter<"Category"> | string
   name?: Prisma.StringFilter<"Category"> | string
-  type?: Prisma.StringFilter<"Category"> | string
+  type?: Prisma.EnumTransactionTypeFilter<"Category"> | $Enums.TransactionType
   icon?: Prisma.StringNullableFilter<"Category"> | string | null
   FixedExpense?: Prisma.FixedExpenseListRelationFilter
   Transaction?: Prisma.TransactionListRelationFilter
@@ -193,7 +193,7 @@ export type CategoryWhereUniqueInput = Prisma.AtLeast<{
   AND?: Prisma.CategoryWhereInput | Prisma.CategoryWhereInput[]
   OR?: Prisma.CategoryWhereInput[]
   NOT?: Prisma.CategoryWhereInput | Prisma.CategoryWhereInput[]
-  type?: Prisma.StringFilter<"Category"> | string
+  type?: Prisma.EnumTransactionTypeFilter<"Category"> | $Enums.TransactionType
   icon?: Prisma.StringNullableFilter<"Category"> | string | null
   FixedExpense?: Prisma.FixedExpenseListRelationFilter
   Transaction?: Prisma.TransactionListRelationFilter
@@ -215,14 +215,14 @@ export type CategoryScalarWhereWithAggregatesInput = {
   NOT?: Prisma.CategoryScalarWhereWithAggregatesInput | Prisma.CategoryScalarWhereWithAggregatesInput[]
   id?: Prisma.StringWithAggregatesFilter<"Category"> | string
   name?: Prisma.StringWithAggregatesFilter<"Category"> | string
-  type?: Prisma.StringWithAggregatesFilter<"Category"> | string
+  type?: Prisma.EnumTransactionTypeWithAggregatesFilter<"Category"> | $Enums.TransactionType
   icon?: Prisma.StringNullableWithAggregatesFilter<"Category"> | string | null
 }
 
 export type CategoryCreateInput = {
   id: string
   name: string
-  type: string
+  type: $Enums.TransactionType
   icon?: string | null
   FixedExpense?: Prisma.FixedExpenseCreateNestedManyWithoutCategoryInput
   Transaction?: Prisma.TransactionCreateNestedManyWithoutCategoryInput
@@ -231,7 +231,7 @@ export type CategoryCreateInput = {
 export type CategoryUncheckedCreateInput = {
   id: string
   name: string
-  type: string
+  type: $Enums.TransactionType
   icon?: string | null
   FixedExpense?: Prisma.FixedExpenseUncheckedCreateNestedManyWithoutCategoryInput
   Transaction?: Prisma.TransactionUncheckedCreateNestedManyWithoutCategoryInput
@@ -240,7 +240,7 @@ export type CategoryUncheckedCreateInput = {
 export type CategoryUpdateInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
-  type?: Prisma.StringFieldUpdateOperationsInput | string
+  type?: Prisma.EnumTransactionTypeFieldUpdateOperationsInput | $Enums.TransactionType
   icon?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   FixedExpense?: Prisma.FixedExpenseUpdateManyWithoutCategoryNestedInput
   Transaction?: Prisma.TransactionUpdateManyWithoutCategoryNestedInput
@@ -249,7 +249,7 @@ export type CategoryUpdateInput = {
 export type CategoryUncheckedUpdateInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
-  type?: Prisma.StringFieldUpdateOperationsInput | string
+  type?: Prisma.EnumTransactionTypeFieldUpdateOperationsInput | $Enums.TransactionType
   icon?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   FixedExpense?: Prisma.FixedExpenseUncheckedUpdateManyWithoutCategoryNestedInput
   Transaction?: Prisma.TransactionUncheckedUpdateManyWithoutCategoryNestedInput
@@ -258,21 +258,21 @@ export type CategoryUncheckedUpdateInput = {
 export type CategoryCreateManyInput = {
   id: string
   name: string
-  type: string
+  type: $Enums.TransactionType
   icon?: string | null
 }
 
 export type CategoryUpdateManyMutationInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
-  type?: Prisma.StringFieldUpdateOperationsInput | string
+  type?: Prisma.EnumTransactionTypeFieldUpdateOperationsInput | $Enums.TransactionType
   icon?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
 }
 
 export type CategoryUncheckedUpdateManyInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
-  type?: Prisma.StringFieldUpdateOperationsInput | string
+  type?: Prisma.EnumTransactionTypeFieldUpdateOperationsInput | $Enums.TransactionType
   icon?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
 }
 
@@ -300,6 +300,10 @@ export type CategoryMinOrderByAggregateInput = {
 export type CategoryScalarRelationFilter = {
   is?: Prisma.CategoryWhereInput
   isNot?: Prisma.CategoryWhereInput
+}
+
+export type EnumTransactionTypeFieldUpdateOperationsInput = {
+  set?: $Enums.TransactionType
 }
 
 export type CategoryCreateNestedOneWithoutFixedExpenseInput = {
@@ -333,7 +337,7 @@ export type CategoryUpdateOneRequiredWithoutTransactionNestedInput = {
 export type CategoryCreateWithoutFixedExpenseInput = {
   id: string
   name: string
-  type: string
+  type: $Enums.TransactionType
   icon?: string | null
   Transaction?: Prisma.TransactionCreateNestedManyWithoutCategoryInput
 }
@@ -341,7 +345,7 @@ export type CategoryCreateWithoutFixedExpenseInput = {
 export type CategoryUncheckedCreateWithoutFixedExpenseInput = {
   id: string
   name: string
-  type: string
+  type: $Enums.TransactionType
   icon?: string | null
   Transaction?: Prisma.TransactionUncheckedCreateNestedManyWithoutCategoryInput
 }
@@ -365,7 +369,7 @@ export type CategoryUpdateToOneWithWhereWithoutFixedExpenseInput = {
 export type CategoryUpdateWithoutFixedExpenseInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
-  type?: Prisma.StringFieldUpdateOperationsInput | string
+  type?: Prisma.EnumTransactionTypeFieldUpdateOperationsInput | $Enums.TransactionType
   icon?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   Transaction?: Prisma.TransactionUpdateManyWithoutCategoryNestedInput
 }
@@ -373,7 +377,7 @@ export type CategoryUpdateWithoutFixedExpenseInput = {
 export type CategoryUncheckedUpdateWithoutFixedExpenseInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
-  type?: Prisma.StringFieldUpdateOperationsInput | string
+  type?: Prisma.EnumTransactionTypeFieldUpdateOperationsInput | $Enums.TransactionType
   icon?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   Transaction?: Prisma.TransactionUncheckedUpdateManyWithoutCategoryNestedInput
 }
@@ -381,7 +385,7 @@ export type CategoryUncheckedUpdateWithoutFixedExpenseInput = {
 export type CategoryCreateWithoutTransactionInput = {
   id: string
   name: string
-  type: string
+  type: $Enums.TransactionType
   icon?: string | null
   FixedExpense?: Prisma.FixedExpenseCreateNestedManyWithoutCategoryInput
 }
@@ -389,7 +393,7 @@ export type CategoryCreateWithoutTransactionInput = {
 export type CategoryUncheckedCreateWithoutTransactionInput = {
   id: string
   name: string
-  type: string
+  type: $Enums.TransactionType
   icon?: string | null
   FixedExpense?: Prisma.FixedExpenseUncheckedCreateNestedManyWithoutCategoryInput
 }
@@ -413,7 +417,7 @@ export type CategoryUpdateToOneWithWhereWithoutTransactionInput = {
 export type CategoryUpdateWithoutTransactionInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
-  type?: Prisma.StringFieldUpdateOperationsInput | string
+  type?: Prisma.EnumTransactionTypeFieldUpdateOperationsInput | $Enums.TransactionType
   icon?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   FixedExpense?: Prisma.FixedExpenseUpdateManyWithoutCategoryNestedInput
 }
@@ -421,7 +425,7 @@ export type CategoryUpdateWithoutTransactionInput = {
 export type CategoryUncheckedUpdateWithoutTransactionInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
-  type?: Prisma.StringFieldUpdateOperationsInput | string
+  type?: Prisma.EnumTransactionTypeFieldUpdateOperationsInput | $Enums.TransactionType
   icon?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   FixedExpense?: Prisma.FixedExpenseUncheckedUpdateManyWithoutCategoryNestedInput
 }
@@ -515,7 +519,7 @@ export type $CategoryPayload<ExtArgs extends runtime.Types.Extensions.InternalAr
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
     name: string
-    type: string
+    type: $Enums.TransactionType
     icon: string | null
   }, ExtArgs["result"]["category"]>
   composites: {}
@@ -944,7 +948,7 @@ export interface Prisma__CategoryClient<T, Null = never, ExtArgs extends runtime
 export interface CategoryFieldRefs {
   readonly id: Prisma.FieldRef<"Category", 'String'>
   readonly name: Prisma.FieldRef<"Category", 'String'>
-  readonly type: Prisma.FieldRef<"Category", 'String'>
+  readonly type: Prisma.FieldRef<"Category", 'TransactionType'>
   readonly icon: Prisma.FieldRef<"Category", 'String'>
 }
     

@@ -69,3 +69,13 @@ export type Transaction = Prisma.TransactionModel
  * 
  */
 export type User = Prisma.UserModel
+/**
+ * Model HouseholdConfig
+ * 
+ */
+export type HouseholdConfig = Prisma.HouseholdConfigModel
+/**
+ * Model MonthlyBalance
+ * 
+ */
+export type MonthlyBalance = Prisma.MonthlyBalanceModel

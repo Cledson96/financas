@@ -389,7 +389,9 @@ export const ModelName = {
   FixedExpense: 'FixedExpense',
   Invoice: 'Invoice',
   Transaction: 'Transaction',
-  User: 'User'
+  User: 'User',
+  HouseholdConfig: 'HouseholdConfig',
+  MonthlyBalance: 'MonthlyBalance'
 } as const
 
 export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -405,7 +407,7 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
     omit: GlobalOmitOptions
   }
   meta: {
-    modelProps: "account" | "category" | "fixedExpense" | "invoice" | "transaction" | "user"
+    modelProps: "account" | "category" | "fixedExpense" | "invoice" | "transaction" | "user" | "householdConfig" | "monthlyBalance"
     txIsolationLevel: TransactionIsolationLevel
   }
   model: {
@@ -853,6 +855,154 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
         }
       }
     }
+    HouseholdConfig: {
+      payload: Prisma.$HouseholdConfigPayload<ExtArgs>
+      fields: Prisma.HouseholdConfigFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.HouseholdConfigFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$HouseholdConfigPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.HouseholdConfigFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$HouseholdConfigPayload>
+        }
+        findFirst: {
+          args: Prisma.HouseholdConfigFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$HouseholdConfigPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.HouseholdConfigFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$HouseholdConfigPayload>
+        }
+        findMany: {
+          args: Prisma.HouseholdConfigFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$HouseholdConfigPayload>[]
+        }
+        create: {
+          args: Prisma.HouseholdConfigCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$HouseholdConfigPayload>
+        }
+        createMany: {
+          args: Prisma.HouseholdConfigCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.HouseholdConfigCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$HouseholdConfigPayload>[]
+        }
+        delete: {
+          args: Prisma.HouseholdConfigDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$HouseholdConfigPayload>
+        }
+        update: {
+          args: Prisma.HouseholdConfigUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$HouseholdConfigPayload>
+        }
+        deleteMany: {
+          args: Prisma.HouseholdConfigDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.HouseholdConfigUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.HouseholdConfigUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$HouseholdConfigPayload>[]
+        }
+        upsert: {
+          args: Prisma.HouseholdConfigUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$HouseholdConfigPayload>
+        }
+        aggregate: {
+          args: Prisma.HouseholdConfigAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateHouseholdConfig>
+        }
+        groupBy: {
+          args: Prisma.HouseholdConfigGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.HouseholdConfigGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.HouseholdConfigCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.HouseholdConfigCountAggregateOutputType> | number
+        }
+      }
+    }
+    MonthlyBalance: {
+      payload: Prisma.$MonthlyBalancePayload<ExtArgs>
+      fields: Prisma.MonthlyBalanceFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.MonthlyBalanceFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$MonthlyBalancePayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.MonthlyBalanceFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$MonthlyBalancePayload>
+        }
+        findFirst: {
+          args: Prisma.MonthlyBalanceFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$MonthlyBalancePayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.MonthlyBalanceFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$MonthlyBalancePayload>
+        }
+        findMany: {
+          args: Prisma.MonthlyBalanceFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$MonthlyBalancePayload>[]
+        }
+        create: {
+          args: Prisma.MonthlyBalanceCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$MonthlyBalancePayload>
+        }
+        createMany: {
+          args: Prisma.MonthlyBalanceCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.MonthlyBalanceCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$MonthlyBalancePayload>[]
+        }
+        delete: {
+          args: Prisma.MonthlyBalanceDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$MonthlyBalancePayload>
+        }
+        update: {
+          args: Prisma.MonthlyBalanceUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$MonthlyBalancePayload>
+        }
+        deleteMany: {
+          args: Prisma.MonthlyBalanceDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.MonthlyBalanceUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.MonthlyBalanceUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$MonthlyBalancePayload>[]
+        }
+        upsert: {
+          args: Prisma.MonthlyBalanceUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$MonthlyBalancePayload>
+        }
+        aggregate: {
+          args: Prisma.MonthlyBalanceAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateMonthlyBalance>
+        }
+        groupBy: {
+          args: Prisma.MonthlyBalanceGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.MonthlyBalanceGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.MonthlyBalanceCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.MonthlyBalanceCountAggregateOutputType> | number
+        }
+      }
+    }
   }
 } & {
   other: {
@@ -896,13 +1046,13 @@ export const AccountScalarFieldEnum = {
   id: 'id',
   name: 'name',
   type: 'type',
-  userId: 'userId',
-  balance: 'balance',
   bankName: 'bankName',
-  createdAt: 'createdAt',
+  balance: 'balance',
   limit: 'limit',
+  dueDay: 'dueDay',
   closingDay: 'closingDay',
-  dueDay: 'dueDay'
+  userId: 'userId',
+  createdAt: 'createdAt'
 } as const
 
 export type AccountScalarFieldEnum = (typeof AccountScalarFieldEnum)[keyof typeof AccountScalarFieldEnum]
@@ -950,25 +1100,28 @@ export type InvoiceScalarFieldEnum = (typeof InvoiceScalarFieldEnum)[keyof typeo
 export const TransactionScalarFieldEnum = {
   id: 'id',
   description: 'description',
+  originalDesc: 'originalDesc',
   amount: 'amount',
+  purchaseDate: 'purchaseDate',
+  paymentDate: 'paymentDate',
+  type: 'type',
+  installment: 'installment',
+  totalInstallments: 'totalInstallments',
+  installmentId: 'installmentId',
+  isReconciled: 'isReconciled',
+  isManual: 'isManual',
   categoryId: 'categoryId',
   accountId: 'accountId',
+  invoiceId: 'invoiceId',
+  payerId: 'payerId',
   splitType: 'splitType',
+  ownerId: 'ownerId',
+  settled: 'settled',
+  receiverAccountId: 'receiverAccountId',
+  isArchived: 'isArchived',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt',
-  installment: 'installment',
-  installmentId: 'installmentId',
-  invoiceId: 'invoiceId',
-  isManual: 'isManual',
-  isReconciled: 'isReconciled',
-  originalDesc: 'originalDesc',
-  ownerId: 'ownerId',
-  payerId: 'payerId',
-  paymentDate: 'paymentDate',
-  purchaseDate: 'purchaseDate',
-  settled: 'settled',
-  totalInstallments: 'totalInstallments',
-  type: 'type'
+  splitShare: 'splitShare'
 } as const
 
 export type TransactionScalarFieldEnum = (typeof TransactionScalarFieldEnum)[keyof typeof TransactionScalarFieldEnum]
@@ -981,6 +1134,31 @@ export const UserScalarFieldEnum = {
 } as const
 
 export type UserScalarFieldEnum = (typeof UserScalarFieldEnum)[keyof typeof UserScalarFieldEnum]
+
+
+export const HouseholdConfigScalarFieldEnum = {
+  id: 'id',
+  partner1Id: 'partner1Id',
+  partner2Id: 'partner2Id',
+  partner1Share: 'partner1Share',
+  updatedAt: 'updatedAt'
+} as const
+
+export type HouseholdConfigScalarFieldEnum = (typeof HouseholdConfigScalarFieldEnum)[keyof typeof HouseholdConfigScalarFieldEnum]
+
+
+export const MonthlyBalanceScalarFieldEnum = {
+  id: 'id',
+  month: 'month',
+  year: 'year',
+  finalBalance: 'finalBalance',
+  debtorId: 'debtorId',
+  creditorId: 'creditorId',
+  status: 'status',
+  createdAt: 'createdAt'
+} as const
+
+export type MonthlyBalanceScalarFieldEnum = (typeof MonthlyBalanceScalarFieldEnum)[keyof typeof MonthlyBalanceScalarFieldEnum]
 
 
 export const SortOrder = {
@@ -1028,6 +1206,20 @@ export type ListStringFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaMod
 
 
 /**
+ * Reference to a field of type 'AccountType'
+ */
+export type EnumAccountTypeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'AccountType'>
+    
+
+
+/**
+ * Reference to a field of type 'AccountType[]'
+ */
+export type ListEnumAccountTypeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'AccountType[]'>
+    
+
+
+/**
  * Reference to a field of type 'Decimal'
  */
 export type DecimalFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Decimal'>
@@ -1038,20 +1230,6 @@ export type DecimalFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel,
  * Reference to a field of type 'Decimal[]'
  */
 export type ListDecimalFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Decimal[]'>
-    
-
-
-/**
- * Reference to a field of type 'DateTime'
- */
-export type DateTimeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'DateTime'>
-    
-
-
-/**
- * Reference to a field of type 'DateTime[]'
- */
-export type ListDateTimeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'DateTime[]'>
     
 
 
@@ -1070,9 +1248,65 @@ export type ListIntFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel,
 
 
 /**
+ * Reference to a field of type 'DateTime'
+ */
+export type DateTimeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'DateTime'>
+    
+
+
+/**
+ * Reference to a field of type 'DateTime[]'
+ */
+export type ListDateTimeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'DateTime[]'>
+    
+
+
+/**
+ * Reference to a field of type 'TransactionType'
+ */
+export type EnumTransactionTypeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'TransactionType'>
+    
+
+
+/**
+ * Reference to a field of type 'TransactionType[]'
+ */
+export type ListEnumTransactionTypeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'TransactionType[]'>
+    
+
+
+/**
+ * Reference to a field of type 'SplitMethod'
+ */
+export type EnumSplitMethodFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'SplitMethod'>
+    
+
+
+/**
+ * Reference to a field of type 'SplitMethod[]'
+ */
+export type ListEnumSplitMethodFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'SplitMethod[]'>
+    
+
+
+/**
  * Reference to a field of type 'Boolean'
  */
 export type BooleanFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Boolean'>
+    
+
+
+/**
+ * Reference to a field of type 'InvoiceStatus'
+ */
+export type EnumInvoiceStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'InvoiceStatus'>
+    
+
+
+/**
+ * Reference to a field of type 'InvoiceStatus[]'
+ */
+export type ListEnumInvoiceStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'InvoiceStatus[]'>
     
 
 
@@ -1190,6 +1424,8 @@ export type GlobalOmitConfig = {
   invoice?: Prisma.InvoiceOmit
   transaction?: Prisma.TransactionOmit
   user?: Prisma.UserOmit
+  householdConfig?: Prisma.HouseholdConfigOmit
+  monthlyBalance?: Prisma.MonthlyBalanceOmit
 }
 
 /* Types for Logging */

@@ -42,7 +42,7 @@ export type FixedExpenseMinAggregateOutputType = {
   amount: runtime.Decimal | null
   dueDay: number | null
   categoryId: string | null
-  splitType: string | null
+  splitType: $Enums.SplitMethod | null
   ownerId: string | null
   active: boolean | null
 }
@@ -53,7 +53,7 @@ export type FixedExpenseMaxAggregateOutputType = {
   amount: runtime.Decimal | null
   dueDay: number | null
   categoryId: string | null
-  splitType: string | null
+  splitType: $Enums.SplitMethod | null
   ownerId: string | null
   active: boolean | null
 }
@@ -207,7 +207,7 @@ export type FixedExpenseGroupByOutputType = {
   amount: runtime.Decimal
   dueDay: number
   categoryId: string
-  splitType: string
+  splitType: $Enums.SplitMethod
   ownerId: string | null
   active: boolean
   _count: FixedExpenseCountAggregateOutputType | null
@@ -241,7 +241,7 @@ export type FixedExpenseWhereInput = {
   amount?: Prisma.DecimalFilter<"FixedExpense"> | runtime.Decimal | runtime.DecimalJsLike | number | string
   dueDay?: Prisma.IntFilter<"FixedExpense"> | number
   categoryId?: Prisma.StringFilter<"FixedExpense"> | string
-  splitType?: Prisma.StringFilter<"FixedExpense"> | string
+  splitType?: Prisma.EnumSplitMethodFilter<"FixedExpense"> | $Enums.SplitMethod
   ownerId?: Prisma.StringNullableFilter<"FixedExpense"> | string | null
   active?: Prisma.BoolFilter<"FixedExpense"> | boolean
   Category?: Prisma.XOR<Prisma.CategoryScalarRelationFilter, Prisma.CategoryWhereInput>
@@ -270,7 +270,7 @@ export type FixedExpenseWhereUniqueInput = Prisma.AtLeast<{
   amount?: Prisma.DecimalFilter<"FixedExpense"> | runtime.Decimal | runtime.DecimalJsLike | number | string
   dueDay?: Prisma.IntFilter<"FixedExpense"> | number
   categoryId?: Prisma.StringFilter<"FixedExpense"> | string
-  splitType?: Prisma.StringFilter<"FixedExpense"> | string
+  splitType?: Prisma.EnumSplitMethodFilter<"FixedExpense"> | $Enums.SplitMethod
   ownerId?: Prisma.StringNullableFilter<"FixedExpense"> | string | null
   active?: Prisma.BoolFilter<"FixedExpense"> | boolean
   Category?: Prisma.XOR<Prisma.CategoryScalarRelationFilter, Prisma.CategoryWhereInput>
@@ -302,7 +302,7 @@ export type FixedExpenseScalarWhereWithAggregatesInput = {
   amount?: Prisma.DecimalWithAggregatesFilter<"FixedExpense"> | runtime.Decimal | runtime.DecimalJsLike | number | string
   dueDay?: Prisma.IntWithAggregatesFilter<"FixedExpense"> | number
   categoryId?: Prisma.StringWithAggregatesFilter<"FixedExpense"> | string
-  splitType?: Prisma.StringWithAggregatesFilter<"FixedExpense"> | string
+  splitType?: Prisma.EnumSplitMethodWithAggregatesFilter<"FixedExpense"> | $Enums.SplitMethod
   ownerId?: Prisma.StringNullableWithAggregatesFilter<"FixedExpense"> | string | null
   active?: Prisma.BoolWithAggregatesFilter<"FixedExpense"> | boolean
 }
@@ -312,7 +312,7 @@ export type FixedExpenseCreateInput = {
   description: string
   amount: runtime.Decimal | runtime.DecimalJsLike | number | string
   dueDay: number
-  splitType?: string
+  splitType?: $Enums.SplitMethod
   active?: boolean
   Category: Prisma.CategoryCreateNestedOneWithoutFixedExpenseInput
   User?: Prisma.UserCreateNestedOneWithoutFixedExpenseInput
@@ -324,7 +324,7 @@ export type FixedExpenseUncheckedCreateInput = {
   amount: runtime.Decimal | runtime.DecimalJsLike | number | string
   dueDay: number
   categoryId: string
-  splitType?: string
+  splitType?: $Enums.SplitMethod
   ownerId?: string | null
   active?: boolean
 }
@@ -334,7 +334,7 @@ export type FixedExpenseUpdateInput = {
   description?: Prisma.StringFieldUpdateOperationsInput | string
   amount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   dueDay?: Prisma.IntFieldUpdateOperationsInput | number
-  splitType?: Prisma.StringFieldUpdateOperationsInput | string
+  splitType?: Prisma.EnumSplitMethodFieldUpdateOperationsInput | $Enums.SplitMethod
   active?: Prisma.BoolFieldUpdateOperationsInput | boolean
   Category?: Prisma.CategoryUpdateOneRequiredWithoutFixedExpenseNestedInput
   User?: Prisma.UserUpdateOneWithoutFixedExpenseNestedInput
@@ -346,7 +346,7 @@ export type FixedExpenseUncheckedUpdateInput = {
   amount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   dueDay?: Prisma.IntFieldUpdateOperationsInput | number
   categoryId?: Prisma.StringFieldUpdateOperationsInput | string
-  splitType?: Prisma.StringFieldUpdateOperationsInput | string
+  splitType?: Prisma.EnumSplitMethodFieldUpdateOperationsInput | $Enums.SplitMethod
   ownerId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   active?: Prisma.BoolFieldUpdateOperationsInput | boolean
 }
@@ -357,7 +357,7 @@ export type FixedExpenseCreateManyInput = {
   amount: runtime.Decimal | runtime.DecimalJsLike | number | string
   dueDay: number
   categoryId: string
-  splitType?: string
+  splitType?: $Enums.SplitMethod
   ownerId?: string | null
   active?: boolean
 }
@@ -367,7 +367,7 @@ export type FixedExpenseUpdateManyMutationInput = {
   description?: Prisma.StringFieldUpdateOperationsInput | string
   amount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   dueDay?: Prisma.IntFieldUpdateOperationsInput | number
-  splitType?: Prisma.StringFieldUpdateOperationsInput | string
+  splitType?: Prisma.EnumSplitMethodFieldUpdateOperationsInput | $Enums.SplitMethod
   active?: Prisma.BoolFieldUpdateOperationsInput | boolean
 }
 
@@ -377,7 +377,7 @@ export type FixedExpenseUncheckedUpdateManyInput = {
   amount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   dueDay?: Prisma.IntFieldUpdateOperationsInput | number
   categoryId?: Prisma.StringFieldUpdateOperationsInput | string
-  splitType?: Prisma.StringFieldUpdateOperationsInput | string
+  splitType?: Prisma.EnumSplitMethodFieldUpdateOperationsInput | $Enums.SplitMethod
   ownerId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   active?: Prisma.BoolFieldUpdateOperationsInput | boolean
 }
@@ -485,6 +485,10 @@ export type IntFieldUpdateOperationsInput = {
   divide?: number
 }
 
+export type EnumSplitMethodFieldUpdateOperationsInput = {
+  set?: $Enums.SplitMethod
+}
+
 export type BoolFieldUpdateOperationsInput = {
   set?: boolean
 }
@@ -536,7 +540,7 @@ export type FixedExpenseCreateWithoutCategoryInput = {
   description: string
   amount: runtime.Decimal | runtime.DecimalJsLike | number | string
   dueDay: number
-  splitType?: string
+  splitType?: $Enums.SplitMethod
   active?: boolean
   User?: Prisma.UserCreateNestedOneWithoutFixedExpenseInput
 }
@@ -546,7 +550,7 @@ export type FixedExpenseUncheckedCreateWithoutCategoryInput = {
   description: string
   amount: runtime.Decimal | runtime.DecimalJsLike | number | string
   dueDay: number
-  splitType?: string
+  splitType?: $Enums.SplitMethod
   ownerId?: string | null
   active?: boolean
 }
@@ -586,7 +590,7 @@ export type FixedExpenseScalarWhereInput = {
   amount?: Prisma.DecimalFilter<"FixedExpense"> | runtime.Decimal | runtime.DecimalJsLike | number | string
   dueDay?: Prisma.IntFilter<"FixedExpense"> | number
   categoryId?: Prisma.StringFilter<"FixedExpense"> | string
-  splitType?: Prisma.StringFilter<"FixedExpense"> | string
+  splitType?: Prisma.EnumSplitMethodFilter<"FixedExpense"> | $Enums.SplitMethod
   ownerId?: Prisma.StringNullableFilter<"FixedExpense"> | string | null
   active?: Prisma.BoolFilter<"FixedExpense"> | boolean
 }
@@ -596,7 +600,7 @@ export type FixedExpenseCreateWithoutUserInput = {
   description: string
   amount: runtime.Decimal | runtime.DecimalJsLike | number | string
   dueDay: number
-  splitType?: string
+  splitType?: $Enums.SplitMethod
   active?: boolean
   Category: Prisma.CategoryCreateNestedOneWithoutFixedExpenseInput
 }
@@ -607,7 +611,7 @@ export type FixedExpenseUncheckedCreateWithoutUserInput = {
   amount: runtime.Decimal | runtime.DecimalJsLike | number | string
   dueDay: number
   categoryId: string
-  splitType?: string
+  splitType?: $Enums.SplitMethod
   active?: boolean
 }
 
@@ -642,7 +646,7 @@ export type FixedExpenseCreateManyCategoryInput = {
   description: string
   amount: runtime.Decimal | runtime.DecimalJsLike | number | string
   dueDay: number
-  splitType?: string
+  splitType?: $Enums.SplitMethod
   ownerId?: string | null
   active?: boolean
 }
@@ -652,7 +656,7 @@ export type FixedExpenseUpdateWithoutCategoryInput = {
   description?: Prisma.StringFieldUpdateOperationsInput | string
   amount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   dueDay?: Prisma.IntFieldUpdateOperationsInput | number
-  splitType?: Prisma.StringFieldUpdateOperationsInput | string
+  splitType?: Prisma.EnumSplitMethodFieldUpdateOperationsInput | $Enums.SplitMethod
   active?: Prisma.BoolFieldUpdateOperationsInput | boolean
   User?: Prisma.UserUpdateOneWithoutFixedExpenseNestedInput
 }
@@ -662,7 +666,7 @@ export type FixedExpenseUncheckedUpdateWithoutCategoryInput = {
   description?: Prisma.StringFieldUpdateOperationsInput | string
   amount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   dueDay?: Prisma.IntFieldUpdateOperationsInput | number
-  splitType?: Prisma.StringFieldUpdateOperationsInput | string
+  splitType?: Prisma.EnumSplitMethodFieldUpdateOperationsInput | $Enums.SplitMethod
   ownerId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   active?: Prisma.BoolFieldUpdateOperationsInput | boolean
 }
@@ -672,7 +676,7 @@ export type FixedExpenseUncheckedUpdateManyWithoutCategoryInput = {
   description?: Prisma.StringFieldUpdateOperationsInput | string
   amount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   dueDay?: Prisma.IntFieldUpdateOperationsInput | number
-  splitType?: Prisma.StringFieldUpdateOperationsInput | string
+  splitType?: Prisma.EnumSplitMethodFieldUpdateOperationsInput | $Enums.SplitMethod
   ownerId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   active?: Prisma.BoolFieldUpdateOperationsInput | boolean
 }
@@ -683,7 +687,7 @@ export type FixedExpenseCreateManyUserInput = {
   amount: runtime.Decimal | runtime.DecimalJsLike | number | string
   dueDay: number
   categoryId: string
-  splitType?: string
+  splitType?: $Enums.SplitMethod
   active?: boolean
 }
 
@@ -692,7 +696,7 @@ export type FixedExpenseUpdateWithoutUserInput = {
   description?: Prisma.StringFieldUpdateOperationsInput | string
   amount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   dueDay?: Prisma.IntFieldUpdateOperationsInput | number
-  splitType?: Prisma.StringFieldUpdateOperationsInput | string
+  splitType?: Prisma.EnumSplitMethodFieldUpdateOperationsInput | $Enums.SplitMethod
   active?: Prisma.BoolFieldUpdateOperationsInput | boolean
   Category?: Prisma.CategoryUpdateOneRequiredWithoutFixedExpenseNestedInput
 }
@@ -703,7 +707,7 @@ export type FixedExpenseUncheckedUpdateWithoutUserInput = {
   amount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   dueDay?: Prisma.IntFieldUpdateOperationsInput | number
   categoryId?: Prisma.StringFieldUpdateOperationsInput | string
-  splitType?: Prisma.StringFieldUpdateOperationsInput | string
+  splitType?: Prisma.EnumSplitMethodFieldUpdateOperationsInput | $Enums.SplitMethod
   active?: Prisma.BoolFieldUpdateOperationsInput | boolean
 }
 
@@ -713,7 +717,7 @@ export type FixedExpenseUncheckedUpdateManyWithoutUserInput = {
   amount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   dueDay?: Prisma.IntFieldUpdateOperationsInput | number
   categoryId?: Prisma.StringFieldUpdateOperationsInput | string
-  splitType?: Prisma.StringFieldUpdateOperationsInput | string
+  splitType?: Prisma.EnumSplitMethodFieldUpdateOperationsInput | $Enums.SplitMethod
   active?: Prisma.BoolFieldUpdateOperationsInput | boolean
 }
 
@@ -795,7 +799,7 @@ export type $FixedExpensePayload<ExtArgs extends runtime.Types.Extensions.Intern
     amount: runtime.Decimal
     dueDay: number
     categoryId: string
-    splitType: string
+    splitType: $Enums.SplitMethod
     ownerId: string | null
     active: boolean
   }, ExtArgs["result"]["fixedExpense"]>
@@ -1228,7 +1232,7 @@ export interface FixedExpenseFieldRefs {
   readonly amount: Prisma.FieldRef<"FixedExpense", 'Decimal'>
   readonly dueDay: Prisma.FieldRef<"FixedExpense", 'Int'>
   readonly categoryId: Prisma.FieldRef<"FixedExpense", 'String'>
-  readonly splitType: Prisma.FieldRef<"FixedExpense", 'String'>
+  readonly splitType: Prisma.FieldRef<"FixedExpense", 'SplitMethod'>
   readonly ownerId: Prisma.FieldRef<"FixedExpense", 'String'>
   readonly active: Prisma.FieldRef<"FixedExpense", 'Boolean'>
 }

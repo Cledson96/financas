@@ -56,7 +56,9 @@ export const ModelName = {
   FixedExpense: 'FixedExpense',
   Invoice: 'Invoice',
   Transaction: 'Transaction',
-  User: 'User'
+  User: 'User',
+  HouseholdConfig: 'HouseholdConfig',
+  MonthlyBalance: 'MonthlyBalance'
 } as const
 
 export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -79,13 +81,13 @@ export const AccountScalarFieldEnum = {
   id: 'id',
   name: 'name',
   type: 'type',
-  userId: 'userId',
-  balance: 'balance',
   bankName: 'bankName',
-  createdAt: 'createdAt',
+  balance: 'balance',
   limit: 'limit',
+  dueDay: 'dueDay',
   closingDay: 'closingDay',
-  dueDay: 'dueDay'
+  userId: 'userId',
+  createdAt: 'createdAt'
 } as const
 
 export type AccountScalarFieldEnum = (typeof AccountScalarFieldEnum)[keyof typeof AccountScalarFieldEnum]
@@ -133,25 +135,28 @@ export type InvoiceScalarFieldEnum = (typeof InvoiceScalarFieldEnum)[keyof typeo
 export const TransactionScalarFieldEnum = {
   id: 'id',
   description: 'description',
+  originalDesc: 'originalDesc',
   amount: 'amount',
+  purchaseDate: 'purchaseDate',
+  paymentDate: 'paymentDate',
+  type: 'type',
+  installment: 'installment',
+  totalInstallments: 'totalInstallments',
+  installmentId: 'installmentId',
+  isReconciled: 'isReconciled',
+  isManual: 'isManual',
   categoryId: 'categoryId',
   accountId: 'accountId',
+  invoiceId: 'invoiceId',
+  payerId: 'payerId',
   splitType: 'splitType',
+  ownerId: 'ownerId',
+  settled: 'settled',
+  receiverAccountId: 'receiverAccountId',
+  isArchived: 'isArchived',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt',
-  installment: 'installment',
-  installmentId: 'installmentId',
-  invoiceId: 'invoiceId',
-  isManual: 'isManual',
-  isReconciled: 'isReconciled',
-  originalDesc: 'originalDesc',
-  ownerId: 'ownerId',
-  payerId: 'payerId',
-  paymentDate: 'paymentDate',
-  purchaseDate: 'purchaseDate',
-  settled: 'settled',
-  totalInstallments: 'totalInstallments',
-  type: 'type'
+  splitShare: 'splitShare'
 } as const
 
 export type TransactionScalarFieldEnum = (typeof TransactionScalarFieldEnum)[keyof typeof TransactionScalarFieldEnum]
@@ -164,6 +169,31 @@ export const UserScalarFieldEnum = {
 } as const
 
 export type UserScalarFieldEnum = (typeof UserScalarFieldEnum)[keyof typeof UserScalarFieldEnum]
+
+
+export const HouseholdConfigScalarFieldEnum = {
+  id: 'id',
+  partner1Id: 'partner1Id',
+  partner2Id: 'partner2Id',
+  partner1Share: 'partner1Share',
+  updatedAt: 'updatedAt'
+} as const
+
+export type HouseholdConfigScalarFieldEnum = (typeof HouseholdConfigScalarFieldEnum)[keyof typeof HouseholdConfigScalarFieldEnum]
+
+
+export const MonthlyBalanceScalarFieldEnum = {
+  id: 'id',
+  month: 'month',
+  year: 'year',
+  finalBalance: 'finalBalance',
+  debtorId: 'debtorId',
+  creditorId: 'creditorId',
+  status: 'status',
+  createdAt: 'createdAt'
+} as const
+
+export type MonthlyBalanceScalarFieldEnum = (typeof MonthlyBalanceScalarFieldEnum)[keyof typeof MonthlyBalanceScalarFieldEnum]
 
 
 export const SortOrder = {

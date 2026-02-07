@@ -44,7 +44,7 @@ export type InvoiceMinAggregateOutputType = {
   year: number | null
   dueDate: Date | null
   closingDate: Date | null
-  status: string | null
+  status: $Enums.InvoiceStatus | null
   amount: runtime.Decimal | null
   accountId: string | null
   createdAt: Date | null
@@ -56,7 +56,7 @@ export type InvoiceMaxAggregateOutputType = {
   year: number | null
   dueDate: Date | null
   closingDate: Date | null
-  status: string | null
+  status: $Enums.InvoiceStatus | null
   amount: runtime.Decimal | null
   accountId: string | null
   createdAt: Date | null
@@ -217,7 +217,7 @@ export type InvoiceGroupByOutputType = {
   year: number
   dueDate: Date
   closingDate: Date
-  status: string
+  status: $Enums.InvoiceStatus
   amount: runtime.Decimal
   accountId: string
   createdAt: Date
@@ -252,7 +252,7 @@ export type InvoiceWhereInput = {
   year?: Prisma.IntFilter<"Invoice"> | number
   dueDate?: Prisma.DateTimeFilter<"Invoice"> | Date | string
   closingDate?: Prisma.DateTimeFilter<"Invoice"> | Date | string
-  status?: Prisma.StringFilter<"Invoice"> | string
+  status?: Prisma.EnumInvoiceStatusFilter<"Invoice"> | $Enums.InvoiceStatus
   amount?: Prisma.DecimalFilter<"Invoice"> | runtime.Decimal | runtime.DecimalJsLike | number | string
   accountId?: Prisma.StringFilter<"Invoice"> | string
   createdAt?: Prisma.DateTimeFilter<"Invoice"> | Date | string
@@ -284,7 +284,7 @@ export type InvoiceWhereUniqueInput = Prisma.AtLeast<{
   year?: Prisma.IntFilter<"Invoice"> | number
   dueDate?: Prisma.DateTimeFilter<"Invoice"> | Date | string
   closingDate?: Prisma.DateTimeFilter<"Invoice"> | Date | string
-  status?: Prisma.StringFilter<"Invoice"> | string
+  status?: Prisma.EnumInvoiceStatusFilter<"Invoice"> | $Enums.InvoiceStatus
   amount?: Prisma.DecimalFilter<"Invoice"> | runtime.Decimal | runtime.DecimalJsLike | number | string
   accountId?: Prisma.StringFilter<"Invoice"> | string
   createdAt?: Prisma.DateTimeFilter<"Invoice"> | Date | string
@@ -318,7 +318,7 @@ export type InvoiceScalarWhereWithAggregatesInput = {
   year?: Prisma.IntWithAggregatesFilter<"Invoice"> | number
   dueDate?: Prisma.DateTimeWithAggregatesFilter<"Invoice"> | Date | string
   closingDate?: Prisma.DateTimeWithAggregatesFilter<"Invoice"> | Date | string
-  status?: Prisma.StringWithAggregatesFilter<"Invoice"> | string
+  status?: Prisma.EnumInvoiceStatusWithAggregatesFilter<"Invoice"> | $Enums.InvoiceStatus
   amount?: Prisma.DecimalWithAggregatesFilter<"Invoice"> | runtime.Decimal | runtime.DecimalJsLike | number | string
   accountId?: Prisma.StringWithAggregatesFilter<"Invoice"> | string
   createdAt?: Prisma.DateTimeWithAggregatesFilter<"Invoice"> | Date | string
@@ -330,7 +330,7 @@ export type InvoiceCreateInput = {
   year: number
   dueDate: Date | string
   closingDate: Date | string
-  status?: string
+  status?: $Enums.InvoiceStatus
   amount?: runtime.Decimal | runtime.DecimalJsLike | number | string
   createdAt?: Date | string
   Account: Prisma.AccountCreateNestedOneWithoutInvoiceInput
@@ -343,7 +343,7 @@ export type InvoiceUncheckedCreateInput = {
   year: number
   dueDate: Date | string
   closingDate: Date | string
-  status?: string
+  status?: $Enums.InvoiceStatus
   amount?: runtime.Decimal | runtime.DecimalJsLike | number | string
   accountId: string
   createdAt?: Date | string
@@ -356,7 +356,7 @@ export type InvoiceUpdateInput = {
   year?: Prisma.IntFieldUpdateOperationsInput | number
   dueDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   closingDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  status?: Prisma.StringFieldUpdateOperationsInput | string
+  status?: Prisma.EnumInvoiceStatusFieldUpdateOperationsInput | $Enums.InvoiceStatus
   amount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   Account?: Prisma.AccountUpdateOneRequiredWithoutInvoiceNestedInput
@@ -369,7 +369,7 @@ export type InvoiceUncheckedUpdateInput = {
   year?: Prisma.IntFieldUpdateOperationsInput | number
   dueDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   closingDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  status?: Prisma.StringFieldUpdateOperationsInput | string
+  status?: Prisma.EnumInvoiceStatusFieldUpdateOperationsInput | $Enums.InvoiceStatus
   amount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   accountId?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -382,7 +382,7 @@ export type InvoiceCreateManyInput = {
   year: number
   dueDate: Date | string
   closingDate: Date | string
-  status?: string
+  status?: $Enums.InvoiceStatus
   amount?: runtime.Decimal | runtime.DecimalJsLike | number | string
   accountId: string
   createdAt?: Date | string
@@ -394,7 +394,7 @@ export type InvoiceUpdateManyMutationInput = {
   year?: Prisma.IntFieldUpdateOperationsInput | number
   dueDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   closingDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  status?: Prisma.StringFieldUpdateOperationsInput | string
+  status?: Prisma.EnumInvoiceStatusFieldUpdateOperationsInput | $Enums.InvoiceStatus
   amount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -405,7 +405,7 @@ export type InvoiceUncheckedUpdateManyInput = {
   year?: Prisma.IntFieldUpdateOperationsInput | number
   dueDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   closingDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  status?: Prisma.StringFieldUpdateOperationsInput | string
+  status?: Prisma.EnumInvoiceStatusFieldUpdateOperationsInput | $Enums.InvoiceStatus
   amount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   accountId?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -522,6 +522,10 @@ export type InvoiceUncheckedUpdateManyWithoutAccountNestedInput = {
   deleteMany?: Prisma.InvoiceScalarWhereInput | Prisma.InvoiceScalarWhereInput[]
 }
 
+export type EnumInvoiceStatusFieldUpdateOperationsInput = {
+  set?: $Enums.InvoiceStatus
+}
+
 export type InvoiceCreateNestedOneWithoutTransactionInput = {
   create?: Prisma.XOR<Prisma.InvoiceCreateWithoutTransactionInput, Prisma.InvoiceUncheckedCreateWithoutTransactionInput>
   connectOrCreate?: Prisma.InvoiceCreateOrConnectWithoutTransactionInput
@@ -544,7 +548,7 @@ export type InvoiceCreateWithoutAccountInput = {
   year: number
   dueDate: Date | string
   closingDate: Date | string
-  status?: string
+  status?: $Enums.InvoiceStatus
   amount?: runtime.Decimal | runtime.DecimalJsLike | number | string
   createdAt?: Date | string
   Transaction?: Prisma.TransactionCreateNestedManyWithoutInvoiceInput
@@ -556,7 +560,7 @@ export type InvoiceUncheckedCreateWithoutAccountInput = {
   year: number
   dueDate: Date | string
   closingDate: Date | string
-  status?: string
+  status?: $Enums.InvoiceStatus
   amount?: runtime.Decimal | runtime.DecimalJsLike | number | string
   createdAt?: Date | string
   Transaction?: Prisma.TransactionUncheckedCreateNestedManyWithoutInvoiceInput
@@ -597,7 +601,7 @@ export type InvoiceScalarWhereInput = {
   year?: Prisma.IntFilter<"Invoice"> | number
   dueDate?: Prisma.DateTimeFilter<"Invoice"> | Date | string
   closingDate?: Prisma.DateTimeFilter<"Invoice"> | Date | string
-  status?: Prisma.StringFilter<"Invoice"> | string
+  status?: Prisma.EnumInvoiceStatusFilter<"Invoice"> | $Enums.InvoiceStatus
   amount?: Prisma.DecimalFilter<"Invoice"> | runtime.Decimal | runtime.DecimalJsLike | number | string
   accountId?: Prisma.StringFilter<"Invoice"> | string
   createdAt?: Prisma.DateTimeFilter<"Invoice"> | Date | string
@@ -609,7 +613,7 @@ export type InvoiceCreateWithoutTransactionInput = {
   year: number
   dueDate: Date | string
   closingDate: Date | string
-  status?: string
+  status?: $Enums.InvoiceStatus
   amount?: runtime.Decimal | runtime.DecimalJsLike | number | string
   createdAt?: Date | string
   Account: Prisma.AccountCreateNestedOneWithoutInvoiceInput
@@ -621,7 +625,7 @@ export type InvoiceUncheckedCreateWithoutTransactionInput = {
   year: number
   dueDate: Date | string
   closingDate: Date | string
-  status?: string
+  status?: $Enums.InvoiceStatus
   amount?: runtime.Decimal | runtime.DecimalJsLike | number | string
   accountId: string
   createdAt?: Date | string
@@ -649,7 +653,7 @@ export type InvoiceUpdateWithoutTransactionInput = {
   year?: Prisma.IntFieldUpdateOperationsInput | number
   dueDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   closingDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  status?: Prisma.StringFieldUpdateOperationsInput | string
+  status?: Prisma.EnumInvoiceStatusFieldUpdateOperationsInput | $Enums.InvoiceStatus
   amount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   Account?: Prisma.AccountUpdateOneRequiredWithoutInvoiceNestedInput
@@ -661,7 +665,7 @@ export type InvoiceUncheckedUpdateWithoutTransactionInput = {
   year?: Prisma.IntFieldUpdateOperationsInput | number
   dueDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   closingDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  status?: Prisma.StringFieldUpdateOperationsInput | string
+  status?: Prisma.EnumInvoiceStatusFieldUpdateOperationsInput | $Enums.InvoiceStatus
   amount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   accountId?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -673,7 +677,7 @@ export type InvoiceCreateManyAccountInput = {
   year: number
   dueDate: Date | string
   closingDate: Date | string
-  status?: string
+  status?: $Enums.InvoiceStatus
   amount?: runtime.Decimal | runtime.DecimalJsLike | number | string
   createdAt?: Date | string
 }
@@ -684,7 +688,7 @@ export type InvoiceUpdateWithoutAccountInput = {
   year?: Prisma.IntFieldUpdateOperationsInput | number
   dueDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   closingDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  status?: Prisma.StringFieldUpdateOperationsInput | string
+  status?: Prisma.EnumInvoiceStatusFieldUpdateOperationsInput | $Enums.InvoiceStatus
   amount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   Transaction?: Prisma.TransactionUpdateManyWithoutInvoiceNestedInput
@@ -696,7 +700,7 @@ export type InvoiceUncheckedUpdateWithoutAccountInput = {
   year?: Prisma.IntFieldUpdateOperationsInput | number
   dueDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   closingDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  status?: Prisma.StringFieldUpdateOperationsInput | string
+  status?: Prisma.EnumInvoiceStatusFieldUpdateOperationsInput | $Enums.InvoiceStatus
   amount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   Transaction?: Prisma.TransactionUncheckedUpdateManyWithoutInvoiceNestedInput
@@ -708,7 +712,7 @@ export type InvoiceUncheckedUpdateManyWithoutAccountInput = {
   year?: Prisma.IntFieldUpdateOperationsInput | number
   dueDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   closingDate?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  status?: Prisma.StringFieldUpdateOperationsInput | string
+  status?: Prisma.EnumInvoiceStatusFieldUpdateOperationsInput | $Enums.InvoiceStatus
   amount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -822,7 +826,7 @@ export type $InvoicePayload<ExtArgs extends runtime.Types.Extensions.InternalArg
     year: number
     dueDate: Date
     closingDate: Date
-    status: string
+    status: $Enums.InvoiceStatus
     amount: runtime.Decimal
     accountId: string
     createdAt: Date
@@ -1256,7 +1260,7 @@ export interface InvoiceFieldRefs {
   readonly year: Prisma.FieldRef<"Invoice", 'Int'>
   readonly dueDate: Prisma.FieldRef<"Invoice", 'DateTime'>
   readonly closingDate: Prisma.FieldRef<"Invoice", 'DateTime'>
-  readonly status: Prisma.FieldRef<"Invoice", 'String'>
+  readonly status: Prisma.FieldRef<"Invoice", 'InvoiceStatus'>
   readonly amount: Prisma.FieldRef<"Invoice", 'Decimal'>
   readonly accountId: Prisma.FieldRef<"Invoice", 'String'>
   readonly createdAt: Prisma.FieldRef<"Invoice", 'DateTime'>

@@ -1,48 +1,50 @@
+datasource db {
+  provider = "postgresql"
+}
+
 generator client {
   provider = "prisma-client"
   output   = "./generated/prisma"
 }
 
-datasource db {
-  provider = "postgresql"
-}
 
 model Account {
-  id          String        @id
-  name        String
-  type        String
-  userId      String?
-  balance     Decimal       @default(0) @db.Decimal(10, 2)
-  bankName    String?
-  createdAt   DateTime      @default(now())
-  limit       Decimal?      @db.Decimal(10, 2)
-  closingDay  Int?
-  dueDay      Int?
-  User        User?         @relation(fields: [userId], references: [id])
-  Invoice     Invoice[]
-  Transaction Transaction[]
+  id                                                 String        @id
+  name                                               String
+  type                                               AccountType
+  bankName                                           String?
+  balance                                            Decimal       @default(0) @db.Decimal(10, 2)
+  limit                                              Decimal?      @db.Decimal(10, 2)
+  dueDay                                             Int?
+  closingDay                                         Int?
+  userId                                             String?
+  createdAt                                          DateTime      @default(now())
+  User                                               User?         @relation(fields: [userId], references: [id])
+  Invoice                                            Invoice[]
+  Transaction                                        Transaction[]
+  Transaction_Transaction_receiverAccountIdToAccount Transaction[] @relation("Transaction_receiverAccountIdToAccount")
 }
 
 model Category {
-  id           String         @id
-  name         String         @unique
-  type         String
+  id           String          @id
+  name         String          @unique
+  type         TransactionType
   icon         String?
   FixedExpense FixedExpense[]
   Transaction  Transaction[]
 }
 
 model FixedExpense {
-  id          String   @id
+  id          String      @id
   description String
-  amount      Decimal  @db.Decimal(10, 2)
+  amount      Decimal     @db.Decimal(10, 2)
   dueDay      Int
   categoryId  String
-  splitType   String   @default("SHARED")
+  splitType   SplitMethod @default(INDIVIDUAL)
   ownerId     String?
-  active      Boolean  @default(true)
-  Category    Category @relation(fields: [categoryId], references: [id])
-  User        User?    @relation(fields: [ownerId], references: [id])
+  active      Boolean     @default(true)
+  Category    Category    @relation(fields: [categoryId], references: [id])
+  User        User?       @relation(fields: [ownerId], references: [id])
 }
 
 model Invoice {
@@ -51,7 +53,7 @@ model Invoice {
   year        Int
   dueDate     DateTime
   closingDate DateTime
-  status      String        @default("OPEN")
+  status      InvoiceStatus @default(OPEN)
   amount      Decimal       @default(0) @db.Decimal(10, 2)
   accountId   String
   createdAt   DateTime      @default(now())
@@ -62,40 +64,99 @@ model Invoice {
 }
 
 model Transaction {
-  id                             String    @id
-  description                    String
-  amount                         Decimal   @db.Decimal(10, 2)
-  categoryId                     String
-  accountId                      String
-  splitType                      String    @default("EQUAL")
-  createdAt                      DateTime  @default(now())
-  updatedAt                      DateTime
-  installment                    Int?      @default(1)
-  installmentId                  String?
-  invoiceId                      String?
-  isManual                       Boolean   @default(true)
-  isReconciled                   Boolean   @default(false)
-  originalDesc                   String?
-  ownerId                        String?
-  payerId                        String
-  paymentDate                    DateTime?
-  purchaseDate                   DateTime
-  settled                        Boolean   @default(false)
-  totalInstallments              Int?      @default(1)
-  type                           String
-  Account                        Account   @relation(fields: [accountId], references: [id])
-  Category                       Category  @relation(fields: [categoryId], references: [id])
-  Invoice                        Invoice?  @relation(fields: [invoiceId], references: [id])
-  User_Transaction_ownerIdToUser User?     @relation("Transaction_ownerIdToUser", fields: [ownerId], references: [id])
-  User_Transaction_payerIdToUser User      @relation("Transaction_payerIdToUser", fields: [payerId], references: [id])
+  id                                             String          @id
+  description                                    String
+  originalDesc                                   String?
+  amount                                         Decimal         @db.Decimal(10, 2)
+  purchaseDate                                   DateTime
+  paymentDate                                    DateTime?
+  type                                           TransactionType
+  installment                                    Int?            @default(1)
+  totalInstallments                              Int?            @default(1)
+  installmentId                                  String?
+  isReconciled                                   Boolean         @default(false)
+  isManual                                       Boolean         @default(true)
+  categoryId                                     String
+  accountId                                      String
+  invoiceId                                      String?
+  payerId                                        String
+  splitType                                      SplitMethod     @default(SHARED)
+  ownerId                                        String?
+  settled                                        Boolean         @default(false)
+  receiverAccountId                              String?
+  isArchived                                     Boolean         @default(false)
+  createdAt                                      DateTime        @default(now())
+  updatedAt                                      DateTime
+  splitShare                                     Decimal?        @db.Decimal(5, 4)
+  Account                                        Account         @relation(fields: [accountId], references: [id])
+  Category                                       Category        @relation(fields: [categoryId], references: [id])
+  Invoice                                        Invoice?        @relation(fields: [invoiceId], references: [id])
+  User_Transaction_ownerIdToUser                 User?           @relation("Transaction_ownerIdToUser", fields: [ownerId], references: [id])
+  User_Transaction_payerIdToUser                 User            @relation("Transaction_payerIdToUser", fields: [payerId], references: [id])
+  Account_Transaction_receiverAccountIdToAccount Account?        @relation("Transaction_receiverAccountIdToAccount", fields: [receiverAccountId], references: [id])
 }
 
 model User {
-  id                                    String         @id
-  name                                  String
-  email                                 String?        @unique
-  Account                               Account[]
-  FixedExpense                          FixedExpense[]
-  Transaction_Transaction_ownerIdToUser Transaction[]  @relation("Transaction_ownerIdToUser")
-  Transaction_Transaction_payerIdToUser Transaction[]  @relation("Transaction_payerIdToUser")
+  id                                               String            @id
+  name                                             String
+  email                                            String?           @unique
+  Account                                          Account[]
+  FixedExpense                                     FixedExpense[]
+  HouseholdConfig_HouseholdConfig_partner1IdToUser HouseholdConfig[] @relation("HouseholdConfig_partner1IdToUser")
+  HouseholdConfig_HouseholdConfig_partner2IdToUser HouseholdConfig[] @relation("HouseholdConfig_partner2IdToUser")
+  MonthlyBalance_MonthlyBalance_creditorIdToUser   MonthlyBalance[]  @relation("MonthlyBalance_creditorIdToUser")
+  MonthlyBalance_MonthlyBalance_debtorIdToUser     MonthlyBalance[]  @relation("MonthlyBalance_debtorIdToUser")
+  Transaction_Transaction_ownerIdToUser            Transaction[]     @relation("Transaction_ownerIdToUser")
+  Transaction_Transaction_payerIdToUser            Transaction[]     @relation("Transaction_payerIdToUser")
+}
+
+model HouseholdConfig {
+  id                                    String   @id
+  partner1Id                            String
+  partner2Id                            String
+  partner1Share                         Decimal  @default(0.50) @db.Decimal(5, 4)
+  updatedAt                             DateTime
+  User_HouseholdConfig_partner1IdToUser User     @relation("HouseholdConfig_partner1IdToUser", fields: [partner1Id], references: [id])
+  User_HouseholdConfig_partner2IdToUser User     @relation("HouseholdConfig_partner2IdToUser", fields: [partner2Id], references: [id])
+}
+
+model MonthlyBalance {
+  id                                   String   @id
+  month                                Int
+  year                                 Int
+  finalBalance                         Decimal  @db.Decimal(10, 2)
+  debtorId                             String
+  creditorId                           String
+  status                               String   @default("OPEN")
+  createdAt                            DateTime @default(now())
+  User_MonthlyBalance_creditorIdToUser User     @relation("MonthlyBalance_creditorIdToUser", fields: [creditorId], references: [id])
+  User_MonthlyBalance_debtorIdToUser   User     @relation("MonthlyBalance_debtorIdToUser", fields: [debtorId], references: [id])
+
+  @@unique([month, year])
+}
+
+enum AccountType {
+  CHECKING_ACCOUNT
+  INVESTMENT
+  CASH
+  CREDIT_CARD
+}
+
+enum InvoiceStatus {
+  OPEN
+  CLOSED
+  PAID
+}
+
+enum SplitMethod {
+  INDIVIDUAL
+  SHARED
+  SHARED_PROPORTIONAL
+}
+
+enum TransactionType {
+  EXPENSE
+  INCOME
+  TRANSFER
+  PAYMENT
 }
