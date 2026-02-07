@@ -36,6 +36,17 @@ import { format, parseISO, isBefore } from "date-fns";
 import { ptBR } from "date-fns/locale";
 import { cn } from "@/lib/utils";
 
+const toNumber = (val: any) => Number(val) || 0;
+
+interface TransactionTableProps {
+  transactions: any[];
+  categories: any[];
+  onEdit?: (t: any) => void;
+  onDelete?: (t: any) => void;
+  onDuplicate?: (t: any) => void;
+  onExport?: (data: any[]) => void;
+}
+
 export default function TransactionTable({
   transactions = [],
   categories = [],
@@ -43,16 +54,17 @@ export default function TransactionTable({
   onDelete,
   onDuplicate,
   onExport,
-}) {
+}: TransactionTableProps) {
   const [search, setSearch] = useState("");
   const [categoryFilter, setCategoryFilter] = useState("all");
   const [typeFilter, setTypeFilter] = useState("all");
   const [sortField, setSortField] = useState("purchaseDate");
   const [sortOrder, setSortOrder] = useState("desc");
 
-  const isOverdue = (transaction) => {
-    if (transaction.status === "PAID") return false;
+  const isOverdue = (transaction: any) => {
+    if (transaction.status === "PAID" || transaction.settled) return false;
     if (!transaction.paymentDate) return false;
+    // Check overdue only on unchecked/unsettled transactions
     return isBefore(parseISO(transaction.paymentDate), new Date());
   };
 
@@ -67,13 +79,20 @@ export default function TransactionTable({
       return matchSearch && matchCategory && matchType;
     })
     .sort((a, b) => {
-      const aVal = a[sortField];
-      const bVal = b[sortField];
+      let aVal = a[sortField];
+      let bVal = b[sortField];
+
+      // Fix numeric sort for amount
+      if (sortField === "amount") {
+        aVal = toNumber(aVal);
+        bVal = toNumber(bVal);
+      }
+
       if (sortOrder === "asc") return aVal > bVal ? 1 : -1;
       return aVal < bVal ? 1 : -1;
     });
 
-  const toggleSort = (field) => {
+  const toggleSort = (field: string) => {
     if (sortField === field) {
       setSortOrder(sortOrder === "asc" ? "desc" : "asc");
     } else {
@@ -171,7 +190,25 @@ export default function TransactionTable({
               </TableRow>
             ) : (
               filteredTransactions.map((transaction) => {
+                // Use safe optional chaining for potential relations
+                const categoryName =
+                  transaction.Category?.name ||
+                  transaction.categoryName ||
+                  "Geral";
+                const accountName =
+                  transaction.Account?.name ||
+                  transaction.accountName ||
+                  "Conta";
+                // Payer relation: User_Transaction_payerIdToUser or payerName fallback
+                const payerName =
+                  transaction.User_Transaction_payerIdToUser?.name ||
+                  transaction.payerName ||
+                  "Desconhecido";
+
                 const overdue = isOverdue(transaction);
+                const isPaid =
+                  transaction.settled || transaction.status === "PAID";
+
                 return (
                   <TableRow
                     key={transaction.id}
@@ -195,15 +232,20 @@ export default function TransactionTable({
                         {transaction.splitType === "SHARED" && (
                           <span className="text-xs text-blue-500">Casal</span>
                         )}
+                        {transaction.splitType === "INDIVIDUAL" && (
+                          <span className="text-xs text-zinc-400">
+                            Individual
+                          </span>
+                        )}
                       </div>
                     </TableCell>
                     <TableCell>
                       <Badge variant="outline" className="gap-1 font-normal">
-                        {transaction.categoryName}
+                        {categoryName}
                       </Badge>
                     </TableCell>
                     <TableCell className="text-zinc-600 dark:text-zinc-400">
-                      {transaction.accountName}
+                      {accountName}
                     </TableCell>
                     <TableCell>
                       <span
@@ -216,33 +258,29 @@ export default function TransactionTable({
                       >
                         {transaction.type === "EXPENSE" ? "-" : "+"}
                         R${" "}
-                        {transaction.amount?.toLocaleString("pt-BR", {
+                        {toNumber(transaction.amount).toLocaleString("pt-BR", {
                           minimumFractionDigits: 2,
                         })}
                       </span>
                     </TableCell>
                     <TableCell className="text-zinc-600 dark:text-zinc-400">
-                      {transaction.payerName}
+                      {payerName}
                     </TableCell>
                     <TableCell>
                       <Badge
                         variant={
                           overdue
                             ? "destructive"
-                            : transaction.status === "PAID"
+                            : isPaid
                               ? "default"
                               : "secondary"
                         }
                         className={cn(
-                          transaction.status === "PAID" &&
+                          isPaid &&
                             "bg-emerald-100 text-emerald-700 dark:bg-emerald-900/30 dark:text-emerald-400",
                         )}
                       >
-                        {overdue
-                          ? "Atrasado"
-                          : transaction.status === "PAID"
-                            ? "Pago"
-                            : "Pendente"}
+                        {overdue ? "Atrasado" : isPaid ? "Pago" : "Pendente"}
                       </Badge>
                     </TableCell>
                     <TableCell>

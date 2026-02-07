@@ -3,7 +3,36 @@ import { Progress } from "@/components/ui/progress";
 import { PiggyBank, AlertTriangle } from "lucide-react";
 import { cn } from "@/lib/utils";
 
-export default function BudgetProgress({ budgets = [], transactions = [] }) {
+// Helper for safe number casting
+const toNumber = (val: any) => Number(val) || 0;
+
+interface Budget {
+  id: string;
+  amount: number;
+  month: number;
+  year: number;
+  categoryId: string;
+  categoryName?: string;
+  categoryIcon?: string;
+}
+
+interface Transaction {
+  id: string;
+  amount: any; // Decimal inputs
+  type: string;
+  categoryId: string;
+  purchaseDate: string;
+}
+
+interface BudgetProgressProps {
+  budgets: Budget[];
+  transactions: Transaction[];
+}
+
+export default function BudgetProgress({
+  budgets = [],
+  transactions = [],
+}: BudgetProgressProps) {
   const currentMonth = new Date().getMonth() + 1;
   const currentYear = new Date().getFullYear();
 
@@ -20,17 +49,18 @@ export default function BudgetProgress({ budgets = [], transactions = [] }) {
           new Date(t.purchaseDate).getMonth() + 1 === currentMonth &&
           new Date(t.purchaseDate).getFullYear() === currentYear,
       )
-      .reduce((sum, t) => sum + (t.amount || 0), 0);
+      .reduce((sum, t) => sum + toNumber(t.amount), 0);
 
-    const percentage = budget.amount > 0 ? (spent / budget.amount) * 100 : 0;
-    const remaining = budget.amount - spent;
+    const amount = toNumber(budget.amount);
+    const percentage = amount > 0 ? (spent / amount) * 100 : 0;
+    const remaining = amount - spent;
 
     return {
       ...budget,
       spent,
       percentage: Math.min(percentage, 100),
       remaining,
-      isOver: spent > budget.amount,
+      isOver: spent > amount,
     };
   });
 
@@ -77,7 +107,7 @@ export default function BudgetProgress({ budgets = [], transactions = [] }) {
                   minimumFractionDigits: 2,
                 })}{" "}
                 / R${" "}
-                {budget.amount.toLocaleString("pt-BR", {
+                {toNumber(budget.amount).toLocaleString("pt-BR", {
                   minimumFractionDigits: 2,
                 })}
               </span>

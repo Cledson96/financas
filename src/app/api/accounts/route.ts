@@ -6,6 +6,7 @@ export async function GET() {
     const accounts = await prisma.account.findMany({
       include: {
         User: true,
+        Invoice: true,
       },
       orderBy: { createdAt: "desc" },
     });

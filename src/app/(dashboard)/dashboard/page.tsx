@@ -25,7 +25,9 @@ import KPICard from "@/components/finance/KPICard";
 import CategoryPieChart from "@/components/finance/CategoryPieChart";
 import ExpenseBarChart from "@/components/finance/ExpenseBarChart";
 import TransactionModal from "@/components/finance/TransactionModal";
-import BudgetProgress from "@/components/finance/BudgetProgress";
+
+// Helper to safely cast Decimal/String to Number
+const toNumber = (val: any) => Number(val) || 0;
 
 async function fetchData(url: string) {
   const res = await fetch(url);
@@ -68,15 +70,11 @@ export default function DashboardPage() {
     queryFn: () => fetchData("/api/family-members"),
   });
 
-  const { data: budgets = [] } = useQuery({
-    queryKey: ["budgets"],
-    queryFn: () => fetchData("/api/budgets"),
-  });
-
   const createTransactionMutation = useMutation({
     mutationFn: createTransaction,
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["transactions"] });
+      queryClient.invalidateQueries({ queryKey: ["accounts"] }); // Update balances/invoices
       setModalOpen(false);
     },
   });
@@ -95,29 +93,49 @@ export default function DashboardPage() {
     return filteredTransactions
       .filter((t: any) => {
         const date = parseISO(t.purchaseDate);
+        // Regra: Somar apenas EXPENSE no mês atual
         return t.type === "EXPENSE" && date >= monthStart && date <= monthEnd;
       })
-      .reduce((sum: number, t: any) => sum + (t.amount || 0), 0);
+      .reduce((sum: number, t: any) => sum + toNumber(t.amount), 0);
   }, [filteredTransactions, monthStart, monthEnd]);
 
   const totalBalance = useMemo(() => {
+    // Regra: Saldo real apenas para CHECKING/CASH
     return accounts
       .filter((a: any) => a.type === "CHECKING_ACCOUNT" || a.type === "CASH")
-      .reduce((sum: number, a: any) => sum + (a.balance || 0), 0);
+      .reduce((sum: number, a: any) => sum + toNumber(a.balance), 0);
   }, [accounts]);
 
   const openInvoices = useMemo(() => {
+    // Regra: Somar faturas em aberto (Status OPEN)
+    // Se a API de contas trouxer Invoices, usamos isso.
+    // Caso contrário, fallback para estimativa.
+    // Assumindo que atualizamos a API para incluir Invoice:
     return accounts
       .filter((a: any) => a.type === "CREDIT_CARD")
       .reduce((sum: number, a: any) => {
-        const used = (a.limit || 0) - (a.balance || 0);
-        return sum + used;
+        // Se tiver invoices populadas via include
+        if (a.Invoice && Array.isArray(a.Invoice)) {
+          const openInvoice = a.Invoice.find(
+            (inv: any) => inv.status === "OPEN",
+          );
+          return sum + (openInvoice ? toNumber(openInvoice.amount) : 0);
+        }
+        // Fallback se não tiver invoice criado ainda: soma do usado?
+        // Mas a regra diz que invoiceId é criado na compra.
+        // Vamos assumir 0 se null para não inventar dados.
+        return sum;
       }, 0);
   }, [accounts]);
 
   const overdueCount = useMemo(() => {
     return transactions.filter((t: any) => {
-      if (t.status === "PAID") return false;
+      if (t.status === "PAID" || t.settled === true) return false;
+      // Se for Despesa e já passou purchaseDate? Não, expense não vence (só fatura).
+      // Regra: Contas a pagar (Invoices ou Transactions manuais com due date?)
+      // O modelo Transaction tem 'paymentDate'. Se paymentDate < hoje e não pago?
+      // Transaction não tem status 'PAID' explícito no novo schema, tem 'settled'.
+      if (t.settled) return false;
       if (!t.paymentDate) return false;
       return isBefore(parseISO(t.paymentDate), new Date());
     }).length;
@@ -132,9 +150,9 @@ export default function DashboardPage() {
         return t.type === "EXPENSE" && date >= monthStart && date <= monthEnd;
       })
       .forEach((t: any) => {
-        const catName = t.category?.name || "Outros";
+        const catName = t.Category?.name || "Outros"; // Case sensitive Prisma include
         expensesByCategory[catName] =
-          (expensesByCategory[catName] || 0) + (t.amount || 0);
+          (expensesByCategory[catName] || 0) + toNumber(t.amount);
       });
 
     return Object.entries(expensesByCategory)
@@ -156,14 +174,14 @@ export default function DashboardPage() {
           const d = parseISO(t.purchaseDate);
           return t.type === "EXPENSE" && d >= start && d <= end;
         })
-        .reduce((sum: number, t: any) => sum + (t.amount || 0), 0);
+        .reduce((sum: number, t: any) => sum + toNumber(t.amount), 0);
 
       const monthIncome = filteredTransactions
         .filter((t: any) => {
           const d = parseISO(t.purchaseDate);
           return t.type === "INCOME" && d >= start && d <= end;
         })
-        .reduce((sum: number, t: any) => sum + (t.amount || 0), 0);
+        .reduce((sum: number, t: any) => sum + toNumber(t.amount), 0);
 
       months.push({
         month: format(date, "MMM", { locale: ptBR }),
@@ -243,9 +261,6 @@ export default function DashboardPage() {
           pulse={overdueCount > 0}
         />
       </div>
-
-      {/* Budget Progress */}
-      <BudgetProgress budgets={budgets} transactions={transactions} />
 
       {/* Charts */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
