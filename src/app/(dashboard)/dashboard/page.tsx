@@ -3,9 +3,17 @@ import DashboardClient from "./DashboardClient";
 
 export const dynamic = "force-dynamic"; // Ensure we always fetch fresh data
 
-export default async function DashboardPage() {
+export default async function DashboardPage({
+  searchParams,
+}: {
+  searchParams: Promise<{ month?: string; year?: string }>;
+}) {
   try {
-    const data = await getDashboardData();
+    const { month: monthParam, year: yearParam } = await searchParams;
+    const month = monthParam ? parseInt(monthParam) : undefined;
+    const year = yearParam ? parseInt(yearParam) : undefined;
+
+    const data = await getDashboardData(month, year);
     return <DashboardClient initialData={data} />;
   } catch (error: any) {
     return (

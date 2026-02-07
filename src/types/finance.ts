@@ -1,7 +1,7 @@
 export type TransactionType = "EXPENSE" | "INCOME" | "PAYMENT";
 export type AccountType = "CREDIT_CARD" | "CHECKING_ACCOUNT" | "CASH";
 export type CategoryType = "EXPENSE" | "INCOME" | "TRANSFER" | "PAYMENT";
-export type SplitType = "SHARED" | "INDIVIDUAL";
+export type SplitType = "SHARED" | "INDIVIDUAL" | "SHARED_PROPORTIONAL";
 export type InvoiceStatus = "OPEN" | "CLOSED" | "PAID";
 
 export interface User {
@@ -60,6 +60,7 @@ export interface Transaction {
   invoiceId?: string | null;
   payerId: string;
   splitType: string; // SplitType
+  splitShare?: number | null; // Added for SHARED_PROPORTIONAL
   ownerId?: string | null;
 
   // Relations used in UI
@@ -69,16 +70,40 @@ export interface Transaction {
   payer?: User;
 }
 
+export interface SettlementDebt {
+  amount: number;
+  creditorName: string;
+}
+
+export interface SettlementData {
+  total: number;
+  debtorName: string | null;
+  creditorName: string | null;
+  breakdown: {
+    sharedFiftyFifty: number; // 50/50 division
+    sharedProportional: number; // Custom division
+    individualPaidByOther: number; // Individual items paid by partner
+  };
+}
+
+export interface FairnessData {
+  userA: { name: string; paid: number; shouldHavePaid: number };
+  userB: { name: string; paid: number; shouldHavePaid: number };
+}
+
 export interface DashboardMetrics {
   totalBalance: number;
   currentMonthExpenses: number;
   openInvoices: number;
-  overdueCount: number;
-  settlement: {
+  nextInvoice?: {
     amount: number;
-    debtorName: string | null; // Who owes the money?
-    creditorName: string | null; // Who receives the money?
-  };
+    daysUntilDue: number;
+    bankName: string;
+    dueDate: Date;
+  } | null;
+  overdueCount: number;
+  settlement: SettlementData;
+  fairness: FairnessData;
 }
 
 export interface DashboardData {

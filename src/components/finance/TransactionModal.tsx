@@ -135,7 +135,7 @@ export default function TransactionModal({
 
         <form onSubmit={handleSubmit} className="space-y-5">
           <Tabs value={type} onValueChange={setType} className="w-full">
-            <TabsList className="grid w-full grid-cols-2 bg-zinc-100 dark:bg-zinc-800">
+            <TabsList className="grid w-full grid-cols-3 bg-zinc-100 dark:bg-zinc-800">
               <TabsTrigger
                 value="EXPENSE"
                 className="data-[state=active]:bg-rose-500 data-[state=active]:text-white"
@@ -147,6 +147,12 @@ export default function TransactionModal({
                 className="data-[state=active]:bg-emerald-500 data-[state=active]:text-white"
               >
                 Receita
+              </TabsTrigger>
+              <TabsTrigger
+                value="TRANSFER"
+                className="data-[state=active]:bg-blue-500 data-[state=active]:text-white"
+              >
+                Transf.
               </TabsTrigger>
             </TabsList>
           </Tabs>
@@ -209,24 +215,30 @@ export default function TransactionModal({
           </div>
 
           <div className="grid grid-cols-2 gap-4">
-            <div className="space-y-2">
-              <Label>Categoria</Label>
-              <Select value={categoryId} onValueChange={setCategoryId} required>
-                <SelectTrigger className="bg-zinc-50 dark:bg-zinc-800 border-zinc-200 dark:border-zinc-700">
-                  <SelectValue placeholder="Selecione" />
-                </SelectTrigger>
-                <SelectContent>
-                  {filteredCategories.map((cat) => (
-                    <SelectItem key={cat.id} value={cat.id}>
-                      <span className="flex items-center gap-2">
-                        {/* {cat.icon && <span>{cat.icon}</span>} */}
-                        {cat.name}
-                      </span>
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
-            </div>
+            {type !== "TRANSFER" && (
+              <div className="space-y-2">
+                <Label>Categoria</Label>
+                <Select
+                  value={categoryId}
+                  onValueChange={setCategoryId}
+                  required={type !== "TRANSFER"}
+                >
+                  <SelectTrigger className="bg-zinc-50 dark:bg-zinc-800 border-zinc-200 dark:border-zinc-700">
+                    <SelectValue placeholder="Selecione" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {filteredCategories.map((cat) => (
+                      <SelectItem key={cat.id} value={cat.id}>
+                        <span className="flex items-center gap-2">
+                          {/* {cat.icon && <span>{cat.icon}</span>} */}
+                          {cat.name}
+                        </span>
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              </div>
+            )}
 
             <div className="space-y-2">
               <Label>Conta</Label>
@@ -246,7 +258,7 @@ export default function TransactionModal({
           </div>
 
           <div className="space-y-2">
-            <Label>Quem Pagou</Label>
+            <Label>{type === "TRANSFER" ? "Quem Enviou" : "Quem Pagou"}</Label>
             <Select value={payerId} onValueChange={setPayerId} required>
               <SelectTrigger className="bg-zinc-50 dark:bg-zinc-800 border-zinc-200 dark:border-zinc-700">
                 <SelectValue placeholder="Selecione" />
@@ -261,21 +273,23 @@ export default function TransactionModal({
             </Select>
           </div>
 
-          <div className="flex items-center justify-between p-4 rounded-lg bg-zinc-50 dark:bg-zinc-800">
-            <div>
-              <Label htmlFor="shared" className="text-sm font-medium">
-                Dividir com o Casal?
-              </Label>
-              <p className="text-xs text-zinc-500 dark:text-zinc-400">
-                {isShared ? "Será dividido 50/50" : "Conta individual"}
-              </p>
+          {type !== "TRANSFER" && (
+            <div className="flex items-center justify-between p-4 rounded-lg bg-zinc-50 dark:bg-zinc-800">
+              <div>
+                <Label htmlFor="shared" className="text-sm font-medium">
+                  Dividir com o Casal?
+                </Label>
+                <p className="text-xs text-zinc-500 dark:text-zinc-400">
+                  {isShared ? "Será dividido 50/50" : "Conta individual"}
+                </p>
+              </div>
+              <Switch
+                id="shared"
+                checked={isShared}
+                onCheckedChange={setIsShared}
+              />
             </div>
-            <Switch
-              id="shared"
-              checked={isShared}
-              onCheckedChange={setIsShared}
-            />
-          </div>
+          )}
 
           <div className="flex gap-3 pt-2">
             <Button
@@ -293,7 +307,9 @@ export default function TransactionModal({
                 "flex-1",
                 type === "EXPENSE"
                   ? "bg-rose-500 hover:bg-rose-600"
-                  : "bg-emerald-500 hover:bg-emerald-600",
+                  : type === "INCOME"
+                    ? "bg-emerald-500 hover:bg-emerald-600"
+                    : "bg-blue-500 hover:bg-blue-600",
               )}
             >
               {isLoading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
