@@ -1,6 +1,0 @@
-{
-  "version": 3,
-  "sources": [],
-  "sections": [
-    {"offset": {"line": 4, "column": 0}, "map": {"version":3,"sources":["file:///C:/projetos/financas/src/app/providers.tsx"],"sourcesContent":["\"use client\";\r\n\r\nimport { QueryClient, QueryClientProvider } from \"@tanstack/react-query\";\r\nimport { useState } from \"react\";\r\n\r\nexport function Providers({ children }: { children: React.ReactNode }) {\r\n  const [queryClient] = useState(\r\n    () =>\r\n      new QueryClient({\r\n        defaultOptions: {\r\n          queries: {\r\n            staleTime: 60 * 1000, // 1 minute\r\n            refetchOnWindowFocus: false,\r\n          },\r\n        },\r\n      }),\r\n  );\r\n\r\n  return (\r\n    <QueryClientProvider client={queryClient}>{children}</QueryClientProvider>\r\n  );\r\n}\r\n"],"names":[],"mappings":";;;;;AAEA;AAAA;AACA;;;AAHA;;;AAKO,SAAS,UAAU,EAAE,QAAQ,EAAiC;;IACnE,MAAM,CAAC,YAAY,GAAG,IAAA,yKAAQ;8BAC5B,IACE,IAAI,+LAAW,CAAC;gBACd,gBAAgB;oBACd,SAAS;wBACP,WAAW,KAAK;wBAChB,sBAAsB;oBACxB;gBACF;YACF;;IAGJ,qBACE,6LAAC,gNAAmB;QAAC,QAAQ;kBAAc;;;;;;AAE/C;GAhBgB;KAAA"}}]
-}
