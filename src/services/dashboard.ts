@@ -28,6 +28,8 @@ const toNumber = (val: any): number => {
 export async function getDashboardData(
   month?: number,
   year?: number,
+  userId?: string,
+  scope?: "ALL" | "SHARED" | "INDIVIDUAL",
 ): Promise<DashboardData> {
   const now = new Date();
   const targetDate =
@@ -48,6 +50,7 @@ export async function getDashboardData(
 
   // 2. Fetch Accounts
   const accountsRaw = await prisma.account.findMany({
+    where: userId ? { userId } : undefined, // Filter accounts if user selected
     include: {
       Invoice: {
         where: { status: "OPEN" },
@@ -64,6 +67,14 @@ export async function getDashboardData(
       purchaseDate: {
         gte: evolutionStartDate,
       },
+      // Basic filtering at DB level
+      // Note: Complex splitting logic usually requires fetching SHARED to calculate correctly
+      // even if viewing as INDIVIDUAL (to see what "I" paid for "You").
+      // But for "Scope", if I want "Only Individual", I shouldn't see SHARED.
+      // If I want "Only Shared", I shouldn't see INDIVIDUAL.
+      // However, for "Settlement", we need GLOBAL data usually.
+      // Strategy: Fetch GLOBAL data for Settlement/Fairness (needs context),
+      // BUT filter `recentTransactions`, `metrics` (expenses), and `charts` based on user selection.
     },
     include: {
       Category: true,
@@ -114,7 +125,7 @@ export async function getDashboardData(
     email: u.email,
   });
 
-  const transactions: Transaction[] = transactionsRaw.map((t) => ({
+  const allTransactions: Transaction[] = transactionsRaw.map((t) => ({
     id: t.id,
     description: t.description,
     originalDesc: t.originalDesc,
@@ -151,6 +162,46 @@ export async function getDashboardData(
       ? mapUser(t.User_Transaction_payerIdToUser)
       : undefined,
   }));
+
+  // --- FILTERING ---
+  // We separate "Global Data" (for fairness/settlement) from "View Data" (for lists/graphs).
+  // Settlement requires seeing EVERYTHING to know who owes whom.
+  // View Data respects the user's filter.
+
+  const transactions = allTransactions.filter((t) => {
+    // 1. Filter by Scope
+    if (scope === "SHARED") {
+      if (t.splitType === "INDIVIDUAL") return false;
+    } else if (scope === "INDIVIDUAL") {
+      if (t.splitType !== "INDIVIDUAL") return false;
+    }
+
+    // 2. Filter by User
+    if (userId && userId !== "all") {
+      // If filtering by specific user:
+      // - Show items they PAID
+      // - OR items they OWN (individual expenses paid by others)
+      // - OR Shared items (usually relevant to everyone, but if I want "My View", maybe I only want items I paid?)
+      // Requirement: "Meus, Somente Casal, ou Meus+Casal"
+      // Interpretation:
+      // "Meus" (Individual View): My Individual expenses (Owner=Me) AND My Shared Contributions?
+      // Usually "User Filter" means "Show things relevant to this user".
+      // Relevant = Payer OR Owner OR Shared Participant.
+
+      const isPayer = t.payerId === userId;
+      const isOwner = t.ownerId === userId;
+      const isShared =
+        t.splitType === "SHARED" || t.splitType === "SHARED_PROPORTIONAL";
+
+      if (!isPayer && !isOwner && !isShared) return false;
+
+      // If Scope is INDIVIDUAL and User is Selected:
+      // Show only Individual items where I am Owner or Payer.
+      if (scope === "INDIVIDUAL" && !isOwner && !isPayer) return false;
+    }
+
+    return true;
+  });
 
   // --- CALCULATIONS ---
 
@@ -244,7 +295,7 @@ export async function getDashboardData(
     let netIndiv = 0;
     let netTransfer = 0;
 
-    const settlementTransactions = transactions.filter(
+    const settlementTransactions = allTransactions.filter(
       (t) => t.purchaseDate >= monthStart && t.purchaseDate <= monthEnd,
     );
 
@@ -347,7 +398,7 @@ export async function getDashboardData(
     const userA = users[0];
     const userB = users[1];
 
-    transactions
+    allTransactions
       .filter(
         (t) =>
           (t.splitType === "SHARED" || t.splitType === "SHARED_PROPORTIONAL") &&

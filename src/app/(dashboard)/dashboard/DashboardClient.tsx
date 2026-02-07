@@ -1,10 +1,17 @@
 "use client";
 
 import { useState } from "react";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { useMutation } from "@tanstack/react-query";
 import { Button } from "@/components/ui/button";
-import { Switch } from "@/components/ui/switch";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Label } from "@/components/ui/label";
 import {
   Wallet,
@@ -36,11 +43,18 @@ async function createTransaction(data: any) {
 
 interface DashboardClientProps {
   initialData: DashboardData;
+  filterUser?: string;
+  filterScope?: "ALL" | "SHARED" | "INDIVIDUAL";
 }
 
-export default function DashboardClient({ initialData }: DashboardClientProps) {
+export default function DashboardClient({
+  initialData,
+  filterUser,
+  filterScope,
+}: DashboardClientProps) {
   const router = useRouter();
-  const [showOnlyShared, setShowOnlyShared] = useState(false);
+  const searchParams = useSearchParams(); // Add this hook
+
   const [modalOpen, setModalOpen] = useState(false);
   const [prefilledData, setPrefilledData] = useState<any>(null);
 
@@ -82,6 +96,16 @@ export default function DashboardClient({ initialData }: DashboardClientProps) {
     setModalOpen(true);
   };
 
+  const updateFilters = (key: string, value: string) => {
+    const params = new URLSearchParams(searchParams.toString());
+    if (value === "all" || !value) {
+      params.delete(key);
+    } else {
+      params.set(key, value);
+    }
+    router.push(`?${params.toString()}`);
+  };
+
   return (
     <div className="space-y-6">
       <div className="flex flex-col sm:flex-row sm:items-center items-start justify-between gap-4">
@@ -96,23 +120,41 @@ export default function DashboardClient({ initialData }: DashboardClientProps) {
           </div>
           <MonthSelector />
         </div>
-        <div className="flex items-center gap-4 w-full sm:w-auto">
-          <div className="flex items-center gap-2">
-            <Switch
-              id="shared-toggle"
-              checked={showOnlyShared}
-              onCheckedChange={setShowOnlyShared}
-            />
-            <Label
-              htmlFor="shared-toggle"
-              className="text-sm text-zinc-600 dark:text-zinc-400"
-            >
-              Só Casal
-            </Label>
-          </div>
+        <div className="flex flex-col sm:flex-row items-center gap-4 w-full sm:w-auto">
+          {/* User Filter */}
+          <Select
+            value={filterUser || "all"}
+            onValueChange={(val) => updateFilters("userId", val)}
+          >
+            <SelectTrigger className="w-[140px] bg-white dark:bg-zinc-900">
+              <SelectValue placeholder="Usuário" />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="all">Visão Geral</SelectItem>
+              {users.map((u) => (
+                <SelectItem key={u.id} value={u.id}>
+                  {u.name}
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
+
+          {/* Scope Filter */}
+          <Tabs
+            value={filterScope || "ALL"}
+            onValueChange={(val) => updateFilters("scope", val)}
+            className="w-auto"
+          >
+            <TabsList className="bg-zinc-100 dark:bg-zinc-800">
+              <TabsTrigger value="ALL">Todos</TabsTrigger>
+              <TabsTrigger value="SHARED">Casal</TabsTrigger>
+              <TabsTrigger value="INDIVIDUAL">Meus</TabsTrigger>
+            </TabsList>
+          </Tabs>
+
           <Button onClick={handleOpenModal} className="gap-2 w-full sm:w-auto">
             <Plus className="h-4 w-4" />
-            <span>Nova Transação</span>
+            <span>Nova</span>
           </Button>
         </div>
       </div>

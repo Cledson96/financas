@@ -6,15 +6,31 @@ export const dynamic = "force-dynamic"; // Ensure we always fetch fresh data
 export default async function DashboardPage({
   searchParams,
 }: {
-  searchParams: Promise<{ month?: string; year?: string }>;
+  searchParams: Promise<{
+    month?: string;
+    year?: string;
+    userId?: string;
+    scope?: "ALL" | "SHARED" | "INDIVIDUAL";
+  }>;
 }) {
   try {
-    const { month: monthParam, year: yearParam } = await searchParams;
+    const {
+      month: monthParam,
+      year: yearParam,
+      userId,
+      scope,
+    } = await searchParams;
     const month = monthParam ? parseInt(monthParam) : undefined;
     const year = yearParam ? parseInt(yearParam) : undefined;
 
-    const data = await getDashboardData(month, year);
-    return <DashboardClient initialData={data} />;
+    const data = await getDashboardData(month, year, userId, scope);
+    return (
+      <DashboardClient
+        initialData={data}
+        filterUser={userId}
+        filterScope={scope}
+      />
+    );
   } catch (error: any) {
     return (
       <div className="p-8 text-red-500">
