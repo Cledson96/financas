@@ -29,65 +29,70 @@ export default function KPICard({
   const variants = {
     default: "bg-white dark:bg-zinc-900 border-zinc-200 dark:border-zinc-800",
     success:
-      "bg-emerald-50 dark:bg-emerald-950/30 border-emerald-200 dark:border-emerald-900",
+      "bg-emerald-50/50 dark:bg-emerald-950/20 border-emerald-200/50 dark:border-emerald-900",
     danger:
-      "bg-rose-50 dark:bg-rose-950/30 border-rose-200 dark:border-rose-900",
+      "bg-rose-50/50 dark:bg-rose-950/20 border-rose-200/50 dark:border-rose-900",
     warning:
-      "bg-amber-50 dark:bg-amber-950/30 border-amber-200 dark:border-amber-900",
+      "bg-amber-50/50 dark:bg-amber-950/20 border-amber-200/50 dark:border-amber-900",
   };
 
   const iconVariants = {
     default: "bg-zinc-100 dark:bg-zinc-800 text-zinc-600 dark:text-zinc-400",
     success:
-      "bg-emerald-100 dark:bg-emerald-900/50 text-emerald-600 dark:text-emerald-400",
-    danger: "bg-rose-100 dark:bg-rose-900/50 text-rose-600 dark:text-rose-400",
+      "bg-emerald-100/80 dark:bg-emerald-900/40 text-emerald-700 dark:text-emerald-400",
+    danger:
+      "bg-rose-100/80 dark:bg-rose-900/40 text-rose-700 dark:text-rose-400",
     warning:
-      "bg-amber-100 dark:bg-amber-900/50 text-amber-600 dark:text-amber-400",
+      "bg-amber-100/80 dark:bg-amber-900/40 text-amber-700 dark:text-amber-400",
   };
 
   return (
     <Card
       className={cn(
-        "relative overflow-hidden transition-all duration-300 hover:shadow-lg",
+        "relative overflow-hidden transition-all duration-300 hover:shadow-lg hover:-translate-y-1 rounded-2xl",
         variants[variant],
-        pulse && "animate-pulse",
+        pulse && "animate-pulse ring-2 ring-rose-500/20",
       )}
     >
       <CardContent className="p-6">
         <div className="flex items-start justify-between">
-          <div className="space-y-2">
+          <div className="space-y-3">
             <p className="text-sm font-medium text-zinc-500 dark:text-zinc-400">
               {title}
             </p>
-            <p className="text-2xl md:text-3xl font-bold tracking-tight text-zinc-900 dark:text-zinc-100">
+            <p className="text-3xl font-bold tracking-tight text-zinc-900 dark:text-zinc-50 tabular-nums">
               {value}
             </p>
             {trend && (
-              <div className="flex items-center gap-1 text-xs">
-                {trend === "up" ? (
-                  <TrendingUp className="w-3 h-3 text-emerald-500" />
-                ) : (
-                  <TrendingDown className="w-3 h-3 text-rose-500" />
-                )}
+              <div className="flex items-center gap-1.5 text-xs font-medium">
                 <span
                   className={cn(
-                    "font-medium",
-                    trend === "up" ? "text-emerald-600" : "text-rose-600",
+                    "flex items-center gap-1 px-1.5 py-0.5 rounded-full bg-opacity-20",
+                    trend === "up"
+                      ? "bg-emerald-100 text-emerald-700 dark:bg-emerald-500/10 dark:text-emerald-400"
+                      : "bg-rose-100 text-rose-700 dark:bg-rose-500/10 dark:text-rose-400",
                   )}
                 >
+                  {trend === "up" ? (
+                    <TrendingUp className="w-3 h-3" />
+                  ) : (
+                    <TrendingDown className="w-3 h-3" />
+                  )}
                   {trendValue}
                 </span>
                 <span className="text-zinc-400">vs mês anterior</span>
               </div>
             )}
           </div>
-          <div className={cn("p-3 rounded-xl", iconVariants[variant])}>
+          <div
+            className={cn("p-3 rounded-xl shadow-sm", iconVariants[variant])}
+          >
             <Icon className="w-5 h-5" />
           </div>
         </div>
         {variant === "danger" && pulse && (
           <div className="absolute top-2 right-2">
-            <AlertTriangle className="w-4 h-4 text-rose-500 animate-bounce" />
+            <AlertTriangle className="w-4 h-4 text-rose-500 animate-bounce opacity-50" />
           </div>
         )}
       </CardContent>

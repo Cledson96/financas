@@ -20,7 +20,11 @@ import {
   AlertTriangle,
   Plus,
   Scale,
+  Calendar,
+  Filter,
+  Users,
 } from "lucide-react";
+import { motion } from "framer-motion";
 import KPICard from "@/components/finance/KPICard";
 import CategoryPieChart from "@/components/finance/CategoryPieChart";
 import ExpenseBarChart from "@/components/finance/ExpenseBarChart";
@@ -47,13 +51,28 @@ interface DashboardClientProps {
   filterScope?: "ALL" | "SHARED" | "INDIVIDUAL";
 }
 
+const container = {
+  hidden: { opacity: 0 },
+  show: {
+    opacity: 1,
+    transition: {
+      staggerChildren: 0.1,
+    },
+  },
+};
+
+const item = {
+  hidden: { opacity: 0, y: 20 },
+  show: { opacity: 1, y: 0 },
+};
+
 export default function DashboardClient({
   initialData,
   filterUser,
   filterScope,
 }: DashboardClientProps) {
   const router = useRouter();
-  const searchParams = useSearchParams(); // Add this hook
+  const searchParams = useSearchParams();
 
   const [modalOpen, setModalOpen] = useState(false);
   const [prefilledData, setPrefilledData] = useState<any>(null);
@@ -78,15 +97,13 @@ export default function DashboardClient({
 
   const handleSettle = () => {
     const debtor = users.find((u) => u.name === metrics.settlement.debtorName);
-    // const creditor = users.find((u) => u.name === metrics.settlement.creditorName);
 
     setPrefilledData({
       type: "TRANSFER",
       amount: metrics.settlement.total,
       description: "Acerto de Contas",
       payerId: debtor?.id || "",
-      purchaseDate: new Date(), // Today
-      // accountId: needs to be selected by user
+      purchaseDate: new Date(),
     });
     setModalOpen(true);
   };
@@ -107,110 +124,150 @@ export default function DashboardClient({
   };
 
   return (
-    <div className="space-y-6">
-      <div className="flex flex-col sm:flex-row sm:items-center items-start justify-between gap-4">
-        <div className="flex flex-col gap-2">
-          <div>
-            <h1 className="text-2xl md:text-3xl font-bold text-zinc-900 dark:text-zinc-100">
-              Dashboard
-            </h1>
-            <p className="text-zinc-500 dark:text-zinc-400 mt-1">
-              Visão geral das suas finanças
-            </p>
-          </div>
-          <MonthSelector />
+    <motion.div
+      variants={container}
+      initial="hidden"
+      animate="show"
+      className="space-y-8 pb-8"
+    >
+      {/* Header Section */}
+      <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-6">
+        <div className="space-y-1">
+          <h1 className="text-3xl md:text-4xl font-bold tracking-tight text-zinc-900 dark:text-zinc-50">
+            Visão Geral
+          </h1>
+          <p className="text-zinc-500 dark:text-zinc-400 text-lg">
+            Gerencie suas finanças com precisão.
+          </p>
         </div>
-        <div className="flex flex-col sm:flex-row items-center gap-4 w-full sm:w-auto">
-          {/* User Filter */}
-          <Select
-            value={filterUser || "all"}
-            onValueChange={(val) => updateFilters("userId", val)}
-          >
-            <SelectTrigger className="w-[140px] bg-white dark:bg-zinc-900">
-              <SelectValue placeholder="Usuário" />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectItem value="all">Visão Geral</SelectItem>
-              {users.map((u) => (
-                <SelectItem key={u.id} value={u.id}>
-                  {u.name}
-                </SelectItem>
-              ))}
-            </SelectContent>
-          </Select>
 
-          {/* Scope Filter */}
-          <Tabs
-            value={filterScope || "ALL"}
-            onValueChange={(val) => updateFilters("scope", val)}
-            className="w-auto"
-          >
-            <TabsList className="bg-zinc-100 dark:bg-zinc-800">
-              <TabsTrigger value="ALL">Todos</TabsTrigger>
-              <TabsTrigger value="SHARED">Casal</TabsTrigger>
-              <TabsTrigger value="INDIVIDUAL">Meus</TabsTrigger>
-            </TabsList>
-          </Tabs>
+        <div className="flex flex-col sm:flex-row gap-3 w-full lg:w-auto">
+          <div className="flex items-center gap-3 bg-white dark:bg-zinc-900 p-1 rounded-lg border border-zinc-200 dark:border-zinc-800 shadow-sm w-full sm:w-auto overflow-x-auto">
+            <MonthSelector />
+            <div className="w-px h-6 bg-zinc-200 dark:bg-zinc-800 hidden sm:block" />
 
-          <Button onClick={handleOpenModal} className="gap-2 w-full sm:w-auto">
-            <Plus className="h-4 w-4" />
-            <span>Nova</span>
+            {/* Scope Filter */}
+            <Tabs
+              value={filterScope || "ALL"}
+              onValueChange={(val) => updateFilters("scope", val)}
+              className="w-auto"
+            >
+              <TabsList className="bg-zinc-100 dark:bg-zinc-800 h-7">
+                <TabsTrigger value="ALL" className="text-xs px-3">
+                  Topics
+                </TabsTrigger>
+                <TabsTrigger value="SHARED" className="text-xs px-3">
+                  Casal
+                </TabsTrigger>
+                <TabsTrigger value="INDIVIDUAL" className="text-xs px-3">
+                  Meus
+                </TabsTrigger>
+              </TabsList>
+            </Tabs>
+
+            <div className="w-px h-6 bg-zinc-200 dark:bg-zinc-800 hidden sm:block" />
+
+            {/* User Filter */}
+            <Select
+              value={filterUser || "all"}
+              onValueChange={(val) => updateFilters("userId", val)}
+            >
+              <SelectTrigger className="w-[130px] border-none shadow-none bg-transparent hover:bg-zinc-50 dark:hover:bg-zinc-800 focus:ring-0 h-7 text-xs">
+                <div className="flex items-center gap-2">
+                  <Users className="w-3.5 h-3.5 text-zinc-500" />
+                  <SelectValue placeholder="Usuário" />
+                </div>
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="all">Todos</SelectItem>
+                {users.map((u) => (
+                  <SelectItem key={u.id} value={u.id}>
+                    {u.name}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+          </div>
+
+          <Button
+            onClick={handleOpenModal}
+            className="gap-2 bg-primary hover:bg-primary/90 text-white shadow-lg shadow-primary/20 rounded-lg h-9 px-4 text-xs font-medium"
+          >
+            <Plus className="h-3.5 w-3.5" />
+            <span>Nova Transação</span>
           </Button>
         </div>
       </div>
 
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-        <KPICard
-          title="Saldo Atual"
-          value={`R$ ${metrics.totalBalance.toLocaleString("pt-BR", { minimumFractionDigits: 2 })}`}
-          icon={Wallet}
-          variant={metrics.totalBalance >= 0 ? "success" : "danger"}
-        />
-        <KPICard
-          title="Gastos do Mês"
-          value={`R$ ${metrics.currentMonthExpenses.toLocaleString("pt-BR", { minimumFractionDigits: 2 })}`}
-          icon={TrendingDown}
-          variant="default"
-        />
-        {metrics.nextInvoice ? (
-          <NextInvoiceCard nextInvoice={metrics.nextInvoice} />
-        ) : (
+      <motion.div
+        variants={container}
+        className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4"
+      >
+        <motion.div variants={item}>
           <KPICard
-            title="Faturas em Aberto"
-            value={`R$ ${metrics.openInvoices.toLocaleString("pt-BR", {
-              minimumFractionDigits: 2,
-            })}`}
-            icon={CreditCard}
-            variant="warning"
+            title="Saldo Atual"
+            value={`R$ ${metrics.totalBalance.toLocaleString("pt-BR", { minimumFractionDigits: 2 })}`}
+            icon={Wallet}
+            variant={metrics.totalBalance >= 0 ? "success" : "danger"}
           />
-        )}
-        <KPICard
-          title="Contas Atrasadas"
-          value={String(metrics.overdueCount)}
-          icon={AlertTriangle}
-          variant={metrics.overdueCount > 0 ? "danger" : "default"}
-          pulse={metrics.overdueCount > 0}
-        />
-      </div>
+        </motion.div>
+        <motion.div variants={item}>
+          <KPICard
+            title="Gastos do Mês"
+            value={`R$ ${metrics.currentMonthExpenses.toLocaleString("pt-BR", { minimumFractionDigits: 2 })}`}
+            icon={TrendingDown}
+            variant="default"
+          />
+        </motion.div>
 
-      <div className="grid grid-cols-1 gap-4">
+        <motion.div variants={item}>
+          {metrics.nextInvoice ? (
+            <NextInvoiceCard nextInvoice={metrics.nextInvoice} />
+          ) : (
+            <KPICard
+              title="Faturas em Aberto"
+              value={`R$ ${metrics.openInvoices.toLocaleString("pt-BR", {
+                minimumFractionDigits: 2,
+              })}`}
+              icon={CreditCard}
+              variant="warning"
+            />
+          )}
+        </motion.div>
+
+        <motion.div variants={item}>
+          <KPICard
+            title="Contas Atrasadas"
+            value={String(metrics.overdueCount)}
+            icon={AlertTriangle}
+            variant={metrics.overdueCount > 0 ? "danger" : "default"}
+            pulse={metrics.overdueCount > 0}
+          />
+        </motion.div>
+      </motion.div>
+
+      <motion.div variants={item} className="grid grid-cols-1 gap-6">
         <SettlementCard
           settlement={metrics.settlement}
           onSettle={handleSettle}
         />
-      </div>
+      </motion.div>
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-        <CategoryPieChart
-          data={categoryExpenses}
-          title="Despesas por Categoria"
-        />
-        <FairnessGraph data={metrics.fairness} />
+        <motion.div variants={item}>
+          <CategoryPieChart
+            data={categoryExpenses}
+            title="Despesas por Categoria"
+          />
+        </motion.div>
+        <motion.div variants={item}>
+          <FairnessGraph data={metrics.fairness} />
+        </motion.div>
       </div>
 
-      <div className="grid grid-cols-1 gap-6">
+      <motion.div variants={item} className="grid grid-cols-1 gap-6">
         <ExpenseBarChart data={evolutionData} title="Evolução Mensal" />
-      </div>
+      </motion.div>
 
       <TransactionModal
         open={modalOpen}
@@ -222,6 +279,6 @@ export default function DashboardClient({
         members={users}
         isLoading={createTransactionMutation.isPending}
       />
-    </div>
+    </motion.div>
   );
 }

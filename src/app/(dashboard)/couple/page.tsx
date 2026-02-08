@@ -18,7 +18,7 @@ import {
 } from "date-fns";
 import { ptBR } from "date-fns/locale";
 import CoupleSettlement from "@/components/finance/CoupleSettlement";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"; // Forces re-resolve
 import {
   Table,
   TableBody,

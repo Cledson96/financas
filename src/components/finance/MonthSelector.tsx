@@ -47,7 +47,7 @@ export function MonthSelector() {
   return (
     <div className="flex items-center gap-2">
       <Select value={selectedValue} onValueChange={handleValueChange}>
-        <SelectTrigger className="w-[180px] bg-white dark:bg-zinc-900 capitalize">
+        <SelectTrigger className="w-[180px] bg-white dark:bg-zinc-900 capitalize h-7 text-xs border-none shadow-none focus:ring-0">
           <SelectValue placeholder="Selecione o mês" />
         </SelectTrigger>
         <SelectContent>
