@@ -4,12 +4,14 @@ import { useState } from "react";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Button } from "@/components/ui/button";
-import { Plus, Wallet, Users } from "lucide-react";
+import { Plus, Wallet, Users, Home, CalendarClock } from "lucide-react";
 import { toast } from "sonner";
 import AccountCard from "@/components/finance/AccountCard";
 import AccountModal from "@/components/finance/AccountModal";
 import CategoryList from "@/components/finance/CategoryList";
 import CategoryModal from "@/components/finance/CategoryModal";
+import HouseholdSettings from "@/components/finance/HouseholdSettings";
+import FixedExpensesList from "@/components/finance/FixedExpensesList";
 import { Card, CardContent } from "@/components/ui/card";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { Input } from "@/components/ui/input";
@@ -199,16 +201,36 @@ export default function SettingsPage() {
           Configurações
         </h1>
         <p className="text-zinc-500 dark:text-zinc-400 mt-1">
-          Gerencie contas, categorias e membros
+          Gerencie contas, categorias e membros da família
         </p>
       </div>
 
-      <Tabs defaultValue="accounts" className="space-y-6">
-        <TabsList className="bg-zinc-100 dark:bg-zinc-800">
-          <TabsTrigger value="accounts">Contas</TabsTrigger>
-          <TabsTrigger value="categories">Categorias</TabsTrigger>
-          <TabsTrigger value="members">Membros</TabsTrigger>
+      <Tabs defaultValue="household" className="space-y-6">
+        <TabsList className="bg-zinc-100 dark:bg-zinc-800 flex overflow-x-auto">
+          <TabsTrigger value="household" className="gap-2">
+            <Home className="w-4 h-4" /> A Casa
+          </TabsTrigger>
+          <TabsTrigger value="fixed-expenses" className="gap-2">
+            <CalendarClock className="w-4 h-4" /> Despesas Fixas
+          </TabsTrigger>
+          <TabsTrigger value="accounts" className="gap-2">
+            <Wallet className="w-4 h-4" /> Contas
+          </TabsTrigger>
+          <TabsTrigger value="categories" className="gap-2">
+            Categorias
+          </TabsTrigger>
+          <TabsTrigger value="members" className="gap-2">
+            <Users className="w-4 h-4" /> Membros
+          </TabsTrigger>
         </TabsList>
+
+        <TabsContent value="household">
+          <HouseholdSettings members={members} />
+        </TabsContent>
+
+        <TabsContent value="fixed-expenses">
+          <FixedExpensesList categories={categories} members={members} />
+        </TabsContent>
 
         {/* Accounts Tab */}
         <TabsContent value="accounts" className="space-y-4">

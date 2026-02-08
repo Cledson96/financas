@@ -59,6 +59,7 @@ export default function TransactionModal({
   const [categoryId, setCategoryId] = useState("");
   const [accountId, setAccountId] = useState("");
   const [payerId, setPayerId] = useState("");
+  const [ownerId, setOwnerId] = useState("");
   const [isShared, setIsShared] = useState(true);
   const [splitMethod, setSplitMethod] = useState<"EQUAL" | "PROPORTIONAL">(
     "EQUAL",
@@ -76,6 +77,7 @@ export default function TransactionModal({
       setCategoryId(editData.categoryId || "");
       setAccountId(editData.accountId || "");
       setPayerId(editData.payerId || "");
+      setOwnerId(editData.ownerId || editData.payerId || "");
       setIsShared(
         editData.splitType === "SHARED" ||
           editData.splitType === "SHARED_PROPORTIONAL",
@@ -102,7 +104,9 @@ export default function TransactionModal({
     setPurchaseDate(new Date());
     setCategoryId("");
     setAccountId("");
+    setAccountId("");
     setPayerId("");
+    setOwnerId("");
     setIsShared(true);
     setSplitMethod("EQUAL");
     setCustomShare("50");
@@ -141,7 +145,7 @@ export default function TransactionModal({
         isShared && splitMethod === "PROPORTIONAL"
           ? (parseFloat(customShare) || 0) / 100
           : null,
-      ownerId: !isShared ? payerId : null,
+      ownerId: !isShared ? ownerId : null,
       status: "PENDING",
     });
   };
@@ -374,6 +378,28 @@ export default function TransactionModal({
                   )}
                 </div>
               )}
+            </div>
+          )}
+
+          {!isShared && type !== "TRANSFER" && (
+            <div className="space-y-2 animate-in fade-in slide-in-from-top-1">
+              <Label>Quem é o Dono da Despesa?</Label>
+              <Select
+                value={ownerId}
+                onValueChange={setOwnerId}
+                required={!isShared}
+              >
+                <SelectTrigger className="bg-zinc-50 dark:bg-zinc-800 border-zinc-200 dark:border-zinc-700">
+                  <SelectValue placeholder="Selecione" />
+                </SelectTrigger>
+                <SelectContent>
+                  {members.map((member) => (
+                    <SelectItem key={member.id} value={member.id}>
+                      {member.name}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
             </div>
           )}
 
