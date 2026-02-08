@@ -60,6 +60,10 @@ export default function TransactionModal({
   const [accountId, setAccountId] = useState("");
   const [payerId, setPayerId] = useState("");
   const [isShared, setIsShared] = useState(true);
+  const [splitMethod, setSplitMethod] = useState<"EQUAL" | "PROPORTIONAL">(
+    "EQUAL",
+  );
+  const [customShare, setCustomShare] = useState("50");
 
   useEffect(() => {
     if (editData) {
@@ -72,7 +76,20 @@ export default function TransactionModal({
       setCategoryId(editData.categoryId || "");
       setAccountId(editData.accountId || "");
       setPayerId(editData.payerId || "");
-      setIsShared(editData.splitType === "SHARED");
+      setIsShared(
+        editData.splitType === "SHARED" ||
+          editData.splitType === "SHARED_PROPORTIONAL",
+      );
+      if (editData.splitType === "SHARED_PROPORTIONAL") {
+        setSplitMethod("PROPORTIONAL");
+        // splitShare is decimal (0.4), UI wants integer percentage (40)
+        setCustomShare(
+          editData.splitShare ? (editData.splitShare * 100).toString() : "50",
+        );
+      } else {
+        setSplitMethod("EQUAL");
+        setCustomShare("50");
+      }
     } else {
       resetForm();
     }
@@ -87,6 +104,8 @@ export default function TransactionModal({
     setAccountId("");
     setPayerId("");
     setIsShared(true);
+    setSplitMethod("EQUAL");
+    setCustomShare("50");
   };
 
   const handleSubmit = (e: React.FormEvent) => {
@@ -112,7 +131,16 @@ export default function TransactionModal({
       accountName: selectedAccount?.name || "",
       payerId,
       payerName: selectedPayer?.name || "",
-      splitType: isShared ? "SHARED" : "INDIVIDUAL",
+      payerName: selectedPayer?.name || "",
+      splitType: isShared
+        ? splitMethod === "PROPORTIONAL"
+          ? "SHARED_PROPORTIONAL"
+          : "SHARED"
+        : "INDIVIDUAL",
+      splitShare:
+        isShared && splitMethod === "PROPORTIONAL"
+          ? (parseFloat(customShare) || 0) / 100
+          : null,
       ownerId: !isShared ? payerId : null,
       status: "PENDING",
     });
@@ -274,20 +302,78 @@ export default function TransactionModal({
           </div>
 
           {type !== "TRANSFER" && (
-            <div className="flex items-center justify-between p-4 rounded-lg bg-zinc-50 dark:bg-zinc-800">
-              <div>
-                <Label htmlFor="shared" className="text-sm font-medium">
-                  Dividir com o Casal?
-                </Label>
-                <p className="text-xs text-zinc-500 dark:text-zinc-400">
-                  {isShared ? "Será dividido 50/50" : "Conta individual"}
-                </p>
+            <div className="space-y-4 p-4 rounded-lg bg-zinc-50 dark:bg-zinc-800 border border-zinc-100 dark:border-zinc-700">
+              <div className="flex items-center justify-between">
+                <div>
+                  <Label htmlFor="shared" className="text-sm font-medium">
+                    Dividir com o Casal?
+                  </Label>
+                  <p className="text-xs text-zinc-500 dark:text-zinc-400">
+                    {isShared
+                      ? "A despesa será compartilhada"
+                      : "Despesa individual sua"}
+                  </p>
+                </div>
+                <Switch
+                  id="shared"
+                  checked={isShared}
+                  onCheckedChange={setIsShared}
+                />
               </div>
-              <Switch
-                id="shared"
-                checked={isShared}
-                onCheckedChange={setIsShared}
-              />
+
+              {isShared && (
+                <div className="pt-2 border-t border-zinc-200 dark:border-zinc-700 space-y-3">
+                  <div className="space-y-2">
+                    <Label className="text-xs text-zinc-500 uppercase font-bold tracking-wider">
+                      Método de Divisão
+                    </Label>
+                    <Tabs
+                      value={splitMethod}
+                      onValueChange={(v) =>
+                        setSplitMethod(v as "EQUAL" | "PROPORTIONAL")
+                      }
+                      className="w-full"
+                    >
+                      <TabsList className="grid w-full grid-cols-2 h-8">
+                        <TabsTrigger value="EQUAL" className="text-xs">
+                          Igual (50/50)
+                        </TabsTrigger>
+                        <TabsTrigger value="PROPORTIONAL" className="text-xs">
+                          Proporcional / Outro
+                        </TabsTrigger>
+                      </TabsList>
+                    </Tabs>
+                  </div>
+
+                  {splitMethod === "PROPORTIONAL" && (
+                    <div className="space-y-2 animate-in fade-in slide-in-from-top-1">
+                      <Label className="text-xs">
+                        Quanto a <strong>outra pessoa</strong> deve pagar? (%)
+                      </Label>
+                      <div className="relative">
+                        <Input
+                          type="number"
+                          value={customShare}
+                          onChange={(e) => setCustomShare(e.target.value)}
+                          placeholder="Ex: 30"
+                          min="0"
+                          max="100"
+                          className="pr-8"
+                        />
+                        <span className="absolute right-3 top-2.5 text-sm text-zinc-400">
+                          %
+                        </span>
+                      </div>
+                      <p className="text-xs text-zinc-500">
+                        Você pagará:{" "}
+                        <span className="font-bold text-zinc-700 dark:text-zinc-300">
+                          {100 - (parseFloat(customShare) || 0)}%
+                        </span>
+                      </p>
+                    </div>
+                  )}
+                </div>
+              )}
             </div>
           )}
 
