@@ -18,7 +18,15 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { Download } from "lucide-react";
+import { Download, Calendar as CalendarIcon, User } from "lucide-react";
+import { Calendar } from "@/components/ui/calendar";
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/popover";
+import { DateRange } from "react-day-picker";
+import { startOfMonth, endOfMonth, isWithinInterval, endOfDay } from "date-fns";
 
 async function fetchData(url: string) {
   const res = await fetch(url);
@@ -72,6 +80,11 @@ export default function TransactionsPage() {
   const [payerFilter, setPayerFilter] = useState("all");
   const [divisionFilter, setDivisionFilter] = useState("all");
   const [statusFilter, setStatusFilter] = useState("all");
+  const [buyerFilter, setBuyerFilter] = useState("all");
+  const [dateRange, setDateRange] = useState<DateRange | undefined>({
+    from: startOfMonth(new Date()),
+    to: endOfMonth(new Date()),
+  });
 
   const [modalOpen, setModalOpen] = useState(false);
   const [editingTransaction, setEditingTransaction] = useState<any>(null);
@@ -101,7 +114,7 @@ export default function TransactionsPage() {
 
   const { data: members = [] } = useQuery({
     queryKey: ["members"],
-    queryFn: () => fetchData("/api/family-members"),
+    queryFn: () => fetchData("/api/users"),
   });
 
   const { data: invoices = [] } = useQuery({
@@ -155,7 +168,12 @@ export default function TransactionsPage() {
   };
 
   const isOverdue = (transaction: any) => {
-    if (transaction.status === "PAID" || transaction.settled) return false;
+    if (
+      transaction.status === "PAID" ||
+      transaction.settled ||
+      transaction.isReconciled
+    )
+      return false;
     if (!transaction.paymentDate) return false;
     return isBefore(parseISO(transaction.paymentDate), new Date());
   };
@@ -197,11 +215,29 @@ export default function TransactionsPage() {
         return false;
 
       // Status
-      const isPaid = t.settled || t.status === "PAID";
+      const isPaid = t.settled || t.status === "PAID" || t.isReconciled;
       const isOverdueItem = isOverdue(t);
       if (statusFilter === "PENDING" && (isPaid || isOverdueItem)) return false;
       if (statusFilter === "PAID" && !isPaid) return false;
       if (statusFilter === "OVERDUE" && !isOverdueItem) return false;
+
+      // Date Range
+      if (dateRange?.from && dateRange?.to && t.purchaseDate) {
+        const date = parseISO(t.purchaseDate);
+        // Normalize time for comparison if needed, or rely on date-fns
+        // isWithinInterval requires start and end to be valid
+        if (
+          !isWithinInterval(date, {
+            start: dateRange.from,
+            end: endOfDay(dateRange.to),
+          })
+        ) {
+          return false;
+        }
+      }
+
+      // Buyer (Quem Comprou)
+      if (buyerFilter !== "all" && t.userId !== buyerFilter) return false;
 
       return true;
     });
@@ -285,6 +321,42 @@ export default function TransactionsPage() {
             />
           </div>
 
+          <Popover>
+            <PopoverTrigger asChild>
+              <Button
+                variant="outline"
+                className={
+                  "w-[240px] justify-start text-left font-normal bg-zinc-50 dark:bg-zinc-800 border-zinc-200 dark:border-zinc-700"
+                }
+              >
+                <CalendarIcon className="mr-2 h-4 w-4" />
+                {dateRange?.from ? (
+                  dateRange.to ? (
+                    <>
+                      {format(dateRange.from, "dd/MM/y", { locale: ptBR })} -{" "}
+                      {format(dateRange.to, "dd/MM/y", { locale: ptBR })}
+                    </>
+                  ) : (
+                    format(dateRange.from, "dd/MM/y", { locale: ptBR })
+                  )
+                ) : (
+                  <span>Selecione uma data</span>
+                )}
+              </Button>
+            </PopoverTrigger>
+            <PopoverContent className="w-auto p-0" align="start">
+              <Calendar
+                initialFocus
+                mode="range"
+                defaultMonth={dateRange?.from}
+                selected={dateRange}
+                onSelect={setDateRange}
+                numberOfMonths={2}
+                locale={ptBR}
+              />
+            </PopoverContent>
+          </Popover>
+
           <Select value={invoiceFilter} onValueChange={setInvoiceFilter}>
             <SelectTrigger className="w-[180px] bg-zinc-50 dark:bg-zinc-800 border-zinc-200 dark:border-zinc-700">
               <SelectValue placeholder="Fatura" />
@@ -330,6 +402,20 @@ export default function TransactionsPage() {
             </SelectTrigger>
             <SelectContent>
               <SelectItem value="all">Quem Pagou</SelectItem>
+              {members.map((m: any) => (
+                <SelectItem key={m.id} value={m.id}>
+                  {m.name}
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
+
+          <Select value={buyerFilter} onValueChange={setBuyerFilter}>
+            <SelectTrigger className="w-[110px] bg-zinc-50 dark:bg-zinc-800 border-zinc-200 dark:border-zinc-700">
+              <SelectValue placeholder="Quem Comprou" />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="all">Quem Comprou</SelectItem>
               {members.map((m: any) => (
                 <SelectItem key={m.id} value={m.id}>
                   {m.name}

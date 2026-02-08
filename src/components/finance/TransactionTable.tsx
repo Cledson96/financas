@@ -118,7 +118,18 @@ export default function TransactionTable({
   };
 
   const isOverdue = (transaction: any) => {
-    if (transaction.status === "PAID" || transaction.settled) return false;
+    // Income never overdue
+    if (transaction.type === "INCOME") return false;
+    // Paid, Settled, or Reconciled never overdue
+    if (
+      transaction.status === "PAID" ||
+      transaction.settled ||
+      transaction.isReconciled
+    )
+      return false;
+    // Credit Card expenses are "Billed", not overdue in this context usually (unless invoice is overdue, but that's invoice level)
+    if (transaction.Account?.type === "CREDIT_CARD") return false;
+
     if (!transaction.paymentDate) return false;
     // Check overdue only on unchecked/unsettled transactions
     return isBefore(parseISO(transaction.paymentDate), new Date());
@@ -211,6 +222,7 @@ export default function TransactionTable({
                   <ArrowUpDown className="h-3 w-3" />
                 </span>
               </TableHead>
+              <TableHead>Vencimento</TableHead>
               <TableHead>Descrição</TableHead>
               <TableHead>Categoria</TableHead>
               <TableHead>Conta</TableHead>
@@ -235,7 +247,7 @@ export default function TransactionTable({
             {paginatedTransactions.length === 0 ? (
               <TableRow>
                 <TableCell
-                  colSpan={9}
+                  colSpan={13}
                   className="text-center py-8 text-zinc-500"
                 >
                   Nenhuma transação encontrada
@@ -256,10 +268,35 @@ export default function TransactionTable({
                   transaction.User_Transaction_payerIdToUser?.name ||
                   transaction.payerName ||
                   "Desconhecido";
-                const ownerName =
-                  transaction.User?.name || // Assuming User is the owner
-                  transaction.userName ||
-                  "Eu";
+
+                // Owner Logic
+                let ownerName = "";
+
+                // Priority 1: Check explicit owner relation
+                if (transaction.User_Transaction_ownerIdToUser?.name) {
+                  ownerName = transaction.User_Transaction_ownerIdToUser.name;
+                }
+                // Priority 2: Check userId if mapped
+                else if (transaction.userId) {
+                  const ownerMember = members?.find(
+                    (m: any) => m.id === transaction.userId,
+                  );
+                  if (ownerMember) ownerName = ownerMember.name;
+                }
+
+                // Fallback if no owner identified yet
+                if (!ownerName) {
+                  if (
+                    transaction.splitType === "SHARED" ||
+                    transaction.splitType === "SHARED_PROPORTIONAL"
+                  ) {
+                    ownerName = "Casal ⚖️";
+                  } else if (transaction.splitType === "INDIVIDUAL") {
+                    ownerName = payerName;
+                  } else {
+                    ownerName = payerName; // Final fallback
+                  }
+                }
 
                 const overdue = isOverdue(transaction);
                 const isPaid =
@@ -287,10 +324,28 @@ export default function TransactionTable({
                         })}
                     </TableCell>
                     <TableCell>
+                      {transaction.paymentDate ? (
+                        format(parseISO(transaction.paymentDate), "dd/MM/yy", {
+                          locale: ptBR,
+                        })
+                      ) : (
+                        <span className="text-zinc-400">-</span>
+                      )}
+                    </TableCell>
+                    <TableCell>
                       <div className="flex flex-col">
-                        <span className="font-medium text-zinc-900 dark:text-zinc-100">
-                          {transaction.description}
-                        </span>
+                        <TooltipProvider>
+                          <Tooltip>
+                            <TooltipTrigger asChild>
+                              <span className="font-medium text-zinc-900 dark:text-zinc-100 truncate max-w-[200px] block text-left cursor-default">
+                                {transaction.description}
+                              </span>
+                            </TooltipTrigger>
+                            <TooltipContent>
+                              <p>{transaction.description}</p>
+                            </TooltipContent>
+                          </Tooltip>
+                        </TooltipProvider>
                       </div>
                     </TableCell>
                     <TableCell>
@@ -385,12 +440,44 @@ export default function TransactionTable({
                     </TableCell>
                     <TableCell>
                       {(() => {
-                        // Status Logic
                         const isCreditCard =
                           transaction.Account?.type === "CREDIT_CARD" &&
                           transaction.type === "EXPENSE";
                         const isIncome = transaction.type === "INCOME";
                         const isPayment = transaction.type === "PAYMENT";
+                        const isPaid =
+                          transaction.isReconciled ||
+                          transaction.settled ||
+                          transaction.status === "PAID";
+
+                        // Status Priority:
+                        // 1. Income -> Always Received (Green)
+                        // 2. Paid -> Always Paid (Green)
+                        // 3. Credit Card -> Billed (Purple)
+                        // 4. Overdue -> Late (Red)
+                        // 5. Default -> Pending (Yellow/Gray)
+
+                        if (isIncome) {
+                          return (
+                            <Badge
+                              variant="default"
+                              className="bg-emerald-100 text-emerald-700 dark:bg-emerald-900/30 dark:text-emerald-400 hover:bg-emerald-200"
+                            >
+                              Recebido
+                            </Badge>
+                          );
+                        }
+
+                        if (isPaid) {
+                          return (
+                            <Badge
+                              variant="default"
+                              className="bg-emerald-100 text-emerald-700 dark:bg-emerald-900/30 dark:text-emerald-400 hover:bg-emerald-200"
+                            >
+                              {isPayment ? "Pago" : "Pago"}
+                            </Badge>
+                          );
+                        }
 
                         if (isCreditCard) {
                           return (
@@ -403,40 +490,16 @@ export default function TransactionTable({
                           );
                         }
 
-                        if (isIncome) {
-                          return (
-                            <Badge
-                              variant={isPaid ? "default" : "secondary"}
-                              className={cn(
-                                isPaid &&
-                                  "bg-emerald-100 text-emerald-700 dark:bg-emerald-900/30 dark:text-emerald-400 hover:bg-emerald-200",
-                              )}
-                            >
-                              {isPaid ? "Recebido" : "Pendente"}
-                            </Badge>
-                          );
-                        }
-
-                        // Expense or Payment
                         if (overdue) {
                           return <Badge variant="destructive">Atrasado</Badge>;
                         }
 
-                        // Paid
-                        if (isPaid) {
-                          return (
-                            <Badge
-                              variant="default"
-                              className="bg-emerald-100 text-emerald-700 dark:bg-emerald-900/30 dark:text-emerald-400 hover:bg-emerald-200"
-                            >
-                              {isPayment ? "Pago" : "Pago"}
-                            </Badge>
-                          );
-                        }
-
-                        // Pending Expense/Payment
+                        // Pending
                         return (
-                          <Badge variant="secondary">
+                          <Badge
+                            variant="secondary"
+                            className="bg-amber-100 text-amber-700 dark:bg-amber-900/30 dark:text-amber-400 hover:bg-amber-200"
+                          >
                             {isPayment ? "Agendado" : "Pendente"}
                           </Badge>
                         );
