@@ -18,11 +18,13 @@ import { SettlementData } from "@/types/finance";
 interface SettlementCardProps {
   settlement: SettlementData;
   onSettle: () => void;
+  isVisible?: boolean;
 }
 
 export default function SettlementCard({
   settlement,
   onSettle,
+  isVisible = true,
 }: SettlementCardProps) {
   if (!settlement.total || settlement.total <= 0) {
     return (
@@ -60,10 +62,16 @@ export default function SettlementCard({
               </span>
               <div className="flex items-center gap-2">
                 <span className="text-2xl font-bold text-blue-600 dark:text-blue-400">
-                  R${" "}
-                  {settlement.total.toLocaleString("pt-BR", {
-                    minimumFractionDigits: 2,
-                  })}
+                  {isVisible ? (
+                    <>
+                      R${" "}
+                      {settlement.total.toLocaleString("pt-BR", {
+                        minimumFractionDigits: 2,
+                      })}
+                    </>
+                  ) : (
+                    "••••••"
+                  )}
                 </span>
                 <ArrowRight className="h-4 w-4 text-zinc-400" />
                 <span className="font-medium text-zinc-700 dark:text-zinc-300">
@@ -89,28 +97,49 @@ export default function SettlementCard({
                 <div className="flex justify-between">
                   <span>Divisão 50/50 (Shared)</span>
                   <span className="font-medium">
-                    R${" "}
-                    {breakdown.sharedFiftyFifty.toLocaleString("pt-BR", {
-                      minimumFractionDigits: 2,
-                    })}
+                    {isVisible ? (
+                      <>
+                        R${" "}
+                        {breakdown.sharedFiftyFifty.toLocaleString("pt-BR", {
+                          minimumFractionDigits: 2,
+                        })}
+                      </>
+                    ) : (
+                      "••••••"
+                    )}
                   </span>
                 </div>
                 <div className="flex justify-between">
                   <span>Divisão Proporcional</span>
                   <span className="font-medium">
-                    R${" "}
-                    {breakdown.sharedProportional.toLocaleString("pt-BR", {
-                      minimumFractionDigits: 2,
-                    })}
+                    {isVisible ? (
+                      <>
+                        R${" "}
+                        {breakdown.sharedProportional.toLocaleString("pt-BR", {
+                          minimumFractionDigits: 2,
+                        })}
+                      </>
+                    ) : (
+                      "••••••"
+                    )}
                   </span>
                 </div>
                 <div className="flex justify-between">
                   <span>Individual (Pago pelo outro)</span>
                   <span className="font-medium">
-                    R${" "}
-                    {breakdown.individualPaidByOther.toLocaleString("pt-BR", {
-                      minimumFractionDigits: 2,
-                    })}
+                    {isVisible ? (
+                      <>
+                        R${" "}
+                        {breakdown.individualPaidByOther.toLocaleString(
+                          "pt-BR",
+                          {
+                            minimumFractionDigits: 2,
+                          },
+                        )}
+                      </>
+                    ) : (
+                      "••••••"
+                    )}
                   </span>
                 </div>
               </AccordionContent>

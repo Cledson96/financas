@@ -23,9 +23,13 @@ import { FairnessData } from "@/types/finance";
 
 interface FairnessGraphProps {
   data: FairnessData;
+  isVisible?: boolean;
 }
 
-export default function FairnessGraph({ data }: FairnessGraphProps) {
+export default function FairnessGraph({
+  data,
+  isVisible = true,
+}: FairnessGraphProps) {
   const chartData = [
     {
       name: data.userA.name,
@@ -56,10 +60,16 @@ export default function FairnessGraph({ data }: FairnessGraphProps) {
                 {item.name === "paid" ? "Pagou Realmente" : "Deveria Pagar"}:
               </span>
               <span className="font-medium text-zinc-900 dark:text-zinc-100">
-                R${" "}
-                {item.value.toLocaleString("pt-BR", {
-                  minimumFractionDigits: 2,
-                })}
+                {isVisible ? (
+                  <>
+                    R${" "}
+                    {item.value.toLocaleString("pt-BR", {
+                      minimumFractionDigits: 2,
+                    })}
+                  </>
+                ) : (
+                  "••••••"
+                )}
               </span>
             </div>
           ))}
@@ -103,7 +113,7 @@ export default function FairnessGraph({ data }: FairnessGraphProps) {
               />
               <YAxis
                 tick={{ fontSize: 12 }}
-                tickFormatter={(value) => `R$${value}`}
+                tickFormatter={(value) => (isVisible ? `R$${value}` : "•••")}
                 tickLine={false}
                 axisLine={false}
                 className="text-zinc-500"

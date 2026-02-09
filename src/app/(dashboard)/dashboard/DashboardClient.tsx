@@ -1,28 +1,17 @@
 "use client";
 
-import { useState } from "react";
-import { useRouter, useSearchParams } from "next/navigation";
+import { useState, useEffect } from "react";
+import { useRouter } from "next/navigation";
 import { useMutation } from "@tanstack/react-query";
 import { Button } from "@/components/ui/button";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
-import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Label } from "@/components/ui/label";
 import {
   Wallet,
   TrendingDown,
   CreditCard,
   AlertTriangle,
   Plus,
-  Scale,
-  Calendar,
-  Filter,
-  Users,
+  Eye,
+  EyeOff,
 } from "lucide-react";
 import { motion } from "framer-motion";
 import KPICard from "@/components/finance/KPICard";
@@ -30,10 +19,10 @@ import CategoryPieChart from "@/components/finance/CategoryPieChart";
 import ExpenseBarChart from "@/components/finance/ExpenseBarChart";
 import TransactionModal from "@/components/finance/TransactionModal";
 import SettlementCard from "@/components/finance/SettlementCard";
-import { MonthSelector } from "@/components/finance/MonthSelector";
 import FairnessGraph from "@/components/finance/FairnessGraph";
 import NextInvoiceCard from "@/components/finance/NextInvoiceCard";
 import { DashboardData } from "@/types/finance";
+import { DashboardFilters } from "@/components/finance/DashboardFilters";
 
 async function createTransaction(data: any) {
   const res = await fetch("/api/transactions", {
@@ -72,10 +61,24 @@ export default function DashboardClient({
   filterScope,
 }: DashboardClientProps) {
   const router = useRouter();
-  const searchParams = useSearchParams();
 
   const [modalOpen, setModalOpen] = useState(false);
   const [prefilledData, setPrefilledData] = useState<any>(null);
+  const [isVisible, setIsVisible] = useState(true);
+
+  // Load visibility preference
+  useEffect(() => {
+    const saved = localStorage.getItem("dashboard-visibility");
+    if (saved !== null) {
+      setIsVisible(saved === "true");
+    }
+  }, []);
+
+  const toggleVisibility = () => {
+    const newValue = !isVisible;
+    setIsVisible(newValue);
+    localStorage.setItem("dashboard-visibility", String(newValue));
+  };
 
   const {
     metrics,
@@ -113,16 +116,6 @@ export default function DashboardClient({
     setModalOpen(true);
   };
 
-  const updateFilters = (key: string, value: string) => {
-    const params = new URLSearchParams(searchParams.toString());
-    if (value === "all" || !value) {
-      params.delete(key);
-    } else {
-      params.set(key, value);
-    }
-    router.push(`?${params.toString()}`);
-  };
-
   return (
     <motion.div
       variants={container}
@@ -133,61 +126,34 @@ export default function DashboardClient({
       {/* Header Section */}
       <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-6">
         <div className="space-y-1">
-          <h1 className="text-3xl md:text-4xl font-bold tracking-tight text-zinc-900 dark:text-zinc-50">
-            Visão Geral
-          </h1>
+          <div className="flex items-center gap-3">
+            <h1 className="text-3xl md:text-4xl font-bold tracking-tight text-zinc-900 dark:text-zinc-50">
+              Visão Geral
+            </h1>
+            <Button
+              variant="ghost"
+              size="icon"
+              onClick={toggleVisibility}
+              className="text-zinc-400 hover:text-zinc-600 dark:hover:text-zinc-300"
+            >
+              {isVisible ? (
+                <Eye className="h-5 w-5" />
+              ) : (
+                <EyeOff className="h-5 w-5" />
+              )}
+            </Button>
+          </div>
           <p className="text-zinc-500 dark:text-zinc-400 text-lg">
             Gerencie suas finanças com precisão.
           </p>
         </div>
 
         <div className="flex flex-col sm:flex-row gap-3 w-full lg:w-auto">
-          <div className="flex items-center gap-3 bg-white dark:bg-zinc-900 p-1 rounded-lg border border-zinc-200 dark:border-zinc-800 shadow-sm w-full sm:w-auto overflow-x-auto">
-            <MonthSelector />
-            <div className="w-px h-6 bg-zinc-200 dark:bg-zinc-800 hidden sm:block" />
-
-            {/* Scope Filter */}
-            <Tabs
-              value={filterScope || "ALL"}
-              onValueChange={(val) => updateFilters("scope", val)}
-              className="w-auto"
-            >
-              <TabsList className="bg-zinc-100 dark:bg-zinc-800 h-7">
-                <TabsTrigger value="ALL" className="text-xs px-3">
-                  Topics
-                </TabsTrigger>
-                <TabsTrigger value="SHARED" className="text-xs px-3">
-                  Casal
-                </TabsTrigger>
-                <TabsTrigger value="INDIVIDUAL" className="text-xs px-3">
-                  Meus
-                </TabsTrigger>
-              </TabsList>
-            </Tabs>
-
-            <div className="w-px h-6 bg-zinc-200 dark:bg-zinc-800 hidden sm:block" />
-
-            {/* User Filter */}
-            <Select
-              value={filterUser || "all"}
-              onValueChange={(val) => updateFilters("userId", val)}
-            >
-              <SelectTrigger className="w-[130px] border-none shadow-none bg-transparent hover:bg-zinc-50 dark:hover:bg-zinc-800 focus:ring-0 h-7 text-xs">
-                <div className="flex items-center gap-2">
-                  <Users className="w-3.5 h-3.5 text-zinc-500" />
-                  <SelectValue placeholder="Usuário" />
-                </div>
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="all">Todos</SelectItem>
-                {users.map((u) => (
-                  <SelectItem key={u.id} value={u.id}>
-                    {u.name}
-                  </SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
-          </div>
+          <DashboardFilters
+            filterScope={filterScope}
+            filterUser={filterUser}
+            users={users}
+          />
 
           <Button
             onClick={handleOpenModal}
@@ -209,6 +175,7 @@ export default function DashboardClient({
             value={`R$ ${metrics.totalBalance.toLocaleString("pt-BR", { minimumFractionDigits: 2 })}`}
             icon={Wallet}
             variant={metrics.totalBalance >= 0 ? "success" : "danger"}
+            isVisible={isVisible}
           />
         </motion.div>
         <motion.div variants={item}>
@@ -217,12 +184,16 @@ export default function DashboardClient({
             value={`R$ ${metrics.currentMonthExpenses.toLocaleString("pt-BR", { minimumFractionDigits: 2 })}`}
             icon={TrendingDown}
             variant="default"
+            isVisible={isVisible}
           />
         </motion.div>
 
         <motion.div variants={item}>
           {metrics.nextInvoice ? (
-            <NextInvoiceCard nextInvoice={metrics.nextInvoice} />
+            <NextInvoiceCard
+              nextInvoice={metrics.nextInvoice}
+              isVisible={isVisible}
+            />
           ) : (
             <KPICard
               title="Faturas em Aberto"
@@ -231,6 +202,7 @@ export default function DashboardClient({
               })}`}
               icon={CreditCard}
               variant="warning"
+              isVisible={isVisible}
             />
           )}
         </motion.div>
@@ -242,6 +214,7 @@ export default function DashboardClient({
             icon={AlertTriangle}
             variant={metrics.overdueCount > 0 ? "danger" : "default"}
             pulse={metrics.overdueCount > 0}
+            isVisible={isVisible} // Usually count is not sensitive, but for consistency
           />
         </motion.div>
       </motion.div>
@@ -250,6 +223,7 @@ export default function DashboardClient({
         <SettlementCard
           settlement={metrics.settlement}
           onSettle={handleSettle}
+          isVisible={isVisible}
         />
       </motion.div>
 
@@ -258,15 +232,20 @@ export default function DashboardClient({
           <CategoryPieChart
             data={categoryExpenses}
             title="Despesas por Categoria"
+            isVisible={isVisible}
           />
         </motion.div>
         <motion.div variants={item}>
-          <FairnessGraph data={metrics.fairness} />
+          <FairnessGraph data={metrics.fairness} isVisible={isVisible} />
         </motion.div>
       </div>
 
       <motion.div variants={item} className="grid grid-cols-1 gap-6">
-        <ExpenseBarChart data={evolutionData} title="Evolução Mensal" />
+        <ExpenseBarChart
+          data={evolutionData}
+          title="Evolução Mensal"
+          isVisible={isVisible}
+        />
       </motion.div>
 
       <TransactionModal

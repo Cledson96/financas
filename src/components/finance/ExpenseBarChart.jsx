@@ -13,6 +13,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 export default function ExpenseBarChart({
   data,
   title = "Evolução de Gastos",
+  isVisible = true,
 }) {
   const CustomTooltip = ({ active, payload, label }) => {
     if (active && payload && payload.length) {
@@ -31,10 +32,16 @@ export default function ExpenseBarChart({
                 {item.name}:
               </span>
               <span className="font-medium text-zinc-900 dark:text-zinc-100">
-                R${" "}
-                {item.value.toLocaleString("pt-BR", {
-                  minimumFractionDigits: 2,
-                })}
+                {isVisible ? (
+                  <>
+                    R${" "}
+                    {item.value.toLocaleString("pt-BR", {
+                      minimumFractionDigits: 2,
+                    })}
+                  </>
+                ) : (
+                  "••••••"
+                )}
               </span>
             </div>
           ))}
@@ -66,7 +73,9 @@ export default function ExpenseBarChart({
               />
               <YAxis
                 tick={{ fontSize: 12 }}
-                tickFormatter={(value) => `R$ ${(value / 1000).toFixed(0)}k`}
+                tickFormatter={(value) =>
+                  isVisible ? `R$ ${(value / 1000).toFixed(0)}k` : "•••"
+                }
                 className="text-zinc-500"
               />
               <Tooltip content={<CustomTooltip />} />

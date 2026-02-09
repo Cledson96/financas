@@ -1,6 +1,9 @@
 import type { Metadata } from "next";
 import { Providers } from "./providers";
-import "../index.css";
+import { Inter } from "next/font/google";
+import "./globals.css";
+
+const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
   title: "Family Finance - Controle Financeiro",
@@ -14,7 +17,9 @@ export default function RootLayout({
 }) {
   return (
     <html lang="pt-BR" suppressHydrationWarning>
-      <body className="min-h-screen bg-zinc-50 dark:bg-zinc-950 antialiased">
+      <body
+        className={`${inter.className} min-h-screen bg-background antialiased`}
+      >
         <Providers>{children}</Providers>
       </body>
     </html>

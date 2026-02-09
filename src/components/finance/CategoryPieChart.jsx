@@ -22,6 +22,7 @@ const COLORS = [
 export default function CategoryPieChart({
   data,
   title = "Gastos por Categoria",
+  isVisible = true,
 }) {
   const CustomTooltip = ({ active, payload }) => {
     if (active && payload && payload.length) {
@@ -31,17 +32,29 @@ export default function CategoryPieChart({
             {payload[0].name}
           </p>
           <p className="text-sm text-zinc-600 dark:text-zinc-400">
-            R${" "}
-            {payload[0].value.toLocaleString("pt-BR", {
-              minimumFractionDigits: 2,
-            })}
+            {isVisible ? (
+              <>
+                R${" "}
+                {payload[0].value.toLocaleString("pt-BR", {
+                  minimumFractionDigits: 2,
+                })}
+              </>
+            ) : (
+              "••••••"
+            )}
           </p>
           <p className="text-xs text-zinc-400">
-            {(
-              (payload[0].value / data.reduce((a, b) => a + b.value, 0)) *
-              100
-            ).toFixed(1)}
-            %
+            {isVisible ? (
+              <>
+                {(
+                  (payload[0].value / data.reduce((a, b) => a + b.value, 0)) *
+                  100
+                ).toFixed(1)}
+                %
+              </>
+            ) : (
+              "••%"
+            )}
           </p>
         </div>
       );

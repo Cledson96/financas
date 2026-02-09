@@ -15,6 +15,7 @@ interface KPICardProps {
   trendValue?: string;
   variant?: "default" | "success" | "danger" | "warning";
   pulse?: boolean;
+  isVisible?: boolean;
 }
 
 export default function KPICard({
@@ -25,6 +26,7 @@ export default function KPICard({
   trendValue,
   variant = "default",
   pulse = false,
+  isVisible = true,
 }: KPICardProps) {
   const variants = {
     default: "bg-white dark:bg-zinc-900 border-zinc-200 dark:border-zinc-800",
@@ -61,7 +63,7 @@ export default function KPICard({
               {title}
             </p>
             <p className="text-3xl font-bold tracking-tight text-zinc-900 dark:text-zinc-50 tabular-nums">
-              {value}
+              {isVisible ? value : "••••••"}
             </p>
             {trend && (
               <div className="flex items-center gap-1.5 text-xs font-medium">

@@ -9,9 +9,13 @@ interface NextInvoiceCardProps {
     bankName: string;
     dueDate: string | Date; // Service returns Date, but check generic compatibility
   };
+  isVisible?: boolean;
 }
 
-export default function NextInvoiceCard({ nextInvoice }: NextInvoiceCardProps) {
+export default function NextInvoiceCard({
+  nextInvoice,
+  isVisible = true,
+}: NextInvoiceCardProps) {
   const isUrgent = nextInvoice.daysUntilDue <= 5;
   const isOverdue = nextInvoice.daysUntilDue < 0;
 
@@ -54,10 +58,16 @@ export default function NextInvoiceCard({ nextInvoice }: NextInvoiceCardProps) {
                 textClass,
               )}
             >
-              R${" "}
-              {nextInvoice.amount.toLocaleString("pt-BR", {
-                minimumFractionDigits: 2,
-              })}
+              {isVisible ? (
+                <>
+                  R${" "}
+                  {nextInvoice.amount.toLocaleString("pt-BR", {
+                    minimumFractionDigits: 2,
+                  })}
+                </>
+              ) : (
+                "••••••"
+              )}
             </p>
             <div className="flex items-center gap-1 text-xs">
               <span className="font-medium text-zinc-700 dark:text-zinc-300">

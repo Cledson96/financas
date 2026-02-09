@@ -4,36 +4,59 @@
 
 @layer base {
     :root {
+        /* Zinc-50 for background, nice and clean */
         --background: 0 0% 98%;
-        /* Slightly off-white for depth */
+        /* Zinc-950 for text */
         --foreground: 240 10% 3.9%;
+
+        /* White cards */
         --card: 0 0% 100%;
         --card-foreground: 240 10% 3.9%;
+
         --popover: 0 0% 100%;
         --popover-foreground: 240 10% 3.9%;
+
+        /* Emerald-600 for primary */
         --primary: 158 82% 34%;
-        /* Deep Emerald */
-        --primary-foreground: 355.7 100% 97.3%;
+        --primary-foreground: 0 0% 98%;
+
+        /* Zinc-100 for heavy muted/secondary */
         --secondary: 240 4.8% 95.9%;
         --secondary-foreground: 240 5.9% 10%;
+
+        /* Zinc-100 for muted backgrounds */
         --muted: 240 4.8% 95.9%;
         --muted-foreground: 240 3.8% 46.1%;
+
+        /* Zinc-100 for accents */
         --accent: 240 4.8% 95.9%;
         --accent-foreground: 240 5.9% 10%;
+
+        /* Red-600 */
         --destructive: 0 84.2% 60.2%;
         --destructive-foreground: 0 0% 98%;
+
+        /* Zinc-200 for borders */
         --border: 240 5.9% 90%;
+        /* Zinc-200 for inputs */
         --input: 240 5.9% 90%;
+
+        /* Emerald-600 for rings */
         --ring: 158 82% 34%;
-        /* Brand Ring */
+
         --radius: 0.5rem;
-        /* Base radius, cards will use 1rem */
+
+        /* Chart Colors */
         --chart-1: 158 82% 34%;
         /* Emerald */
         --chart-2: 173 58% 39%;
+        /* Teal */
         --chart-3: 197 37% 24%;
+        /* Slate Blue */
         --chart-4: 43 74% 66%;
+        /* Amber */
         --chart-5: 27 87% 67%;
+        /* Orange */
 
         --sidebar-background: 0 0% 98%;
         --sidebar-foreground: 240 5.3% 26.1%;
@@ -46,26 +69,44 @@
     }
 
     .dark {
+        /* Zinc-950: Rich, deep black-blue */
         --background: 240 10% 3.9%;
+        /* Zinc-50 */
         --foreground: 0 0% 98%;
-        --card: 240 10% 3.9%;
+
+        /* Zinc-900: Slightly lighter than bg */
+        --card: 240 10% 9%;
         --card-foreground: 0 0% 98%;
-        --popover: 240 10% 3.9%;
+
+        --popover: 240 10% 9%;
         --popover-foreground: 0 0% 98%;
+
+        /* Emerald-500: Vibrant against dark */
         --primary: 158 82% 34%;
-        /* Emerald stays strong */
-        --primary-foreground: 355.7 100% 97.3%;
+        --primary-foreground: 0 0% 98%;
+
+        /* Zinc-800 */
         --secondary: 240 3.7% 15.9%;
         --secondary-foreground: 0 0% 98%;
+
+        /* Zinc-800 */
         --muted: 240 3.7% 15.9%;
         --muted-foreground: 240 5% 64.9%;
+
+        /* Zinc-800 */
         --accent: 240 3.7% 15.9%;
         --accent-foreground: 0 0% 98%;
+
+        /* Red-900 */
         --destructive: 0 62.8% 30.6%;
         --destructive-foreground: 0 0% 98%;
+
+        /* Zinc-800: Subtle borders */
         --border: 240 3.7% 15.9%;
         --input: 240 3.7% 15.9%;
+
         --ring: 158 82% 34%;
+
         --chart-1: 158 82% 34%;
         --chart-2: 160 60% 45%;
         --chart-3: 30 80% 55%;
@@ -82,8 +123,6 @@
         --sidebar-ring: 217.2 91.2% 59.8%;
     }
 }
-
-
 
 @layer base {
     * {
