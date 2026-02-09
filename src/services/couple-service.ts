@@ -159,4 +159,60 @@ export class CoupleService {
       },
     };
   }
+
+  static async listSharedTransactions(month: number, year: number) {
+    const startDate = startOfMonth(new Date(year, month - 1));
+    const endDate = endOfMonth(new Date(year, month - 1));
+
+    const config = await prisma.householdConfig.findFirst({
+      select: {
+        partner1Id: true,
+        partner2Id: true,
+      },
+    });
+
+    if (!config) return [];
+
+    const transactions = await prisma.transaction.findMany({
+      where: {
+        purchaseDate: {
+          gte: startDate,
+          lte: endDate,
+        },
+        // We fetch broadly and filter in memory to match getNetWorth logic complex conditions
+      },
+      include: {
+        User_Transaction_payerIdToUser: {
+          select: { id: true, name: true },
+        },
+        User_Transaction_ownerIdToUser: {
+          select: { id: true, name: true },
+        },
+        Category: {
+          select: { id: true, name: true, icon: true },
+        },
+      },
+      orderBy: {
+        purchaseDate: "desc",
+      },
+    });
+
+    // Apply the "Couple Filter"
+    return transactions.filter((t) => {
+      // 1. Transfers are always relevant (Settlements)
+      if (t.type === "TRANSFER") return true;
+
+      // 2. Shared Expenses are always relevant
+      if (t.splitType === "SHARED" || t.splitType === "SHARED_PROPORTIONAL")
+        return true;
+
+      // 3. Individual Expenses ONLY if paid by the other person (Debt)
+      // If I pay for myself, it's not a couple matter.
+      if (t.splitType === "INDIVIDUAL") {
+        return t.payerId !== t.ownerId;
+      }
+
+      return false;
+    });
+  }
 }

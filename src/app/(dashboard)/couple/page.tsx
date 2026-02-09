@@ -1,7 +1,6 @@
 "use client";
 
 import { useState, useMemo, useEffect } from "react";
-import { useQuery } from "@tanstack/react-query";
 import {
   Select,
   SelectContent,
@@ -9,24 +8,19 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import {
-  startOfMonth,
-  endOfMonth,
-  subMonths,
-  parseISO,
-  format,
-} from "date-fns";
+import { subMonths, format } from "date-fns";
 import { ptBR } from "date-fns/locale";
-import SettlementCard from "@/components/finance/SettlementCard"; // Assuming we use this or create wrapper
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Users, Calendar } from "lucide-react";
 import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from "@/components/ui/table";
+  getMonthNetWorth,
+  getSharedTransactions,
+} from "@/app/actions/couple-actions";
+import { getFixedExpensesAction } from "@/app/actions/fixed-expense-actions";
+import { toast } from "sonner";
+import { CoupleMetrics } from "@/components/couple/CoupleMetrics";
+import { FixedExpensesList } from "@/components/couple/FixedExpensesList";
+import { SharedTransactionTable } from "@/components/couple/SharedTransactionTable";
+import { Button } from "@/components/ui/button";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -37,40 +31,22 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
-import { Badge } from "@/components/ui/badge";
-import { Users, Calendar } from "lucide-react";
-import { getMonthNetWorth } from "@/app/actions/couple-actions";
 import { closeMonthAction } from "@/app/actions/monthly-balance-actions";
-import { toast } from "sonner";
-import { SettlementData } from "@/types/finance";
-// Note: SettlementData needs to be compatible or we redefine local interface
-
-async function fetchData(url: string) {
-  const res = await fetch(url);
-  if (!res.ok) throw new Error("Failed to fetch");
-  return res.json();
-}
 
 export default function CouplePage() {
   const [selectedMonth, setSelectedMonth] = useState("current");
+  const [loading, setLoading] = useState(true);
+
+  // Data States
   const [netWorth, setNetWorth] = useState<any>(null);
-  const [loadingNetWorth, setLoadingNetWorth] = useState(false);
+  const [transactions, setTransactions] = useState<any[]>([]);
+  const [fixedExpenses, setFixedExpenses] = useState<any[]>([]);
   const [settleDialogOpen, setSettleDialogOpen] = useState(false);
 
-  // We still need transactions for the list
-  const { data: transactions = [] } = useQuery({
-    queryKey: ["transactions"],
-    queryFn: () => fetchData("/api/transactions"),
-  });
-
-  const { data: members = [] } = useQuery({
-    queryKey: ["members"],
-    queryFn: () => fetchData("/api/family-members"),
-  });
-
+  // Load Data
   useEffect(() => {
-    async function loadNetWorth() {
-      setLoadingNetWorth(true);
+    async function loadData() {
+      setLoading(true);
       try {
         const date =
           selectedMonth === "current"
@@ -78,16 +54,24 @@ export default function CouplePage() {
             : new Date(selectedMonth + "-01");
         const m = date.getMonth() + 1;
         const y = date.getFullYear();
-        const data = await getMonthNetWorth(m, y);
-        setNetWorth(data);
+
+        const [nwData, txData, fxData] = await Promise.all([
+          getMonthNetWorth(m, y),
+          getSharedTransactions(m, y),
+          getFixedExpensesAction(),
+        ]);
+
+        setNetWorth(nwData);
+        setTransactions(txData);
+        setFixedExpenses(fxData);
       } catch (error) {
         console.error(error);
-        toast.error("Erro ao calcular saldo do casal");
+        toast.error("Erro ao carregar dados do casal");
       } finally {
-        setLoadingNetWorth(false);
+        setLoading(false);
       }
     }
-    loadNetWorth();
+    loadData();
   }, [selectedMonth]);
 
   const monthOptions = useMemo(() => {
@@ -102,54 +86,11 @@ export default function CouplePage() {
     return options;
   }, []);
 
-  const filteredTransactions = useMemo(() => {
-    let start, end;
-
-    if (selectedMonth === "current") {
-      start = startOfMonth(new Date());
-      end = endOfMonth(new Date());
-    } else {
-      const [year, month] = selectedMonth.split("-");
-      const date = new Date(parseInt(year), parseInt(month) - 1, 1);
-      start = startOfMonth(date);
-      end = endOfMonth(date);
-    }
-
-    // Filter logic: show SHARED, TRANSFER, and INDIVIDUAL (cross)
-    // Actually just show all relevant transactions for transparency?
-    // Let's filter to meaningful ones: SHARED, SHARED_PROPORTIONAL, INDIVIDUAL (if payer != owner), TRANSFER
-    return transactions.filter((t: any) => {
-      const date = parseISO(t.purchaseDate);
-      if (!(date >= start && date <= end)) return false;
-
-      if (t.type === "TRANSFER") return true;
-      if (t.splitType === "SHARED" || t.splitType === "SHARED_PROPORTIONAL")
-        return true;
-      if (t.splitType === "INDIVIDUAL" && t.payerId !== t.ownerId) return true;
-
-      return false;
-    });
-  }, [transactions, selectedMonth]);
-
-  // Adapter for SettlementCard
-  const settlementData: SettlementData | null = useMemo(() => {
-    if (!netWorth || !netWorth.summary) return null;
-
-    return {
-      total: netWorth.summary.amount,
-      debtorName:
-        netWorth.summary.payer === "p1" ? netWorth.p1.name : netWorth.p2.name,
-      creditorName:
-        netWorth.summary.payer === "p1" ? netWorth.p2.name : netWorth.p1.name,
-      breakdown: {
-        sharedFiftyFifty: Math.abs(netWorth.breakdown.sharedFiftyFifty),
-        sharedProportional: Math.abs(netWorth.breakdown.sharedProportional),
-        individualPaidByOther: Math.abs(netWorth.breakdown.individual),
-      },
-    };
-  }, [netWorth]);
-
   const handleSettle = () => {
+    if (!netWorth?.summary || netWorth.summary.amount === 0) {
+      toast.info("Não há nada para acertar neste mês!");
+      return;
+    }
     setSettleDialogOpen(true);
   };
 
@@ -178,11 +119,21 @@ export default function CouplePage() {
       await closeMonthAction(m, y, debtorId, creditorId, amount);
       toast.success("Mês fechado com sucesso!");
       setSettleDialogOpen(false);
-      // Refresh data ideally
+      // Determine if we should reload...? Ideally yes.
     } catch (error) {
       toast.error("Erro ao fechar mês");
     }
   };
+
+  // Calculate total shared spending from the transactions list?
+  // Or use the net worth data?
+  // Using the raw transaction list sum might be more intuitive for "Total Spending"
+  // but netWorth logic handles splits.
+  // Let's sum up the 'amount' of all listed shared transactions for a rough "Total Volume" metric.
+  const totalVolume = transactions.reduce(
+    (acc, t) => acc + Number(t.amount),
+    0,
+  );
 
   return (
     <div className="space-y-6">
@@ -191,10 +142,10 @@ export default function CouplePage() {
         <div>
           <h1 className="text-2xl md:text-3xl font-bold text-zinc-900 dark:text-zinc-100 flex items-center gap-2">
             <Users className="w-8 h-8 text-blue-500" />
-            Divisão do Casal
+            Finanças do Casal
           </h1>
           <p className="text-zinc-500 dark:text-zinc-400 mt-1">
-            Acompanhe e acerte as contas compartilhadas
+            Visão unificada das despesas compartilhadas
           </p>
         </div>
         <div className="flex items-center gap-2">
@@ -214,92 +165,51 @@ export default function CouplePage() {
         </div>
       </div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-        {/* Settlement Card - Only show if we have data */}
-        {loadingNetWorth ? (
-          <Card>
-            <CardContent className="p-6">Calculando...</CardContent>
-          </Card>
-        ) : settlementData ? (
-          <SettlementCard settlement={settlementData} onSettle={handleSettle} />
-        ) : (
-          <Card>
-            <CardContent className="p-6">
-              Nenhum dado para o período.
-            </CardContent>
-          </Card>
-        )}
+      {loading ? (
+        <div className="p-12 text-center text-zinc-500">
+          Carregando dados...
+        </div>
+      ) : (
+        <>
+          {/* Top Metrics */}
+          <CoupleMetrics
+            summary={netWorth?.summary || null}
+            p1Name={netWorth?.p1?.name || "Parceiro 1"}
+            p2Name={netWorth?.p2?.name || "Parceiro 2"}
+            totalSharedRaw={totalVolume}
+          />
 
-        {/* Shared Transactions List */}
-        <Card className="bg-white dark:bg-zinc-900 border-zinc-200 dark:border-zinc-800">
-          <CardHeader className="pb-2">
-            <CardTitle className="text-lg font-semibold text-zinc-900 dark:text-zinc-100">
-              Transações do Casal
-            </CardTitle>
-          </CardHeader>
-          <CardContent>
-            <div className="max-h-[400px] overflow-y-auto">
-              <Table>
-                <TableHeader>
-                  <TableRow>
-                    <TableHead>Data</TableHead>
-                    <TableHead>Descrição</TableHead>
-                    <TableHead>Quem Pagou</TableHead>
-                    <TableHead className="text-right">Valor</TableHead>
-                  </TableRow>
-                </TableHeader>
-                <TableBody>
-                  {filteredTransactions.length === 0 ? (
-                    <TableRow>
-                      <TableCell
-                        colSpan={4}
-                        className="text-center py-8 text-zinc-500"
-                      >
-                        Nenhuma transação compartilhada no período
-                      </TableCell>
-                    </TableRow>
-                  ) : (
-                    filteredTransactions.map((t: any) => (
-                      <TableRow key={t.id}>
-                        <TableCell className="text-zinc-500">
-                          {format(parseISO(t.purchaseDate), "dd/MM")}
-                        </TableCell>
-                        <TableCell className="font-medium">
-                          {t.description}
-                          <div className="text-xs text-muted-foreground">
-                            {t.type === "TRANSFER"
-                              ? "Transferência"
-                              : t.splitType}
-                          </div>
-                        </TableCell>
-                        <TableCell>
-                          <Badge variant="outline">
-                            {t.payer?.name || "Não informado"}
-                          </Badge>
-                        </TableCell>
-                        <TableCell className="text-right font-semibold text-rose-600">
-                          R${" "}
-                          {t.amount?.toLocaleString("pt-BR", {
-                            minimumFractionDigits: 2,
-                          })}
-                        </TableCell>
-                      </TableRow>
-                    ))
-                  )}
-                </TableBody>
-              </Table>
+          <div className="flex justify-end mb-4">
+            <Button
+              onClick={handleSettle}
+              variant={netWorth?.summary?.amount > 0 ? "default" : "outline"}
+              disabled={!netWorth?.summary || netWorth.summary.amount === 0}
+            >
+              Realizar Fechamento do Mês
+            </Button>
+          </div>
+
+          <div className="grid grid-cols-1 xl:grid-cols-3 gap-6">
+            {/* Main Content: Transactions Table */}
+            <div className="xl:col-span-2 space-y-6">
+              <SharedTransactionTable transactions={transactions} />
             </div>
-          </CardContent>
-        </Card>
-      </div>
+
+            {/* Sidebar: Fixed Expenses */}
+            <div className="xl:col-span-1">
+              <FixedExpensesList expenses={fixedExpenses} />
+            </div>
+          </div>
+        </>
+      )}
+
+      {/* Settle Dialog */}
       <AlertDialog open={settleDialogOpen} onOpenChange={setSettleDialogOpen}>
         <AlertDialogContent>
           <AlertDialogHeader>
             <AlertDialogTitle>Fechar Mês e Confirmar Dívida?</AlertDialogTitle>
             <AlertDialogDescription>
-              Isso criará um registro de fechamento para o mês selecionado. O
-              saldo será registrado e o mês seguinte iniciará zerado (se a
-              lógica de histórico suportar).
+              Isso criará um registro de fechamento para o mês selecionado.
               <br />
               <br />
               <strong>Valor Final:</strong> R${" "}
