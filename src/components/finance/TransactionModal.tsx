@@ -135,7 +135,7 @@ export default function TransactionModal({
       accountName: selectedAccount?.name || "",
       payerId,
       payerName: selectedPayer?.name || "",
-      payerName: selectedPayer?.name || "",
+
       splitType: isShared
         ? splitMethod === "PROPORTIONAL"
           ? "SHARED_PROPORTIONAL"

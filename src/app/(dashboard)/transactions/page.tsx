@@ -3,30 +3,22 @@
 import { useState, useMemo } from "react";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Plus, Search, Filter } from "lucide-react";
+import { Plus } from "lucide-react";
 import TransactionTable from "@/components/finance/TransactionTable";
 import TransactionModal from "@/components/finance/TransactionModal";
 import TransactionSummary from "@/components/finance/TransactionSummary";
+import TransactionFilters from "@/components/finance/TransactionFilters";
 import InvoiceSheet from "@/components/finance/InvoiceSheet";
-import { format, parseISO, isBefore } from "date-fns";
-import { ptBR } from "date-fns/locale";
 import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
-import { Download, Calendar as CalendarIcon, User } from "lucide-react";
-import { Calendar } from "@/components/ui/calendar";
-import {
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
-} from "@/components/ui/popover";
+  parseISO,
+  isBefore,
+  startOfMonth,
+  endOfMonth,
+  isWithinInterval,
+  endOfDay,
+  subMonths,
+} from "date-fns";
 import { DateRange } from "react-day-picker";
-import { startOfMonth, endOfMonth, isWithinInterval, endOfDay } from "date-fns";
 
 async function fetchData(url: string) {
   const res = await fetch(url);
@@ -224,8 +216,6 @@ export default function TransactionsPage() {
       // Date Range
       if (dateRange?.from && dateRange?.to && t.purchaseDate) {
         const date = parseISO(t.purchaseDate);
-        // Normalize time for comparison if needed, or rely on date-fns
-        // isWithinInterval requires start and end to be valid
         if (
           !isWithinInterval(date, {
             start: dateRange.from,
@@ -250,6 +240,9 @@ export default function TransactionsPage() {
     payerFilter,
     divisionFilter,
     statusFilter,
+    categoryFilter, // Included based on prior logic, though double checked
+    buyerFilter,
+    dateRange,
   ]);
 
   const handleEdit = (transaction: any) => {
@@ -288,7 +281,7 @@ export default function TransactionsPage() {
             Transações
           </h1>
           <p className="text-zinc-500 dark:text-zinc-400 mt-1">
-            Gerencie todas as suas transações
+            Histórico completo de receitas e despesas
           </p>
         </div>
         <Button
@@ -296,7 +289,7 @@ export default function TransactionsPage() {
             setEditingTransaction(null);
             setModalOpen(true);
           }}
-          className="gap-2"
+          className="gap-2 bg-emerald-600 hover:bg-emerald-700 text-white"
         >
           <Plus className="h-4 w-4" />
           Nova Transação
@@ -308,164 +301,47 @@ export default function TransactionsPage() {
         invoiceFilter={invoiceFilter}
       />
 
-      {/* Filters */}
-      <div className="flex flex-col sm:flex-row gap-3 items-start sm:items-center justify-between bg-white dark:bg-zinc-900/50 p-4 rounded-xl border border-zinc-200 dark:border-zinc-800 shadow-sm">
-        <div className="flex flex-1 gap-3 flex-wrap">
-          <div className="relative flex-1 min-w-[200px]">
-            <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-zinc-400" />
-            <Input
-              placeholder="Buscar transação..."
-              value={searchTerm}
-              onChange={(e) => setSearchTerm(e.target.value)}
-              className="pl-9 bg-zinc-50 dark:bg-zinc-800 border-zinc-200 dark:border-zinc-700"
-            />
-          </div>
+      {/* Main Content Area: Filters + Table */}
+      <div className="space-y-4">
+        <TransactionFilters
+          searchTerm={searchTerm}
+          onSearchChange={setSearchTerm}
+          dateRange={dateRange}
+          onDateRangeChange={setDateRange}
+          invoiceFilter={invoiceFilter}
+          setInvoiceFilter={setInvoiceFilter}
+          categoryFilter={categoryFilter}
+          setCategoryFilter={setCategoryFilter}
+          typeFilter={typeFilter}
+          setTypeFilter={setTypeFilter}
+          payerFilter={payerFilter}
+          setPayerFilter={setPayerFilter}
+          buyerFilter={buyerFilter}
+          setBuyerFilter={setBuyerFilter}
+          divisionFilter={divisionFilter}
+          setDivisionFilter={setDivisionFilter}
+          statusFilter={statusFilter}
+          setStatusFilter={setStatusFilter}
+          invoices={invoices}
+          categories={categories}
+          members={members}
+          onExport={() => alert("Export functionality coming soon")}
+        />
 
-          <Popover>
-            <PopoverTrigger asChild>
-              <Button
-                variant="outline"
-                className={
-                  "w-[240px] justify-start text-left font-normal bg-zinc-50 dark:bg-zinc-800 border-zinc-200 dark:border-zinc-700"
-                }
-              >
-                <CalendarIcon className="mr-2 h-4 w-4" />
-                {dateRange?.from ? (
-                  dateRange.to ? (
-                    <>
-                      {format(dateRange.from, "dd/MM/y", { locale: ptBR })} -{" "}
-                      {format(dateRange.to, "dd/MM/y", { locale: ptBR })}
-                    </>
-                  ) : (
-                    format(dateRange.from, "dd/MM/y", { locale: ptBR })
-                  )
-                ) : (
-                  <span>Selecione uma data</span>
-                )}
-              </Button>
-            </PopoverTrigger>
-            <PopoverContent className="w-auto p-0" align="start">
-              <Calendar
-                initialFocus
-                mode="range"
-                defaultMonth={dateRange?.from}
-                selected={dateRange}
-                onSelect={setDateRange}
-                numberOfMonths={2}
-                locale={ptBR}
-              />
-            </PopoverContent>
-          </Popover>
-
-          <Select value={invoiceFilter} onValueChange={setInvoiceFilter}>
-            <SelectTrigger className="w-[180px] bg-zinc-50 dark:bg-zinc-800 border-zinc-200 dark:border-zinc-700">
-              <SelectValue placeholder="Fatura" />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectItem value="all">Todas as Faturas</SelectItem>
-              {invoices.map((inv: any) => (
-                <SelectItem key={inv.id} value={inv.id}>
-                  {inv.month}/{inv.year} - {inv.Account?.name || "Cartão"}
-                </SelectItem>
-              ))}
-            </SelectContent>
-          </Select>
-
-          <Select value={categoryFilter} onValueChange={setCategoryFilter}>
-            <SelectTrigger className="w-[160px] bg-zinc-50 dark:bg-zinc-800 border-zinc-200 dark:border-zinc-700">
-              <SelectValue placeholder="Categoria" />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectItem value="all">Todas</SelectItem>
-              {categories.map((cat: any) => (
-                <SelectItem key={cat.id} value={cat.id}>
-                  {cat.icon} {cat.name}
-                </SelectItem>
-              ))}
-            </SelectContent>
-          </Select>
-          <Select value={typeFilter} onValueChange={setTypeFilter}>
-            <SelectTrigger className="w-[110px] bg-zinc-50 dark:bg-zinc-800 border-zinc-200 dark:border-zinc-700">
-              <SelectValue placeholder="Tipo" />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectItem value="all">Todos</SelectItem>
-              <SelectItem value="EXPENSE">Despesas</SelectItem>
-              <SelectItem value="INCOME">Receitas</SelectItem>
-              <SelectItem value="TRANSFER">Transf.</SelectItem>
-            </SelectContent>
-          </Select>
-
-          <Select value={payerFilter} onValueChange={setPayerFilter}>
-            <SelectTrigger className="w-[110px] bg-zinc-50 dark:bg-zinc-800 border-zinc-200 dark:border-zinc-700">
-              <SelectValue placeholder="Quem Pagou" />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectItem value="all">Quem Pagou</SelectItem>
-              {members.map((m: any) => (
-                <SelectItem key={m.id} value={m.id}>
-                  {m.name}
-                </SelectItem>
-              ))}
-            </SelectContent>
-          </Select>
-
-          <Select value={buyerFilter} onValueChange={setBuyerFilter}>
-            <SelectTrigger className="w-[110px] bg-zinc-50 dark:bg-zinc-800 border-zinc-200 dark:border-zinc-700">
-              <SelectValue placeholder="Quem Comprou" />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectItem value="all">Quem Comprou</SelectItem>
-              {members.map((m: any) => (
-                <SelectItem key={m.id} value={m.id}>
-                  {m.name}
-                </SelectItem>
-              ))}
-            </SelectContent>
-          </Select>
-
-          <Select value={divisionFilter} onValueChange={setDivisionFilter}>
-            <SelectTrigger className="w-[110px] bg-zinc-50 dark:bg-zinc-800 border-zinc-200 dark:border-zinc-700">
-              <SelectValue placeholder="Divisão" />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectItem value="all">Divisão</SelectItem>
-              <SelectItem value="INDIVIDUAL">Individual</SelectItem>
-              <SelectItem value="SHARED">Casal (50/50)</SelectItem>
-              <SelectItem value="PROPORTIONAL">Proporcional</SelectItem>
-            </SelectContent>
-          </Select>
-
-          <Select value={statusFilter} onValueChange={setStatusFilter}>
-            <SelectTrigger className="w-[110px] bg-zinc-50 dark:bg-zinc-800 border-zinc-200 dark:border-zinc-700">
-              <SelectValue placeholder="Status" />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectItem value="all">Status</SelectItem>
-              <SelectItem value="PENDING">Pendente</SelectItem>
-              <SelectItem value="PAID">Pago</SelectItem>
-              <SelectItem value="OVERDUE">Atrasado</SelectItem>
-            </SelectContent>
-          </Select>
+        <div className="bg-white dark:bg-zinc-900/50 rounded-xl border border-zinc-200 dark:border-zinc-800 shadow-sm overflow-hidden">
+          <TransactionTable
+            transactions={filteredTransactions}
+            categories={categories}
+            accounts={accounts}
+            members={members}
+            onEdit={handleEdit}
+            onDelete={handleDelete}
+            onBulkDelete={handleBulkDelete}
+            onBulkCategoryChange={handleBulkCategoryChange}
+            onViewInvoice={handleViewInvoice}
+          />
         </div>
-        <Button variant="outline" className="gap-2">
-          <Download className="h-4 w-4" />
-          Exportar Excel
-        </Button>
       </div>
-
-      {/* Transactions Table */}
-      <TransactionTable
-        transactions={filteredTransactions}
-        categories={categories}
-        accounts={accounts}
-        members={members}
-        onEdit={handleEdit}
-        onDelete={handleDelete}
-        onBulkDelete={handleBulkDelete}
-        onBulkCategoryChange={handleBulkCategoryChange}
-        onViewInvoice={handleViewInvoice}
-      />
 
       {/* Transaction Modal */}
       <TransactionModal
