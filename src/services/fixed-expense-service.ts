@@ -13,6 +13,11 @@ export class FixedExpenseService {
             icon: true,
           },
         },
+        User: {
+          select: {
+            name: true,
+          },
+        },
       },
       orderBy: {
         dueDay: "asc",

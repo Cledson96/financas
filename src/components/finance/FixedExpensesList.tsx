@@ -40,6 +40,9 @@ interface FixedExpense {
     name: string;
     icon: string | null;
   };
+  User?: {
+    name: string;
+  } | null;
 }
 
 // Since FixedExpenseService is server-side only in strict sense (imports prisma),
@@ -122,6 +125,11 @@ export default function FixedExpensesList({ categories, members }: any) {
                     <span>R$ {Number(expense.amount).toFixed(2)}</span>
                     <span>•</span>
                     <Badge variant="outline">{expense.splitType}</Badge>
+                    {expense.splitType === "INDIVIDUAL" && expense.User && (
+                      <Badge variant="secondary" className="ml-1 text-xs">
+                        {expense.User.name}
+                      </Badge>
+                    )}
                   </div>
                 </div>
               </div>
