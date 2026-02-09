@@ -17,9 +17,14 @@ import { signOut, useSession } from "next-auth/react";
 interface UserMenuProps {
   isSidebarWide: boolean;
   isMobile?: boolean;
+  className?: string;
 }
 
-export function UserMenu({ isSidebarWide, isMobile = false }: UserMenuProps) {
+export function UserMenu({
+  isSidebarWide,
+  isMobile = false,
+  className,
+}: UserMenuProps) {
   const { data: session } = useSession();
   const user = session?.user;
 
@@ -33,6 +38,7 @@ export function UserMenu({ isSidebarWide, isMobile = false }: UserMenuProps) {
           className={cn(
             "w-full justify-start gap-3 transition-all duration-300 relative h-14",
             !isSidebarWide && !isMobile && "justify-center px-0",
+            className,
           )}
         >
           <Avatar className="h-8 w-8 flex-shrink-0">
