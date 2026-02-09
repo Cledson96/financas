@@ -3,6 +3,7 @@
 import { useState, useEffect } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import Image from "next/image"; // Added import
 import { Button } from "@/components/ui/button";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import {
@@ -18,6 +19,7 @@ import {
   ChevronRight,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { UserMenu } from "@/components/user-menu";
 
 const navigation = [
   { name: "Dashboard", href: "/dashboard", icon: LayoutDashboard },
@@ -140,8 +142,13 @@ export default function DashboardLayout({
               !isSidebarWide && "px-4 justify-center",
             )}
           >
-            <div className="p-2 rounded-xl bg-gradient-to-br from-blue-500 to-indigo-600 flex-shrink-0">
-              <Wallet className="w-6 h-6 text-white" />
+            <div className="relative w-10 h-10 rounded-xl overflow-hidden flex-shrink-0 border border-zinc-200 dark:border-zinc-700">
+              <Image
+                src="/images/couple.jpg"
+                alt="Finanças do Casal"
+                fill
+                className="object-cover"
+              />
             </div>
             <div
               className={cn(
@@ -150,7 +157,7 @@ export default function DashboardLayout({
               )}
             >
               <h1 className="text-lg font-bold text-zinc-900 dark:text-zinc-100">
-                Family Finance
+                Finanças do Casal
               </h1>
               <p className="text-xs text-zinc-500">Controle Financeiro</p>
             </div>
@@ -161,8 +168,10 @@ export default function DashboardLayout({
             <NavItems />
           </div>
 
-          {/* Theme Toggle */}
-          <div className="p-4 border-t border-zinc-200 dark:border-zinc-800 overflow-hidden">
+          {/* Use Menu & Theme Toggle */}
+          <div className="p-4 border-t border-zinc-200 dark:border-zinc-800 overflow-hidden flex flex-col gap-2">
+            <UserMenu isSidebarWide={isSidebarWide} />
+
             <Button
               variant="ghost"
               onClick={toggleTheme}
@@ -211,12 +220,17 @@ export default function DashboardLayout({
               </SheetTrigger>
               <SheetContent side="left" className="w-72 p-0">
                 <div className="flex items-center gap-3 px-6 py-5 border-b border-zinc-200 dark:border-zinc-800">
-                  <div className="p-2 rounded-xl bg-gradient-to-br from-blue-500 to-indigo-600">
-                    <Wallet className="w-6 h-6 text-white" />
+                  <div className="relative w-10 h-10 rounded-xl overflow-hidden flex-shrink-0 border border-zinc-200 dark:border-zinc-700">
+                    <Image
+                      src="/images/couple.jpg"
+                      alt="Finanças do Casal"
+                      fill
+                      className="object-cover"
+                    />
                   </div>
                   <div>
                     <h1 className="text-lg font-bold text-zinc-900 dark:text-zinc-100">
-                      Family Finance
+                      Finanças do Casal
                     </h1>
                     <p className="text-xs text-zinc-500">Controle Financeiro</p>
                   </div>
@@ -226,12 +240,15 @@ export default function DashboardLayout({
                     onNavigate={() => setMobileOpen(false)}
                     isMobile={true}
                   />
+                  <div className="mt-4 pt-4 border-t border-zinc-200 dark:border-zinc-800">
+                    <UserMenu isSidebarWide={true} isMobile={true} />
+                  </div>
                 </div>
               </SheetContent>
             </Sheet>
             <span className="font-semibold text-zinc-900 dark:text-zinc-100">
               {navigation.find((n) => n.href === pathname)?.name ||
-                "Family Finance"}
+                "Finanças do Casal"}
             </span>
           </div>
           <Button variant="ghost" size="icon" onClick={toggleTheme}>
