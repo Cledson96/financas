@@ -14,19 +14,14 @@ import {
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 
+import { dashboardNavigation } from "@/config/dashboard";
+
 interface SidebarProps {
   isCollapsed: boolean;
   toggleSidebar: () => void;
   isMobile?: boolean;
   closeMobile?: () => void;
 }
-
-const navigation = [
-  { name: "Dashboard", href: "/dashboard", icon: LayoutDashboard },
-  { name: "Transações", href: "/transactions", icon: Receipt },
-  { name: "Casal", href: "/couple", icon: Users },
-  { name: "Configurações", href: "/settings", icon: Settings },
-];
 
 export function Sidebar({
   isCollapsed,
@@ -75,7 +70,7 @@ export function Sidebar({
       {/* Navigation Links */}
       <div className="flex-1 px-3 py-4 overflow-y-auto overflow-x-hidden">
         <nav className="space-y-1">
-          {navigation.map((item) => {
+          {dashboardNavigation.map((item) => {
             const isActive = pathname === item.href;
             return (
               <Link

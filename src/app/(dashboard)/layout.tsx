@@ -13,7 +13,6 @@ export default function DashboardLayout({
 }) {
   const [theme, setTheme] = useState("light");
   const [mobileOpen, setMobileOpen] = useState(false);
-  const [isCollapsed, setIsCollapsed] = useState(false);
   const [mounted, setMounted] = useState(false);
 
   useEffect(() => {
@@ -21,9 +20,6 @@ export default function DashboardLayout({
     const stored = localStorage.getItem("theme") || "light";
     setTheme(stored);
     document.documentElement.classList.toggle("dark", stored === "dark");
-
-    const storedCollapsed = localStorage.getItem("sidebarCollapsed") === "true";
-    setIsCollapsed(storedCollapsed);
   }, []);
 
   const toggleTheme = () => {
@@ -33,21 +29,10 @@ export default function DashboardLayout({
     document.documentElement.classList.toggle("dark", newTheme === "dark");
   };
 
-  const toggleSidebar = () => {
-    const newCollapsed = !isCollapsed;
-    setIsCollapsed(newCollapsed);
-    localStorage.setItem("sidebarCollapsed", String(newCollapsed));
-  };
-
   if (!mounted) return null;
 
   return (
-    <div className="flex h-screen overflow-hidden bg-zinc-50 dark:bg-zinc-950 transition-colors duration-300">
-      {/* Desktop Sidebar */}
-      <div className="hidden lg:block lg:flex-shrink-0">
-        <Sidebar isCollapsed={isCollapsed} toggleSidebar={toggleSidebar} />
-      </div>
-
+    <div className="flex flex-col h-screen overflow-hidden bg-zinc-50 dark:bg-zinc-950 transition-colors duration-300">
       {/* Mobile Sidebar */}
       <Sheet open={mobileOpen} onOpenChange={setMobileOpen}>
         <SheetContent
@@ -63,18 +48,17 @@ export default function DashboardLayout({
         </SheetContent>
       </Sheet>
 
-      {/* Main Content Area */}
-      <div className="flex flex-col flex-1 min-w-0 overflow-hidden">
-        <Header
-          onMenuClick={() => setMobileOpen(true)}
-          theme={theme}
-          toggleTheme={toggleTheme}
-        />
+      {/* Header (Always Visible) */}
+      <Header
+        onMenuClick={() => setMobileOpen(true)}
+        theme={theme}
+        toggleTheme={toggleTheme}
+      />
 
-        <main className="flex-1 overflow-y-auto focus:outline-none p-4 sm:p-6 lg:p-8">
-          <div className="max-w-7xl mx-auto">{children}</div>
-        </main>
-      </div>
+      {/* Main Content Area */}
+      <main className="flex-1 overflow-y-auto focus:outline-none scroll-smooth">
+        <div className="p-4 sm:p-6 lg:p-8 max-w-7xl mx-auto">{children}</div>
+      </main>
     </div>
   );
 }
