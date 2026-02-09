@@ -47,11 +47,11 @@ export default function AccountCard({ account, onEdit, onDelete }) {
       )}
     >
       <div
-        className="absolute top-0 right-0 w-32 h-32 rounded-full opacity-10 -translate-y-8 translate-x-8"
+        className="absolute top-0 right-0 w-32 h-32 rounded-full opacity-10 -translate-y-8 translate-x-8 pointer-events-none"
         style={{ backgroundColor: account.color || "#3b82f6" }}
       />
 
-      <CardContent className="p-5">
+      <CardContent className="p-5 relative z-10">
         <div className="flex items-start justify-between mb-4">
           <div className="flex items-center gap-3">
             <div
