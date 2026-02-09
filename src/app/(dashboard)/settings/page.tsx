@@ -88,9 +88,9 @@ export default function SettingsPage() {
     queryFn: () => fetchData("/api/categories"),
   });
 
-  const { data: members = [] } = useQuery({
+  const { data: members = [], refetch: refetchMembers } = useQuery({
     queryKey: ["members"],
-    queryFn: () => fetchData("/api/family-members"),
+    queryFn: () => fetchData("/api/users"),
   });
 
   // Account Mutations
@@ -157,7 +157,7 @@ export default function SettingsPage() {
 
   // Member Mutations
   const createMember = useMutation({
-    mutationFn: (data: any) => postData("/api/family-members", data),
+    mutationFn: (data: any) => postData("/api/users", data),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["members"] });
       setMemberModalOpen(false);
@@ -167,7 +167,7 @@ export default function SettingsPage() {
 
   const updateMember = useMutation({
     mutationFn: ({ id, data }: { id: string; data: any }) =>
-      putData(`/api/family-members/${id}`, data),
+      putData(`/api/users/${id}`, data),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["members"] });
       setMemberModalOpen(false);
@@ -177,7 +177,7 @@ export default function SettingsPage() {
   });
 
   const deleteMember = useMutation({
-    mutationFn: (id: string) => deleteData(`/api/family-members/${id}`),
+    mutationFn: (id: string) => deleteData(`/api/users/${id}`),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["members"] });
       setDeleteId(null);
@@ -407,6 +407,7 @@ export default function SettingsPage() {
         }}
         editData={editAccount}
         isLoading={createAccount.isPending || updateAccount.isPending}
+        members={members}
       />
 
       {/* Category Modal */}

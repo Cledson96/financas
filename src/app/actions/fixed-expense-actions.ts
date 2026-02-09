@@ -5,7 +5,13 @@ import { revalidatePath } from "next/cache";
 import { SplitMethod } from "@prisma/client";
 
 export async function getFixedExpensesAction() {
-  return FixedExpenseService.list();
+  const expenses = await FixedExpenseService.list();
+
+  // Serialize Decimal objects to numbers for Client Components
+  return expenses.map((expense) => ({
+    ...expense,
+    amount: Number(expense.amount),
+  }));
 }
 
 export async function createFixedExpenseAction(formData: FormData) {

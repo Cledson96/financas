@@ -34,6 +34,7 @@ export default function AccountModal({
   onSubmit,
   editData = null,
   isLoading = false,
+  members = [],
 }) {
   const [name, setName] = useState("");
   const [type, setType] = useState("CHECKING_ACCOUNT");
@@ -43,6 +44,7 @@ export default function AccountModal({
   const [dueDay, setDueDay] = useState("");
   const [closingDay, setClosingDay] = useState("");
   const [color, setColor] = useState("#3b82f6");
+  const [userId, setUserId] = useState("none");
 
   useEffect(() => {
     if (editData) {
@@ -54,6 +56,7 @@ export default function AccountModal({
       setDueDay(editData.dueDay?.toString() || "");
       setClosingDay(editData.closingDay?.toString() || "");
       setColor(editData.color || "#3b82f6");
+      setUserId(editData.userId || "none");
     } else {
       resetForm();
     }
@@ -67,7 +70,9 @@ export default function AccountModal({
     setLimit("");
     setDueDay("");
     setClosingDay("");
+    setClosingDay("");
     setColor("#3b82f6");
+    setUserId("none");
   };
 
   const handleSubmit = (e) => {
@@ -81,6 +86,7 @@ export default function AccountModal({
       dueDay: type === "CREDIT_CARD" ? parseInt(dueDay) || null : null,
       closingDay: type === "CREDIT_CARD" ? parseInt(closingDay) || null : null,
       color,
+      userId: userId === "none" ? null : userId,
     });
   };
 
@@ -124,6 +130,23 @@ export default function AccountModal({
                 </SelectContent>
               </Select>
             </div>
+          </div>
+
+          <div className="space-y-2">
+            <Label>Dono da Conta</Label>
+            <Select value={userId} onValueChange={setUserId}>
+              <SelectTrigger className="bg-zinc-50 dark:bg-zinc-800 border-zinc-200 dark:border-zinc-700">
+                <SelectValue placeholder="Selecione o dono (opcional)" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="none">Sem dono específico</SelectItem>
+                {members.map((member) => (
+                  <SelectItem key={member.id} value={member.id}>
+                    {member.name}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
           </div>
 
           <div className="grid grid-cols-2 gap-4">

@@ -4,7 +4,15 @@ import { HouseholdService } from "@/services/household-service";
 import { revalidatePath } from "next/cache";
 
 export async function getHouseholdConfig() {
-  return HouseholdService.getConfig();
+  const config = await HouseholdService.getConfig();
+
+  if (!config) return null;
+
+  // Serialize Decimal objects to numbers for Client Components
+  return {
+    ...config,
+    partner1Share: Number(config.partner1Share),
+  };
 }
 
 export async function updateHouseholdConfig(formData: FormData) {
