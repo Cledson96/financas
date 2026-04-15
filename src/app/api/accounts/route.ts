@@ -34,6 +34,13 @@ export async function POST(request: Request) {
         dueDay: data.dueDay || null,
         closingDay: data.closingDay || null,
         userId: data.userId || null,
+        isActive: data.isActive ?? true,
+        isShared: data.isShared ?? false,
+        includeInNetWorth: data.includeInNetWorth ?? true,
+        includeInAvailableBalance: data.includeInAvailableBalance ?? true,
+        subtype: data.subtype || null,
+        reserveType: data.reserveType || null,
+        notes: data.notes || null,
       },
     });
     return NextResponse.json(account, { status: 201 });

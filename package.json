@@ -8,6 +8,8 @@
     "build": "prisma generate && next build",
     "start": "next start",
     "lint": "next lint",
+    "test": "node --test tests/**/*.test.js",
+    "generate:bills": "node scripts/backfill-current-month-bills.mjs",
     "postinstall": "prisma generate"
   },
   "dependencies": {

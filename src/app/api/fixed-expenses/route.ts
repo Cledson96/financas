@@ -24,6 +24,7 @@ export async function GET() {
 export async function POST(request: Request) {
   try {
     const data = await request.json();
+    const splitType = data.splitType || "SHARED";
     const fixedExpense = await prisma.fixedExpense.create({
       data: {
         id: crypto.randomUUID(),
@@ -31,9 +32,21 @@ export async function POST(request: Request) {
         amount: data.amount,
         dueDay: data.dueDay,
         categoryId: data.categoryId,
-        splitType: data.splitType || "SHARED",
-        ownerId: data.ownerId || null,
-        active: true,
+        splitType,
+        ownerId: splitType === "INDIVIDUAL" ? (data.ownerId || null) : null,
+        active: data.active ?? true,
+        frequency: data.frequency || "MONTHLY",
+        startDate: data.startDate ? new Date(data.startDate) : null,
+        endDate: data.endDate ? new Date(data.endDate) : null,
+        defaultAccountId: data.defaultAccountId || null,
+        isHousehold: splitType !== "INDIVIDUAL",
+        autoGenerateBill: data.autoGenerateBill ?? true,
+        autoGenerateTransaction: data.autoGenerateTransaction ?? false,
+        leadDays: data.leadDays ?? 3,
+        notes: data.notes || null,
+        createdByUserId: data.createdByUserId || null,
+        createdByAgent: data.createdByAgent || null,
+        updatedAt: new Date(),
       },
       include: {
         Category: true,

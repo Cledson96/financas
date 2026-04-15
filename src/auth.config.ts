@@ -13,6 +13,7 @@ export const authConfig = {
         nextUrl.pathname === "/login" ||
         nextUrl.pathname.startsWith("/auth/error") ||
         nextUrl.pathname.startsWith("/api/auth") ||
+        nextUrl.pathname.startsWith("/api/assistant") ||
         nextUrl.pathname.startsWith("/_next") ||
         nextUrl.pathname === "/favicon.ico";
 

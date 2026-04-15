@@ -6,7 +6,6 @@ generator client {
   provider = "prisma-client-js"
 }
 
-
 model Account {
   id                                                 String        @id
   name                                               String
@@ -18,10 +17,18 @@ model Account {
   closingDay                                         Int?
   userId                                             String?
   createdAt                                          DateTime      @default(now())
+  isActive                                           Boolean       @default(true)
+  isShared                                           Boolean       @default(false)
+  includeInNetWorth                                  Boolean       @default(true)
+  includeInAvailableBalance                          Boolean       @default(true)
+  subtype                                            AccountSubtype?
+  reserveType                                        ReserveType?
+  notes                                              String?
   User                                               User?         @relation(fields: [userId], references: [id])
   Invoice                                            Invoice[]
   Transaction                                        Transaction[]
   Transaction_Transaction_receiverAccountIdToAccount Transaction[] @relation("Transaction_receiverAccountIdToAccount")
+  Bill                                               Bill[]
 }
 
 model Category {
@@ -31,19 +38,33 @@ model Category {
   icon         String?
   FixedExpense FixedExpense[]
   Transaction  Transaction[]
+  Bill         Bill[]
 }
 
 model FixedExpense {
-  id          String      @id
-  description String
-  amount      Decimal     @db.Decimal(10, 2)
-  dueDay      Int
-  categoryId  String
-  splitType   SplitMethod @default(INDIVIDUAL)
-  ownerId     String?
-  active      Boolean     @default(true)
-  Category    Category    @relation(fields: [categoryId], references: [id])
-  User        User?       @relation(fields: [ownerId], references: [id])
+  id               String              @id
+  description      String
+  amount           Decimal             @db.Decimal(10, 2)
+  dueDay           Int
+  categoryId       String
+  splitType        SplitMethod         @default(INDIVIDUAL)
+  ownerId          String?
+  active           Boolean             @default(true)
+  frequency        RecurrenceFrequency @default(MONTHLY)
+  startDate        DateTime?
+  endDate          DateTime?
+  defaultAccountId String?
+  isHousehold      Boolean             @default(false)
+  autoGenerateBill Boolean             @default(true)
+  autoGenerateTransaction Boolean      @default(false)
+  leadDays         Int?                @default(3)
+  notes            String?
+  createdByUserId  String?
+  createdByAgent   String?
+  updatedAt        DateTime            @default(now())
+  Category         Category            @relation(fields: [categoryId], references: [id])
+  User             User?               @relation(fields: [ownerId], references: [id])
+  Bill             Bill[]
 }
 
 model Invoice {
@@ -58,6 +79,7 @@ model Invoice {
   createdAt   DateTime      @default(now())
   Account     Account       @relation(fields: [accountId], references: [id])
   Transaction Transaction[]
+  Bill        Bill[]
 
   @@unique([accountId, month, year])
 }
@@ -87,18 +109,27 @@ model Transaction {
   createdAt                                      DateTime        @default(now())
   updatedAt                                      DateTime
   splitShare                                     Decimal?        @db.Decimal(5, 4)
+  status                                         TransactionStatus @default(POSTED)
+  source                                         TransactionSource @default(WEB)
+  createdByUserId                                String?
+  createdByAgent                                 String?
+  isHousehold                                    Boolean         @default(false)
+  notes                                          String?
+  metadata                                       Json?
   Account                                        Account         @relation(fields: [accountId], references: [id])
   Category                                       Category        @relation(fields: [categoryId], references: [id])
   Invoice                                        Invoice?        @relation(fields: [invoiceId], references: [id])
   User_Transaction_ownerIdToUser                 User?           @relation("Transaction_ownerIdToUser", fields: [ownerId], references: [id])
   User_Transaction_payerIdToUser                 User            @relation("Transaction_payerIdToUser", fields: [payerId], references: [id])
   Account_Transaction_receiverAccountIdToAccount Account?        @relation("Transaction_receiverAccountIdToAccount", fields: [receiverAccountId], references: [id])
+  Bill                                           Bill?
 }
 
 model User {
   id                                               String            @id
   name                                             String
   email                                            String?           @unique
+  isActive                                         Boolean           @default(true)
   Account                                          Account[]
   FixedExpense                                     FixedExpense[]
   HouseholdConfig_HouseholdConfig_partner1IdToUser HouseholdConfig[] @relation("HouseholdConfig_partner1IdToUser")
@@ -107,6 +138,8 @@ model User {
   MonthlyBalance_MonthlyBalance_debtorIdToUser     MonthlyBalance[]  @relation("MonthlyBalance_debtorIdToUser")
   Transaction_Transaction_ownerIdToUser            Transaction[]     @relation("Transaction_ownerIdToUser")
   Transaction_Transaction_payerIdToUser            Transaction[]     @relation("Transaction_payerIdToUser")
+  Bill_Bill_ownerIdToUser                          Bill[]            @relation("Bill_ownerIdToUser")
+  Bill_Bill_payerIdToUser                          Bill[]            @relation("Bill_payerIdToUser")
 }
 
 model HouseholdConfig {
@@ -115,6 +148,9 @@ model HouseholdConfig {
   partner2Id                            String
   partner1Share                         Decimal  @default(0.50) @db.Decimal(5, 4)
   updatedAt                             DateTime
+  defaultSharedRule                     SplitMethod @default(SHARED)
+  isActive                              Boolean  @default(true)
+  notes                                 String?
   User_HouseholdConfig_partner1IdToUser User     @relation("HouseholdConfig_partner1IdToUser", fields: [partner1Id], references: [id])
   User_HouseholdConfig_partner2IdToUser User     @relation("HouseholdConfig_partner2IdToUser", fields: [partner2Id], references: [id])
 }
@@ -128,10 +164,60 @@ model MonthlyBalance {
   creditorId                           String
   status                               String   @default("OPEN")
   createdAt                            DateTime @default(now())
+  householdExpenseTotal                Decimal? @db.Decimal(10, 2)
+  individualExpensePartner1            Decimal? @db.Decimal(10, 2)
+  individualExpensePartner2            Decimal? @db.Decimal(10, 2)
+  sharedExpenseTotal                   Decimal? @db.Decimal(10, 2)
+  paidByPartner1                       Decimal? @db.Decimal(10, 2)
+  paidByPartner2                       Decimal? @db.Decimal(10, 2)
+  transferAdjustment                   Decimal? @db.Decimal(10, 2)
+  calculatedAt                         DateTime?
+  closingNotes                         String?
   User_MonthlyBalance_creditorIdToUser User     @relation("MonthlyBalance_creditorIdToUser", fields: [creditorId], references: [id])
   User_MonthlyBalance_debtorIdToUser   User     @relation("MonthlyBalance_debtorIdToUser", fields: [debtorId], references: [id])
 
   @@unique([month, year])
+}
+
+model Bill {
+  id                String      @id
+  description       String
+  amount            Decimal     @db.Decimal(10, 2)
+  kind              BillKind
+  status            BillStatus  @default(PENDING)
+  issueDate         DateTime?
+  dueDate           DateTime
+  paidAt            DateTime?
+  competencyDate    DateTime?
+  categoryId        String?
+  accountId         String?
+  invoiceId         String?
+  fixedExpenseId    String?
+  payerId           String?
+  ownerId           String?
+  splitType         SplitMethod @default(INDIVIDUAL)
+  splitShare        Decimal?    @db.Decimal(5, 4)
+  isHousehold       Boolean     @default(false)
+  source            BillSource  @default(MANUAL)
+  createdByUserId   String?
+  createdByAgent    String?
+  notes             String?
+  metadata          Json?
+  installmentNumber Int?
+  installmentTotal  Int?
+  installmentGroupId String?
+  creditorName      String?
+  isRecurringInstance Boolean   @default(false)
+  linkedTransactionId String?   @unique
+  createdAt         DateTime    @default(now())
+  updatedAt         DateTime
+  Account           Account?    @relation(fields: [accountId], references: [id])
+  Category          Category?   @relation(fields: [categoryId], references: [id])
+  FixedExpense      FixedExpense? @relation(fields: [fixedExpenseId], references: [id])
+  Invoice           Invoice?    @relation(fields: [invoiceId], references: [id])
+  Transaction       Transaction? @relation(fields: [linkedTransactionId], references: [id])
+  User_Bill_ownerIdToUser User? @relation("Bill_ownerIdToUser", fields: [ownerId], references: [id])
+  User_Bill_payerIdToUser User? @relation("Bill_payerIdToUser", fields: [payerId], references: [id])
 }
 
 enum AccountType {
@@ -158,4 +244,67 @@ enum TransactionType {
   INCOME
   TRANSFER
   PAYMENT
+}
+
+enum TransactionStatus {
+  POSTED
+  PENDING
+  CANCELLED
+}
+
+enum TransactionSource {
+  WEB
+  ASSISTANT
+  RECURRING
+  IMPORT
+  ADJUSTMENT
+  SYSTEM
+}
+
+enum RecurrenceFrequency {
+  WEEKLY
+  MONTHLY
+  YEARLY
+  CUSTOM
+}
+
+enum BillKind {
+  RECURRING_BILL
+  ONE_TIME_BILL
+  INSTALLMENT
+  DEBT
+  CREDIT_CARD_BILL
+}
+
+enum BillStatus {
+  PENDING
+  PAID
+  OVERDUE
+  PARTIALLY_PAID
+  CANCELLED
+}
+
+enum BillSource {
+  MANUAL
+  RECURRING
+  ASSISTANT
+  IMPORT
+  SYSTEM
+}
+
+enum AccountSubtype {
+  PERSONAL
+  HOUSEHOLD
+  RESERVE
+  INVESTMENT
+  CARD
+  CASHBOX
+}
+
+enum ReserveType {
+  EMERGENCY
+  VACATION
+  BILLS
+  GOAL
+  NONE
 }
