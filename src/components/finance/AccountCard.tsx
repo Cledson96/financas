@@ -70,8 +70,9 @@ export default function AccountCard({ account, onEdit, onDelete }: AccountCardPr
   const isCheckingWithLimit =
     account.type === "CHECKING_ACCOUNT" && (account.limit ?? 0) > 0;
 
-  // Card invoice / limit calculations
-  const effectiveLimit = account.limit ?? 0;
+  // Prisma Decimal fields come as strings — normalize to number
+  const balance = Number(account.balance);
+  const effectiveLimit = Number(account.limit ?? 0);
 
   // For pure CREDIT_CARD: balance = available credit, so usedLimit = limit - balance
   // For CHECKING_ACCOUNT with limit: balance = bank balance (unrelated to card),
@@ -89,10 +90,10 @@ export default function AccountCard({ account, onEdit, onDelete }: AccountCardPr
     usedLimit = Number(openInvoice.amount);
     availableLimit = effectiveLimit - usedLimit;
     usagePercent = effectiveLimit > 0 ? (usedLimit / effectiveLimit) * 100 : 0;
-  } else if (isCreditCard && effectiveLimit > 0 && account.balance !== 0) {
+  } else if (isCreditCard && effectiveLimit > 0 && balance !== 0) {
     // No open invoice but has non-zero balance — calculate from balance
-    usedLimit = effectiveLimit - account.balance;
-    availableLimit = account.balance;
+    usedLimit = effectiveLimit - balance;
+    availableLimit = balance;
     usagePercent = (usedLimit / effectiveLimit) * 100;
   }
   // Otherwise (no invoice, zero balance, or CHECKING_ACCOUNT): fatura = 0, available = full limit
@@ -180,12 +181,12 @@ export default function AccountCard({ account, onEdit, onDelete }: AccountCardPr
               <p
                 className={cn(
                   "text-2xl font-bold",
-                  account.balance >= 0
+                  balance >= 0
                     ? "text-emerald-600 dark:text-emerald-400"
                     : "text-rose-600 dark:text-rose-400",
                 )}
               >
-                R$ {formatBRL(account.balance)}
+                R$ {formatBRL(balance)}
               </p>
             </div>
 
@@ -256,12 +257,12 @@ export default function AccountCard({ account, onEdit, onDelete }: AccountCardPr
             <p
               className={cn(
                 "text-2xl font-bold",
-                account.balance >= 0
-                  ? "text-emerald-600 dark:text-emerald-400"
-                  : "text-rose-600 dark:text-rose-400",
+                  balance >= 0
+                    ? "text-emerald-600 dark:text-emerald-400"
+                    : "text-rose-600 dark:text-rose-400",
               )}
             >
-              R$ {formatBRL(account.balance || 0)}
+              R$ {formatBRL(balance)}
             </p>
           </div>
         )}
