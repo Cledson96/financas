@@ -6,13 +6,12 @@ import {
   DialogContent,
   DialogHeader,
   DialogTitle,
+  DialogDescription,
 } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Loader2, Target, Trash2 } from "lucide-react";
-import { format } from "date-fns";
-import { ptBR } from "date-fns/locale";
 
 interface Category {
   id: string;
@@ -96,9 +95,11 @@ export default function BudgetModal({
     onSubmit({ budgets, month, year });
   };
 
-  const monthLabel = format(new Date(year, month - 1, 1), "MMMM yyyy", {
-    locale: ptBR,
-  });
+  const monthNames = [
+    "Janeiro", "Fevereiro", "Março", "Abril", "Maio", "Junho",
+    "Julho", "Agosto", "Setembro", "Outubro", "Novembro", "Dezembro"
+  ];
+  const monthLabel = `${monthNames[month - 1]} ${year}`;
 
   const hasChanges =
     JSON.stringify(values) !== JSON.stringify(initialValues);
@@ -112,6 +113,9 @@ export default function BudgetModal({
             <Target className="w-5 h-5 text-blue-500" />
             Definir Metas de Orçamento
           </DialogTitle>
+          <DialogDescription className="text-sm text-zinc-500 dark:text-zinc-400">
+            Defina limites de gastos por categoria para o mês.
+          </DialogDescription>
         </DialogHeader>
 
         <div className="p-3 rounded-lg bg-blue-50 dark:bg-blue-950/30 text-center">
