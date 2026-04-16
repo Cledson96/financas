@@ -74,7 +74,7 @@ export default function TransactionsPage() {
   const [statusFilter, setStatusFilter] = useState("all");
   const [buyerFilter, setBuyerFilter] = useState("all");
   const [dateRange, setDateRange] = useState<DateRange | undefined>({
-    from: startOfMonth(new Date()),
+    from: startOfMonth(subMonths(new Date(), 2)),
     to: endOfMonth(new Date()),
   });
 

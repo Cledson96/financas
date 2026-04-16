@@ -91,7 +91,7 @@ export default function TransactionTable({
 
   // Pagination State
   const [currentPage, setCurrentPage] = useState(1);
-  const [itemsPerPage, setItemsPerPage] = useState(10);
+  const [itemsPerPage, setItemsPerPage] = useState(20);
 
   // Toggle selection
   const toggleSelection = (id: string) => {
@@ -217,8 +217,9 @@ export default function TransactionTable({
                 </span>
               </TableHead>
               <TableHead className="w-[200px]">Descrição</TableHead>
-              <TableHead className="w-[140px]">Categoria</TableHead>
-              <TableHead>Conta / Pagamento</TableHead>
+              <TableHead className="w-[120px]">Categoria</TableHead>
+              <TableHead className="w-[110px]">Quem</TableHead>
+              <TableHead>Conta</TableHead>
               <TableHead
                 className="text-right hover:text-emerald-600 cursor-pointer transition-colors"
                 onClick={() => toggleSort("amount")}
@@ -234,7 +235,7 @@ export default function TransactionTable({
             {paginatedTransactions.length === 0 ? (
               <TableRow>
                 <TableCell
-                  colSpan={7}
+                  colSpan={8}
                   className="text-center py-12 text-zinc-500"
                 >
                   <div className="flex flex-col items-center justify-center gap-2">
@@ -258,12 +259,18 @@ export default function TransactionTable({
 
                 const accountName = transaction.Account?.name || "Conta";
 
-                const payer = members?.find(
-                  (m) => m.id === transaction.payerId,
-                );
-                const payerName = payer?.name || "Desconhecido";
+                // Resolve owner (quem comprou) and payer (quem pagou)
+                // API returns User_Transaction_ownerIdToUser and User_Transaction_payerIdToUser
+                const owner = members?.find((m) => m.id === transaction.ownerId)
+                  || { name: transaction.User_Transaction_ownerIdToUser?.name, image: transaction.User_Transaction_ownerIdToUser?.image };
+                const payer = members?.find((m) => m.id === transaction.payerId)
+                  || { name: transaction.User_Transaction_payerIdToUser?.name, image: transaction.User_Transaction_payerIdToUser?.image };
 
-                const owner = members?.find((m) => m.id === transaction.userId);
+                const ownerName = owner?.name || "";
+                const payerName = payer?.name || "";
+                // Show payer as "Quem" — fallback to owner if same person or no separate payer
+                const whoName = payerName || ownerName || "—";
+                const whoIsDifferent = payerName && ownerName && payerName !== ownerName;
 
                 // Determine display based on split type
                 let splitLabel = "";
@@ -366,6 +373,39 @@ export default function TransactionTable({
                         <span>{categoryIcon}</span>
                         <span>{categoryName}</span>
                       </Badge>
+                    </TableCell>
+                    <TableCell>
+                      <TooltipProvider>
+                        <Tooltip>
+                          <TooltipTrigger asChild>
+                            <div className="flex items-center gap-2">
+                              <Avatar className="h-6 w-6">
+                                <AvatarImage src={payer?.image || owner?.image} />
+                                <AvatarFallback className="text-[10px]">
+                                  {getInitials(whoName)}
+                                </AvatarFallback>
+                              </Avatar>
+                              <div className="flex flex-col leading-tight">
+                                <span className="text-xs font-medium text-zinc-700 dark:text-zinc-300 truncate max-w-[80px]">
+                                  {whoName}
+                                </span>
+                                {whoIsDifferent && (
+                                  <span className="text-[10px] text-zinc-400 truncate max-w-[80px]">
+                                    p/ {ownerName}
+                                  </span>
+                                )}
+                              </div>
+                            </div>
+                          </TooltipTrigger>
+                          <TooltipContent>
+                            {whoIsDifferent ? (
+                              <p>{payerName} pagou por {ownerName}</p>
+                            ) : (
+                              <p>{whoName}</p>
+                            )}
+                          </TooltipContent>
+                        </Tooltip>
+                      </TooltipProvider>
                     </TableCell>
                     <TableCell>
                       <div className="flex flex-col gap-1">
