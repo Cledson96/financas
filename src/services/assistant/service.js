@@ -180,21 +180,253 @@ export async function createAssistantTransaction(payload, actor = "assistant") {
   return serializeTransaction(transaction);
 }
 
-export async function listAssistantTransactions({ limit = 20 } = {}) {
-  const transactions = await prisma.transaction.findMany({
-    include: {
-      Category: true,
-      Account: true,
-      User_Transaction_payerIdToUser: true,
-      User_Transaction_ownerIdToUser: true,
-      Invoice: true,
-      Bill: true,
-    },
-    orderBy: [{ purchaseDate: "desc" }, { createdAt: "desc" }],
-    take: limit,
+const TXN_INCLUDE = {
+  Category: true,
+  Account: true,
+  User_Transaction_payerIdToUser: true,
+  User_Transaction_ownerIdToUser: true,
+  Invoice: true,
+  Bill: true,
+};
+
+const TXN_ORDER = [{ purchaseDate: "desc" }, { createdAt: "desc" }];
+
+/**
+ * @param {{ type?: string, categoryId?: string, accountId?: string, payerId?: string, ownerId?: string, status?: string, source?: string, isHousehold?: boolean, startDate?: string, endDate?: string, search?: string, limit?: number, offset?: number }} filters
+ */
+export async function listAssistantTransactions(filters = {}) {
+  const {
+    type,
+    categoryId,
+    accountId,
+    payerId,
+    ownerId,
+    status,
+    source,
+    isHousehold,
+    startDate,
+    endDate,
+    search,
+    limit = 50,
+    offset = 0,
+  } = filters;
+
+  const where = { isArchived: false };
+
+  if (type) where.type = type;
+  if (categoryId) where.categoryId = categoryId;
+  if (accountId) where.accountId = accountId;
+  if (payerId) where.payerId = payerId;
+  if (ownerId) where.ownerId = ownerId;
+  if (status) where.status = status;
+  if (source) where.source = source;
+  if (typeof isHousehold === "boolean") where.isHousehold = isHousehold;
+
+  if (startDate || endDate) {
+    where.purchaseDate = {};
+    if (startDate) where.purchaseDate.gte = new Date(startDate);
+    if (endDate) where.purchaseDate.lte = new Date(endDate);
+  }
+
+  if (search) {
+    where.description = { contains: search, mode: "insensitive" };
+  }
+
+  const [transactions, total] = await Promise.all([
+    prisma.transaction.findMany({
+      where,
+      include: TXN_INCLUDE,
+      orderBy: TXN_ORDER,
+      take: limit,
+      skip: offset,
+    }),
+    prisma.transaction.count({ where }),
+  ]);
+
+  return {
+    transactions: transactions.map(serializeTransaction),
+    total,
+    limit,
+    offset,
+  };
+}
+
+export async function getAssistantTransaction(id) {
+  const transaction = await prisma.transaction.findUnique({
+    where: { id },
+    include: TXN_INCLUDE,
   });
 
-  return transactions.map(serializeTransaction);
+  if (!transaction) throw new Error("Transaction not found");
+  return serializeTransaction(transaction);
+}
+
+/**
+ * @param {string} id
+ * @param {object} payload
+ * @param {string} [actor]
+ */
+export async function updateAssistantTransaction(id, payload, actor = "assistant") {
+  const existing = await prisma.transaction.findUnique({ where: { id } });
+  if (!existing) throw new Error("Transaction not found");
+
+  const data = { updatedAt: new Date() };
+
+  if (payload.description !== undefined) data.description = payload.description;
+  if (payload.amount !== undefined) data.amount = ensureNumber(payload.amount, "amount");
+  if (payload.purchaseDate !== undefined) data.purchaseDate = toDate(payload.purchaseDate);
+  if (payload.paymentDate !== undefined) data.paymentDate = toDate(payload.paymentDate);
+  if (payload.type !== undefined) data.type = payload.type;
+  if (payload.categoryId !== undefined) data.categoryId = payload.categoryId;
+  if (payload.accountId !== undefined) data.accountId = payload.accountId;
+  if (payload.payerId !== undefined) data.payerId = payload.payerId;
+  if (payload.invoiceId !== undefined) data.invoiceId = payload.invoiceId || null;
+  if (payload.installment !== undefined) data.installment = payload.installment;
+  if (payload.totalInstallments !== undefined) data.totalInstallments = payload.totalInstallments;
+  if (payload.splitShare !== undefined) data.splitShare = payload.splitShare;
+  if (payload.receiverAccountId !== undefined) data.receiverAccountId = payload.receiverAccountId || null;
+  if (payload.status !== undefined) data.status = payload.status;
+  if (payload.settled !== undefined) data.settled = Boolean(payload.settled);
+  if (payload.notes !== undefined) data.notes = optionalString(payload.notes);
+  if (payload.metadata !== undefined) data.metadata = payload.metadata;
+
+  if (payload.splitType !== undefined || payload.ownerId !== undefined) {
+    const splitType = payload.splitType || existing.splitType;
+    const payerId = payload.payerId || existing.payerId;
+    const ownership = normalizeOwnership({
+      splitType,
+      payerId,
+      ownerId: payload.ownerId || existing.ownerId || null,
+    });
+    data.splitType = ownership.splitType;
+    data.ownerId = ownership.ownerId;
+    data.isHousehold = ownership.isHousehold;
+  }
+
+  const transaction = await prisma.transaction.update({
+    where: { id },
+    data,
+    include: TXN_INCLUDE,
+  });
+
+  return serializeTransaction(transaction);
+}
+
+/**
+ * @param {string} id
+ * @param {{ hard?: boolean }} [options]
+ */
+export async function deleteAssistantTransaction(id, options = {}) {
+  const existing = await prisma.transaction.findUnique({ where: { id } });
+  if (!existing) throw new Error("Transaction not found");
+
+  if (options.hard) {
+    await prisma.transaction.delete({ where: { id } });
+    return { id, deleted: true, mode: "hard" };
+  }
+
+  const transaction = await prisma.transaction.update({
+    where: { id },
+    data: {
+      isArchived: true,
+      status: "CANCELLED",
+      updatedAt: new Date(),
+    },
+    include: TXN_INCLUDE,
+  });
+
+  return serializeTransaction(transaction);
+}
+
+/**
+ * @param {string} id
+ * @param {object} [payload]
+ * @param {string} [actor]
+ */
+export async function reverseAssistantTransaction(id, payload = {}, actor = "assistant") {
+  const existing = await prisma.transaction.findUnique({
+    where: { id },
+    include: { Account: true },
+  });
+  if (!existing) throw new Error("Transaction not found");
+  if (existing.status === "CANCELLED") throw new Error("Transaction already cancelled");
+  if (existing.isArchived) throw new Error("Transaction is archived");
+
+  let reversedTx = null;
+
+  if (existing.type === "TRANSFER" && existing.receiverAccountId) {
+    reversedTx = await createAssistantTransaction(
+      {
+        description: `Estorno: ${existing.description}`,
+        amount: serializeDecimal(existing.amount),
+        purchaseDate: new Date(),
+        paymentDate: new Date(),
+        type: "TRANSFER",
+        categoryId: existing.categoryId,
+        accountId: existing.receiverAccountId,
+        receiverAccountId: existing.accountId,
+        payerId: existing.payerId,
+        ownerId: existing.ownerId,
+        splitType: existing.splitType,
+        splitShare: serializeDecimal(existing.splitShare),
+        status: "POSTED",
+        source: "ASSISTANT",
+        notes: payload.notes || `Estorno automático da transação ${id}`,
+        metadata: {
+          reversedTransactionId: id,
+          action: "REVERSAL",
+        },
+        settled: true,
+      },
+      actor,
+    );
+  } else {
+    const reverseType = existing.type === "EXPENSE" ? "INCOME" : existing.type === "INCOME" ? "EXPENSE" : existing.type;
+    const reverseAccountId = existing.type === "TRANSFER"
+      ? existing.accountId
+      : existing.accountId;
+
+    reversedTx = await createAssistantTransaction(
+      {
+        description: `Estorno: ${existing.description}`,
+        amount: serializeDecimal(existing.amount),
+        purchaseDate: new Date(),
+        paymentDate: new Date(),
+        type: reverseType,
+        categoryId: existing.categoryId,
+        accountId: reverseAccountId,
+        payerId: existing.payerId,
+        ownerId: existing.ownerId,
+        splitType: existing.splitType,
+        splitShare: serializeDecimal(existing.splitShare),
+        status: "POSTED",
+        source: "ASSISTANT",
+        notes: payload.notes || `Estorno automático da transação ${id}`,
+        metadata: {
+          reversedTransactionId: id,
+          action: "REVERSAL",
+        },
+        settled: true,
+      },
+      actor,
+    );
+  }
+
+  const cancelled = await prisma.transaction.update({
+    where: { id },
+    data: {
+      status: "CANCELLED",
+      isArchived: true,
+      notes: `Estornada pela transação ${reversedTx.id}`,
+      updatedAt: new Date(),
+    },
+    include: TXN_INCLUDE,
+  });
+
+  return {
+    original: serializeTransaction(cancelled),
+    reversal: reversedTx,
+  };
 }
 
 export async function createAssistantBill(payload, actor = "assistant") {
