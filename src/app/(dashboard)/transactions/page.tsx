@@ -227,7 +227,10 @@ export default function TransactionsPage() {
       }
 
       // Buyer (Quem Comprou)
-      if (buyerFilter !== "all" && t.userId !== buyerFilter) return false;
+      if (buyerFilter !== "all") {
+        const buyerId = t.ownerId || t.User_Transaction_ownerIdToUser?.id || t.payerId;
+        if (buyerId !== buyerFilter) return false;
+      }
 
       return true;
     });

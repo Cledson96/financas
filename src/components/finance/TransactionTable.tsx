@@ -268,8 +268,8 @@ export default function TransactionTable({
 
                 const ownerName = owner?.name || "";
                 const payerName = payer?.name || "";
-                // Show payer as "Quem" — fallback to owner if same person or no separate payer
-                const whoName = payerName || ownerName || "—";
+                // Show owner (quem comprou) as primary, payer as secondary
+                const whoName = ownerName || payerName || "—";
                 const whoIsDifferent = payerName && ownerName && payerName !== ownerName;
 
                 // Determine display based on split type
@@ -380,7 +380,7 @@ export default function TransactionTable({
                           <TooltipTrigger asChild>
                             <div className="flex items-center gap-2">
                               <Avatar className="h-6 w-6">
-                                <AvatarImage src={payer?.image || owner?.image} />
+                                <AvatarImage src={owner?.image || payer?.image} />
                                 <AvatarFallback className="text-[10px]">
                                   {getInitials(whoName)}
                                 </AvatarFallback>
@@ -391,7 +391,7 @@ export default function TransactionTable({
                                 </span>
                                 {whoIsDifferent && (
                                   <span className="text-[10px] text-zinc-400 truncate max-w-[80px]">
-                                    p/ {ownerName}
+                                    pagou {payerName}
                                   </span>
                                 )}
                               </div>
@@ -399,7 +399,7 @@ export default function TransactionTable({
                           </TooltipTrigger>
                           <TooltipContent>
                             {whoIsDifferent ? (
-                              <p>{payerName} pagou por {ownerName}</p>
+                              <p>{ownerName} comprou, {payerName} pagou</p>
                             ) : (
                               <p>{whoName}</p>
                             )}
