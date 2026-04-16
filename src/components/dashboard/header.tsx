@@ -39,7 +39,7 @@ export function Header({ onMenuClick, theme, toggleTheme }: HeaderProps) {
     <header className="sticky top-0 z-40 w-full border-b border-zinc-200 dark:border-zinc-800 bg-white/80 dark:bg-zinc-900/80 backdrop-blur-md transition-colors">
       <div className="flex h-16 items-center justify-between px-4 sm:px-6 lg:px-8 relative">
         {/* Left Section: Mobile Menu & Logo/Title */}
-        <div className="flex items-center gap-4 lg:gap-8 min-w-[200px]">
+        <div className="flex items-center gap-4 lg:gap-8 min-w-0 sm:min-w-[200px]">
           <Button
             variant="ghost"
             size="icon"
@@ -95,7 +95,7 @@ export function Header({ onMenuClick, theme, toggleTheme }: HeaderProps) {
         </nav>
 
         {/* Right Section: Actions */}
-        <div className="flex items-center justify-end gap-2 sm:gap-4 min-w-[200px]">
+        <div className="flex items-center justify-end gap-2 sm:gap-4 min-w-0 sm:min-w-[200px]">
           {/* Notifications Placeholder - Future feature */}
           <Button
             variant="ghost"

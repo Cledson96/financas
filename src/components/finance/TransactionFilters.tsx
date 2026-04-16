@@ -120,10 +120,10 @@ export default function TransactionFilters({
       <div className="flex flex-col sm:flex-row gap-3 items-center justify-between">
         {/* Left Side: Search & Date */}
         <div className="flex flex-1 gap-2 w-full sm:w-auto">
-          <div className="relative flex-1 sm:max-w-xs">
+          <div className="relative flex-1">
             <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-zinc-400" />
             <Input
-              placeholder="Buscar por descrição..."
+              placeholder="Buscar..."
               value={searchTerm}
               onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
                 onSearchChange(e.target.value)
@@ -137,7 +137,7 @@ export default function TransactionFilters({
               <Button
                 variant="outline"
                 className={cn(
-                  "w-[240px] justify-start text-left font-normal h-10 bg-white dark:bg-zinc-900 border-zinc-200 dark:border-zinc-800",
+                  "w-full sm:w-[240px] justify-start text-left font-normal h-10 bg-white dark:bg-zinc-900 border-zinc-200 dark:border-zinc-800",
                   !dateRange && "text-zinc-500",
                 )}
               >
@@ -165,7 +165,7 @@ export default function TransactionFilters({
                 defaultMonth={dateRange?.from}
                 selected={dateRange}
                 onSelect={onDateRangeChange}
-                numberOfMonths={2}
+                numberOfMonths={1}
                 locale={ptBR}
               />
             </PopoverContent>
@@ -198,7 +198,7 @@ export default function TransactionFilters({
             </PopoverTrigger>
             {/* @ts-ignore */}
             <PopoverContent
-              className="w-[340px] p-4 bg-white dark:bg-zinc-950 border-zinc-200 dark:border-zinc-800 shadow-xl"
+              className="w-[calc(100vw-2rem)] sm:w-[340px] p-4 bg-white dark:bg-zinc-950 border-zinc-200 dark:border-zinc-800 shadow-xl"
               align="end"
             >
               <div className="space-y-4">

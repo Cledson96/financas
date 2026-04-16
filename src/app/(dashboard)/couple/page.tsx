@@ -141,17 +141,17 @@ export default function CouplePage() {
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
           <h1 className="text-2xl md:text-3xl font-bold text-zinc-900 dark:text-zinc-100 flex items-center gap-2">
-            <Users className="w-8 h-8 text-blue-500" />
+            <Users className="w-6 h-6 md:w-8 md:h-8 text-blue-500" />
             Finanças do Casal
           </h1>
           <p className="text-zinc-500 dark:text-zinc-400 mt-1">
             Visão unificada das despesas compartilhadas
           </p>
         </div>
-        <div className="flex items-center gap-2">
-          <Calendar className="w-4 h-4 text-zinc-500" />
+        <div className="flex items-center gap-2 w-full sm:w-auto">
+          <Calendar className="w-4 h-4 text-zinc-500 flex-shrink-0" />
           <Select value={selectedMonth} onValueChange={setSelectedMonth}>
-            <SelectTrigger className="w-[180px] bg-white dark:bg-zinc-800">
+            <SelectTrigger className="w-full sm:w-[180px] bg-white dark:bg-zinc-800">
               <SelectValue />
             </SelectTrigger>
             <SelectContent>
@@ -180,24 +180,25 @@ export default function CouplePage() {
             totalSharedRaw={totalVolume}
           />
 
-          <div className="flex justify-end mb-4">
+          <div className="flex justify-start sm:justify-end mb-4">
             <Button
               onClick={handleSettle}
               variant={netWorth?.summary?.amount > 0 ? "default" : "outline"}
               disabled={!netWorth?.summary || netWorth.summary.amount === 0}
+              className="w-full sm:w-auto"
             >
               Realizar Fechamento do Mês
             </Button>
           </div>
 
-          <div className="grid grid-cols-1 xl:grid-cols-3 gap-6">
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
             {/* Main Content: Transactions Table */}
-            <div className="xl:col-span-2 space-y-6">
+            <div className="lg:col-span-2 space-y-6">
               <SharedTransactionTable transactions={transactions} />
             </div>
 
             {/* Sidebar: Fixed Expenses */}
-            <div className="xl:col-span-1">
+            <div className="lg:col-span-1">
               <FixedExpensesList expenses={fixedExpenses} />
             </div>
           </div>

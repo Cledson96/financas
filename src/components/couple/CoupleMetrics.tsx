@@ -32,7 +32,7 @@ export function CoupleMetrics({
     v.toLocaleString("pt-BR", { minimumFractionDigits: 2 });
 
   return (
-    <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
+    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 mb-6">
       {/* ── Saldo de Acerto ── */}
       <Card className="bg-gradient-to-br from-blue-50 to-indigo-50 dark:from-blue-950/40 dark:to-indigo-950/40 border-blue-200 dark:border-blue-900">
         <CardHeader className="pb-2">

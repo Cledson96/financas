@@ -39,6 +39,20 @@ model Category {
   FixedExpense FixedExpense[]
   Transaction  Transaction[]
   Bill         Bill[]
+  Budget       Budget[]
+}
+
+model Budget {
+  id         String   @id @default(uuid())
+  categoryId String
+  amount     Decimal  @db.Decimal(10, 2)
+  month      Int
+  year       Int
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+  Category   Category @relation(fields: [categoryId], references: [id])
+
+  @@unique([categoryId, month, year])
 }
 
 model FixedExpense {
@@ -123,6 +137,10 @@ model Transaction {
   User_Transaction_payerIdToUser                 User            @relation("Transaction_payerIdToUser", fields: [payerId], references: [id])
   Account_Transaction_receiverAccountIdToAccount Account?        @relation("Transaction_receiverAccountIdToAccount", fields: [receiverAccountId], references: [id])
   Bill                                           Bill?
+
+  @@index([purchaseDate, type])
+  @@index([purchaseDate, splitType, type])
+  @@index([payerId, purchaseDate])
 }
 
 model User {

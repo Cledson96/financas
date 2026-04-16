@@ -207,9 +207,9 @@ export default function SettingsPage() {
       </div>
 
       <Tabs defaultValue="household" className="space-y-6">
-        <TabsList className="bg-zinc-100 dark:bg-zinc-800 flex overflow-x-auto">
-          <TabsTrigger value="household" className="gap-2">
-            <Home className="w-4 h-4" /> A Casa
+        <TabsList className="bg-zinc-100 dark:bg-zinc-800 flex w-full overflow-x-auto">
+          <TabsTrigger value="household" className="gap-1.5 text-xs sm:text-sm sm:gap-2">
+            <Home className="w-4 h-4" /> <span className="hidden sm:inline">A Casa</span><span className="sm:hidden">Casa</span>
           </TabsTrigger>
           <TabsTrigger value="fixed-incomes" className="gap-2">
             <TrendingUp className="w-4 h-4" /> Receitas
@@ -242,7 +242,7 @@ export default function SettingsPage() {
 
         {/* Accounts Tab */}
         <TabsContent value="accounts" className="space-y-4">
-          <div className="flex justify-between items-center">
+          <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-2">
             <h2 className="text-lg font-semibold text-zinc-900 dark:text-zinc-100 flex items-center gap-2">
               <Wallet className="w-5 h-5 text-blue-500" />
               Minhas Contas
@@ -252,7 +252,7 @@ export default function SettingsPage() {
                 setEditAccount(null);
                 setAccountModalOpen(true);
               }}
-              className="gap-2"
+              className="gap-2 w-full sm:w-auto"
             >
               <Plus className="h-4 w-4" />
               Nova Conta
@@ -313,7 +313,7 @@ export default function SettingsPage() {
 
         {/* Members Tab */}
         <TabsContent value="members" className="space-y-4">
-          <div className="flex justify-between items-center">
+          <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-2">
             <h2 className="text-lg font-semibold text-zinc-900 dark:text-zinc-100 flex items-center gap-2">
               <Users className="w-5 h-5 text-blue-500" />
               Membros da Família
@@ -323,7 +323,7 @@ export default function SettingsPage() {
                 setEditMember(null);
                 setMemberModalOpen(true);
               }}
-              className="gap-2"
+              className="gap-2 w-full sm:w-auto"
             >
               <Plus className="h-4 w-4" />
               Novo Membro
@@ -336,24 +336,26 @@ export default function SettingsPage() {
                 key={member.id}
                 className="bg-white dark:bg-zinc-900 border-zinc-200 dark:border-zinc-800"
               >
-                <CardContent className="p-6">
-                  <div className="flex items-center gap-4">
-                    <Avatar className="h-14 w-14">
-                      <AvatarFallback
-                        style={{ backgroundColor: member.color || "#3b82f6" }}
-                      >
-                        {member.name?.charAt(0)?.toUpperCase()}
-                      </AvatarFallback>
-                    </Avatar>
-                    <div className="flex-1">
-                      <h3 className="font-semibold text-zinc-900 dark:text-zinc-100">
-                        {member.name}
-                      </h3>
-                      {member.email && (
-                        <p className="text-sm text-zinc-500">{member.email}</p>
-                      )}
+                <CardContent className="p-4 sm:p-6">
+                  <div className="flex flex-col sm:flex-row sm:items-center gap-3 sm:gap-4">
+                    <div className="flex items-center gap-3 sm:gap-4">
+                      <Avatar className="h-12 w-12 sm:h-14 sm:w-14 flex-shrink-0">
+                        <AvatarFallback
+                          style={{ backgroundColor: member.color || "#3b82f6" }}
+                        >
+                          {member.name?.charAt(0)?.toUpperCase()}
+                        </AvatarFallback>
+                      </Avatar>
+                      <div className="flex-1 min-w-0">
+                        <h3 className="font-semibold text-zinc-900 dark:text-zinc-100 truncate">
+                          {member.name}
+                        </h3>
+                        {member.email && (
+                          <p className="text-sm text-zinc-500 truncate">{member.email}</p>
+                        )}
+                      </div>
                     </div>
-                    <div className="flex gap-1">
+                    <div className="flex gap-1 sm:ml-auto">
                       <Button
                         variant="ghost"
                         size="sm"

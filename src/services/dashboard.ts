@@ -109,6 +109,7 @@ export async function getDashboardData(
     dueDay: a.dueDay,
     closingDay: a.closingDay,
     userId: a.userId,
+    includeInNetWorth: a.includeInNetWorth,
     Invoice: a.Invoice ? a.Invoice.map(mapInvoice) : [],
   }));
 
@@ -208,6 +209,12 @@ export async function getDashboardData(
   // 1. Total Balance (checking + cash accounts)
   const totalBalance = accounts
     .filter((a) => a.type === "CHECKING_ACCOUNT" || a.type === "CASH")
+    .reduce((sum, a) => sum + a.balance, 0);
+
+  // 1b. Net Worth (patrimônio líquido) — sum of all accounts with includeInNetWorth=true
+  // For credit cards, balance is negative (debt), so we sum all balances directly
+  const netWorth = accounts
+    .filter((a) => a.includeInNetWorth !== false)
     .reduce((sum, a) => sum + a.balance, 0);
 
   // 2. Current Month Expenses
@@ -552,6 +559,26 @@ export async function getDashboardData(
   const allCategoriesRaw = await prisma.category.findMany();
   const categories = allCategoriesRaw.map(mapCategory);
 
+  // Fetch budgets for current month
+  const budgetsRaw = await prisma.budget.findMany({
+    where: {
+      month: targetDate.getMonth() + 1,
+      year: targetDate.getFullYear(),
+    },
+    include: { Category: true },
+    orderBy: { Category: { name: "asc" } },
+  });
+
+  const budgets = budgetsRaw.map((b) => ({
+    id: b.id,
+    categoryId: b.categoryId,
+    categoryName: b.Category.name,
+    categoryIcon: b.Category.icon || undefined,
+    amount: Number(b.amount),
+    month: b.month,
+    year: b.year,
+  }));
+
   return {
     metrics: {
       totalBalance,
@@ -564,6 +591,7 @@ export async function getDashboardData(
       nextInvoice,
       fairness,
       hasSharedExpenses,
+      netWorth,
     },
     recentTransactions: transactions.slice(0, 10),
     categoryExpenses,
@@ -571,5 +599,6 @@ export async function getDashboardData(
     accounts,
     categories,
     users,
+    budgets,
   };
 }

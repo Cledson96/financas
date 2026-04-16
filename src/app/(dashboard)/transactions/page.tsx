@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useMemo } from "react";
+import { useState, useMemo, useCallback, useRef, useEffect } from "react";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { Button } from "@/components/ui/button";
 import { Plus } from "lucide-react";
@@ -17,8 +17,10 @@ import {
   isWithinInterval,
   endOfDay,
   subMonths,
+  format,
 } from "date-fns";
 import { DateRange } from "react-day-picker";
+import { Download } from "lucide-react";
 
 async function fetchData(url: string) {
   const res = await fetch(url);
@@ -66,6 +68,26 @@ async function bulkDeleteTransactions(ids: string[]) {
 
 export default function TransactionsPage() {
   const [searchTerm, setSearchTerm] = useState("");
+  const [searchInput, setSearchInput] = useState("");
+  const debounceTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+
+  const handleSearchChange = useCallback((value: string) => {
+    setSearchInput(value);
+    if (debounceTimerRef.current) {
+      clearTimeout(debounceTimerRef.current);
+    }
+    debounceTimerRef.current = setTimeout(() => {
+      setSearchTerm(value);
+    }, 300);
+  }, []);
+
+  useEffect(() => {
+    return () => {
+      if (debounceTimerRef.current) {
+        clearTimeout(debounceTimerRef.current);
+      }
+    };
+  }, []);
   const [invoiceFilter, setInvoiceFilter] = useState("all");
   const [categoryFilter, setCategoryFilter] = useState("all");
   const [typeFilter, setTypeFilter] = useState("all");
@@ -157,6 +179,70 @@ export default function TransactionsPage() {
     alert(
       "Funcionalidade de mudar categoria em massa será implementada em breve!",
     );
+  };
+
+  const handleExportCSV = () => {
+    const data = filteredTransactions;
+    if (data.length === 0) return;
+
+    const BOM = "\uFEFF";
+    const header = "Data;Descrição;Valor;Tipo;Categoria;Conta;Quem Comprou";
+    
+    const rows = data.map((t: any) => {
+      const category = categories?.find((c: any) => c.id === t.categoryId);
+      const categoryName = category?.name || "Geral";
+      const accountName = t.Account?.name || "Conta";
+      const owner = members?.find((m: any) => m.id === t.ownerId)
+        || { name: t.User_Transaction_ownerIdToUser?.name };
+      const payer = members?.find((m: any) => m.id === t.payerId)
+        || { name: t.User_Transaction_payerIdToUser?.name };
+      const whoName = owner?.name || payer?.name || "";
+
+      const dateStr = t.purchaseDate
+        ? format(parseISO(t.purchaseDate), "dd/MM/yyyy")
+        : "";
+
+      const amount = Number(t.amount) || 0;
+      const amountStr = amount.toLocaleString("pt-BR", {
+        minimumFractionDigits: 2,
+        maximumFractionDigits: 2,
+      });
+      const tipo = t.type === "INCOME" ? "Receita" : "Despesa";
+
+      const escapeCSV = (val: string) => {
+        if (val.includes(";") || val.includes('"') || val.includes("\n")) {
+          return `"${val.replace(/"/g, '""')}"`;
+        }
+        return val;
+      };
+
+      return [
+        dateStr,
+        escapeCSV(t.description || ""),
+        amountStr,
+        tipo,
+        escapeCSV(categoryName),
+        escapeCSV(accountName),
+        escapeCSV(whoName),
+      ].join(";");
+    });
+
+    const csv = BOM + header + "\n" + rows.join("\n");
+
+    const now = new Date();
+    const month = String(now.getMonth() + 1).padStart(2, "0");
+    const year = now.getFullYear();
+    const fileName = `transacoes-${month}-${year}.csv`;
+
+    const blob = new Blob([csv], { type: "text/csv;charset=utf-8;" });
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement("a");
+    link.href = url;
+    link.download = fileName;
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+    URL.revokeObjectURL(url);
   };
 
   const isOverdue = (transaction: any) => {
@@ -292,7 +378,7 @@ export default function TransactionsPage() {
             setEditingTransaction(null);
             setModalOpen(true);
           }}
-          className="gap-2 bg-emerald-600 hover:bg-emerald-700 text-white"
+          className="gap-2 bg-emerald-600 hover:bg-emerald-700 text-white w-full sm:w-auto"
         >
           <Plus className="h-4 w-4" />
           Nova Transação
@@ -307,8 +393,8 @@ export default function TransactionsPage() {
       {/* Main Content Area: Filters + Table */}
       <div className="space-y-4">
         <TransactionFilters
-          searchTerm={searchTerm}
-          onSearchChange={setSearchTerm}
+          searchTerm={searchInput}
+          onSearchChange={handleSearchChange}
           dateRange={dateRange}
           onDateRangeChange={setDateRange}
           invoiceFilter={invoiceFilter}
@@ -328,7 +414,7 @@ export default function TransactionsPage() {
           invoices={invoices}
           categories={categories}
           members={members}
-          onExport={() => alert("Export functionality coming soon")}
+          onExport={handleExportCSV}
         />
 
         <div className="bg-white dark:bg-zinc-900/50 rounded-xl border border-zinc-200 dark:border-zinc-800 shadow-sm overflow-hidden">

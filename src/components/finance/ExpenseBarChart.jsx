@@ -44,34 +44,96 @@ export default function ExpenseBarChart({
 
   const CustomTooltip = ({ active, payload, label }) => {
     if (active && payload && payload.length) {
+      // Find current index in data array for month-over-month comparison
+      const currentIndex = data.findIndex((d) => d.month === label);
+      const prevMonth = currentIndex > 0 ? data[currentIndex - 1] : null;
+      const prevLabel = prevMonth?.month || null;
+
+      const formatComparison = (current, previous, prevName) => {
+        if (!previous && previous !== 0) {
+          // First month in chart with data — no previous to compare
+          return null;
+        }
+        if (previous === 0) {
+          // Previous was zero — all current value is "new"
+          return { type: "new", prevName };
+        }
+        const diff = ((current - previous) / previous) * 100;
+        const sign = diff >= 0 ? "+" : "";
+        return {
+          type: "percent",
+          value: `${sign}${diff.toFixed(0)}% vs ${prevName}`,
+          isPositive: diff >= 0,
+        };
+      };
+
+      const getExpenseValue = () =>
+        payload.find((p) => p.dataKey === "expenses")?.value ?? 0;
+      const getIncomeValue = () =>
+        payload.find((p) => p.dataKey === "income")?.value ?? 0;
+
+      const expenseComp = prevMonth
+        ? formatComparison(getExpenseValue(), prevMonth.expenses, prevLabel)
+        : null;
+      const incomeComp = prevMonth
+        ? formatComparison(getIncomeValue(), prevMonth.income, prevLabel)
+        : null;
+
+      const comparisons = {
+        expenses: expenseComp,
+        income: incomeComp,
+      };
+
       return (
         <div className="bg-white dark:bg-zinc-800 p-3 rounded-lg shadow-lg border border-zinc-200 dark:border-zinc-700">
           <p className="font-medium text-zinc-900 dark:text-zinc-100 mb-2">
             {label}
           </p>
-          {payload.map((item, index) => (
-            <div key={index} className="flex items-center gap-2 text-sm">
-              <div
-                className="w-3 h-3 rounded-full"
-                style={{ backgroundColor: item.color }}
-              />
-              <span className="text-zinc-600 dark:text-zinc-400">
-                {item.name}:
-              </span>
-              <span className="font-medium text-zinc-900 dark:text-zinc-100">
-                {isVisible ? (
-                  <>
-                    R${" "}
-                    {item.value.toLocaleString("pt-BR", {
-                      minimumFractionDigits: 2,
-                    })}
-                  </>
-                ) : (
-                  "••••••"
+          {payload.map((item, index) => {
+            const comp = comparisons[item.dataKey];
+            return (
+              <div key={index} className="flex flex-col gap-0.5 text-sm">
+                <div className="flex items-center gap-2">
+                  <div
+                    className="w-3 h-3 rounded-full flex-shrink-0"
+                    style={{ backgroundColor: item.color }}
+                  />
+                  <span className="text-zinc-600 dark:text-zinc-400">
+                    {item.name}:
+                  </span>
+                  <span className="font-medium text-zinc-900 dark:text-zinc-100">
+                    {isVisible ? (
+                      <>
+                        R${" "}
+                        {item.value.toLocaleString("pt-BR", {
+                          minimumFractionDigits: 2,
+                        })}
+                      </>
+                    ) : (
+                      "••••••"
+                    )}
+                  </span>
+                </div>
+                {comp && isVisible && (
+                  <span className="ml-5 text-xs font-medium">
+                    {comp.type === "new" ? (
+                      <span className="text-amber-600 dark:text-amber-400">
+                        (novas em {label})
+                      </span>
+                    ) : comp.isPositive ? (
+                      <span className="text-emerald-600 dark:text-emerald-400">
+                        ({comp.value})
+                      </span>
+                    ) : (
+                      <span className="text-rose-600 dark:text-rose-400">
+                        ({comp.value})
+                      </span>
+                    )}
+                  </span>
                 )}
-              </span>
-            </div>
-          ))}
+              </div>
+            );
+          })}
         </div>
       );
     }

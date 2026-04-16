@@ -62,7 +62,7 @@ export default function KPICard({
             <p className="text-sm font-medium text-zinc-500 dark:text-zinc-400">
               {title}
             </p>
-            <p className="text-3xl font-bold tracking-tight text-zinc-900 dark:text-zinc-50 tabular-nums">
+            <p className="text-2xl sm:text-3xl font-bold tracking-tight text-zinc-900 dark:text-zinc-50 tabular-nums">
               {isVisible ? value : "••••••"}
             </p>
             {trend && (

@@ -5,17 +5,61 @@ export interface SettlementBreakdown {
   sharedFiftyFifty: number;
   sharedProportional: number;
   individual: number;
-  transfer: number; // New: track transfers explicitly
+  transfer: number;
 }
 
 export interface SettlementResult {
   p1: { id: string; name: string };
   p2: { id: string; name: string };
   summary: {
-    payer: "p1" | "p2" | null; // Who pays?
-    amount: number; // How much?
+    payer: "p1" | "p2" | null;
+    amount: number;
   };
   breakdown: SettlementBreakdown;
+}
+
+// Cache household config in-memory for the duration of a request batch
+// (both getNetWorth and listSharedTransactions need it in the same call)
+let _configCache: {
+  partner1Id: string;
+  partner2Id: string;
+  partner1Share: number;
+  p1Name: string;
+  p1Id: string;
+  p2Name: string;
+  p2Id: string;
+} | null = null;
+
+async function getHouseholdConfig() {
+  if (_configCache) return _configCache;
+
+  const config = await prisma.householdConfig.findFirst({
+    select: {
+      partner1Id: true,
+      partner2Id: true,
+      partner1Share: true,
+      User_HouseholdConfig_partner1IdToUser: { select: { id: true, name: true } },
+      User_HouseholdConfig_partner2IdToUser: { select: { id: true, name: true } },
+    },
+  });
+
+  if (!config) return null;
+
+  _configCache = {
+    partner1Id: config.partner1Id,
+    partner2Id: config.partner2Id,
+    partner1Share: Number(config.partner1Share),
+    p1Name: config.User_HouseholdConfig_partner1IdToUser.name,
+    p1Id: config.User_HouseholdConfig_partner1IdToUser.id,
+    p2Name: config.User_HouseholdConfig_partner2IdToUser.name,
+    p2Id: config.User_HouseholdConfig_partner2IdToUser.id,
+  };
+
+  return _configCache;
+}
+
+export function clearConfigCache() {
+  _configCache = null;
 }
 
 export class CoupleService {
@@ -26,136 +70,99 @@ export class CoupleService {
     const startDate = startOfMonth(new Date(year, month - 1));
     const endDate = endOfMonth(new Date(year, month - 1));
 
-    const config = await prisma.householdConfig.findFirst({
-      include: {
-        User_HouseholdConfig_partner1IdToUser: true,
-        User_HouseholdConfig_partner2IdToUser: true,
-      },
-    });
+    const config = await getHouseholdConfig();
     if (!config) return null;
 
-    const p1 = config.User_HouseholdConfig_partner1IdToUser;
-    const p2 = config.User_HouseholdConfig_partner2IdToUser;
-    const p1Share = Number(config.partner1Share);
-    const p2Share = 1 - p1Share;
+    const { partner1Id, partner2Id, partner1Share, p1Name, p1Id, p2Name, p2Id } = config;
+    const p2Share = 1 - partner1Share;
 
+    // Fetch only the columns we need, filtered at DB level
     const transactions = await prisma.transaction.findMany({
       where: {
-        purchaseDate: {
-          gte: startDate,
-          lte: endDate,
-        },
-        type: {
-          in: ["EXPENSE", "TRANSFER"],
-        },
+        purchaseDate: { gte: startDate, lte: endDate },
+        type: { in: ["EXPENSE", "TRANSFER"] },
+        splitType: { in: ["SHARED", "SHARED_PROPORTIONAL", "INDIVIDUAL"] },
+        payerId: { in: [partner1Id, partner2Id] },
+      },
+      select: {
+        amount: true,
+        payerId: true,
+        ownerId: true,
+        type: true,
+        splitType: true,
+        splitShare: true,
       },
     });
-
-    // We track how much P2 OWES P1 (positive) or P1 OWES P2 (negative)
-    // Detailed breakdown of DEBT.
-    // Ideally we want: "Total Debt of Debtor".
 
     let p1PaidForP2_Shared = 0;
     let p1PaidForP2_Prop = 0;
     let p1PaidForP2_Ind = 0;
-    let p1PaidForP2_Transfer = 0; // P1 sent money to P2 = reduces P2's debt to P1 (or increases P1's debt to P2)
-    // Actually, TRANSFER represents SETTLEMENT.
-    // If P1 sends 100 to P2, P1 "paid" 100 "for" P2 (gave cash).
-    // So distinct from expense.
+    let p1PaidForP2_Transfer = 0;
 
     let p2PaidForP1_Shared = 0;
     let p2PaidForP1_Prop = 0;
     let p2PaidForP1_Ind = 0;
-    let p2PaidForP1_Transfer = 0; // P2 sent money to P1
+    let p2PaidForP1_Transfer = 0;
 
     for (const t of transactions) {
       const amount = Number(t.amount);
 
       if (t.type === "TRANSFER") {
-        if (t.payerId === p1.id) p1PaidForP2_Transfer += amount;
-        else if (t.payerId === p2.id) p2PaidForP1_Transfer += amount;
+        if (t.payerId === partner1Id) p1PaidForP2_Transfer += amount;
+        else if (t.payerId === partner2Id) p2PaidForP1_Transfer += amount;
         continue;
       }
 
-      // EXPENSES
-      // Logic: specific value owed by the OTHER person
       if (t.splitType === "INDIVIDUAL") {
-        if (t.ownerId === p2.id && t.payerId === p1.id) {
+        if (t.ownerId === partner2Id && t.payerId === partner1Id) {
           p1PaidForP2_Ind += amount;
-        } else if (t.ownerId === p1.id && t.payerId === p2.id) {
+        } else if (t.ownerId === partner1Id && t.payerId === partner2Id) {
           p2PaidForP1_Ind += amount;
         }
       } else if (t.splitType === "SHARED") {
-        if (t.payerId === p1.id) {
+        if (t.payerId === partner1Id) {
           p1PaidForP2_Shared += amount * 0.5;
-        } else if (t.payerId === p2.id) {
+        } else if (t.payerId === partner2Id) {
           p2PaidForP1_Shared += amount * 0.5;
         }
       } else if (t.splitType === "SHARED_PROPORTIONAL") {
         const otherOwesPct = t.splitShare
           ? Number(t.splitShare)
-          : t.payerId === p1.id
+          : t.payerId === partner1Id
             ? p2Share
-            : p1Share;
+            : partner1Share;
 
-        if (t.payerId === p1.id) {
+        if (t.payerId === partner1Id) {
           p1PaidForP2_Prop += amount * otherOwesPct;
-        } else if (t.payerId === p2.id) {
+        } else if (t.payerId === partner2Id) {
           p2PaidForP1_Prop += amount * otherOwesPct;
         }
       }
     }
 
-    // Total P1 Credited to Relation (What P1 paid that helps P2)
     const totalP1Credit =
-      p1PaidForP2_Shared +
-      p1PaidForP2_Prop +
-      p1PaidForP2_Ind +
-      p1PaidForP2_Transfer;
-    // Total P2 Credited to Relation
+      p1PaidForP2_Shared + p1PaidForP2_Prop + p1PaidForP2_Ind + p1PaidForP2_Transfer;
     const totalP2Credit =
-      p2PaidForP1_Shared +
-      p2PaidForP1_Prop +
-      p2PaidForP1_Ind +
-      p2PaidForP1_Transfer;
+      p2PaidForP1_Shared + p2PaidForP1_Prop + p2PaidForP1_Ind + p2PaidForP1_Transfer;
 
     const net = totalP1Credit - totalP2Credit;
-    // If net > 0, P1 has more credit, so P2 owes P1.
-    // If net < 0, P2 has more credit, so P1 owes P2.
 
     const summary = {
       payer: net !== 0 ? ((net > 0 ? "p2" : "p1") as "p1" | "p2") : null,
       amount: Math.abs(net),
     };
 
-    // Breakdown for the DEBTOR (What composes the debt?)
-    // This is tricky because it's a net balance.
-    // We should probably just return the raw totals and let UI calculate net breakdown?
-    // OR return the net diff per category?
-    // Let's return the NET per category for simplicity of the UI
-    // (e.g. Shared: P1 paid 100 (50 owed), P2 paid 50 (25 owed). Net Shared Debt: P2 owes 25.)
-
-    // Calculate Nets per category (Positive = P2 owes P1)
-    const netShared = p1PaidForP2_Shared - p2PaidForP1_Shared;
-    const netProp = p1PaidForP2_Prop - p2PaidForP1_Prop;
-    const netInd = p1PaidForP2_Ind - p2PaidForP1_Ind;
-    const netTransfer = p1PaidForP2_Transfer - p2PaidForP1_Transfer;
-
-    // But wait, the UI expects "Breakdown of the TOTAL debt".
-    // If the final payer is P2 (Net > 0), we want to show positive numbers explaining WHY P2 pays.
-    // If final payer is P1 (Net < 0), we want positive numbers explaining WHY P1 pays.
-
     const sign = summary.payer === "p2" ? 1 : -1;
 
     return {
-      p1: { id: p1.id, name: p1.name },
-      p2: { id: p2.id, name: p2.name },
+      p1: { id: p1Id, name: p1Name },
+      p2: { id: p2Id, name: p2Name },
       summary,
       breakdown: {
-        sharedFiftyFifty: netShared * sign,
-        sharedProportional: netProp * sign,
-        individual: netInd * sign,
-        transfer: netTransfer * sign, // Usually negative (reduces debt) but we handle it
+        sharedFiftyFifty: (p1PaidForP2_Shared - p2PaidForP1_Shared) * sign,
+        sharedProportional: (p1PaidForP2_Prop - p2PaidForP1_Prop) * sign,
+        individual: (p1PaidForP2_Ind - p2PaidForP1_Ind) * sign,
+        transfer: (p1PaidForP2_Transfer - p2PaidForP1_Transfer) * sign,
       },
     };
   }
@@ -164,55 +171,77 @@ export class CoupleService {
     const startDate = startOfMonth(new Date(year, month - 1));
     const endDate = endOfMonth(new Date(year, month - 1));
 
-    const config = await prisma.householdConfig.findFirst({
-      select: {
-        partner1Id: true,
-        partner2Id: true,
-      },
-    });
-
+    const config = await getHouseholdConfig();
     if (!config) return [];
 
-    const transactions = await prisma.transaction.findMany({
-      where: {
-        purchaseDate: {
-          gte: startDate,
-          lte: endDate,
-        },
-        // We fetch broadly and filter in memory to match getNetWorth logic complex conditions
-      },
-      include: {
-        User_Transaction_payerIdToUser: {
-          select: { id: true, name: true },
-        },
-        User_Transaction_ownerIdToUser: {
-          select: { id: true, name: true },
-        },
-        Category: {
-          select: { id: true, name: true, icon: true },
-        },
-      },
-      orderBy: {
-        purchaseDate: "desc",
-      },
-    });
+    const { partner1Id, partner2Id } = config;
 
-    // Apply the "Couple Filter"
-    return transactions.filter((t) => {
-      // 1. Transfers are always relevant (Settlements)
-      if (t.type === "TRANSFER") return true;
+    // Run targeted queries in parallel instead of fetching ALL transactions
+    const [transfers, sharedExpenses, crossPaidIndividual] = await Promise.all([
+      // 1. Transfers between partners (always relevant)
+      prisma.transaction.findMany({
+        where: {
+          purchaseDate: { gte: startDate, lte: endDate },
+          type: "TRANSFER",
+          payerId: { in: [partner1Id, partner2Id] },
+        },
+        select: transactionSelect,
+        orderBy: { purchaseDate: "desc" },
+      }),
+      // 2. Shared & proportional expenses paid by either partner
+      prisma.transaction.findMany({
+        where: {
+          purchaseDate: { gte: startDate, lte: endDate },
+          type: "EXPENSE",
+          splitType: { in: ["SHARED", "SHARED_PROPORTIONAL"] },
+          payerId: { in: [partner1Id, partner2Id] },
+        },
+        select: transactionSelect,
+        orderBy: { purchaseDate: "desc" },
+      }),
+      // 3. Individual expenses where one partner paid for the other
+      //    DB narrows to partner-related, JS filters payerId !== ownerId
+      prisma.transaction.findMany({
+        where: {
+          purchaseDate: { gte: startDate, lte: endDate },
+          type: "EXPENSE",
+          splitType: "INDIVIDUAL",
+          payerId: { in: [partner1Id, partner2Id] },
+          ownerId: { in: [partner1Id, partner2Id] },
+        },
+        select: transactionSelect,
+        orderBy: { purchaseDate: "desc" },
+      }),
+    ]);
 
-      // 2. Shared Expenses are always relevant
-      if (t.splitType === "SHARED" || t.splitType === "SHARED_PROPORTIONAL")
-        return true;
+    // Filter cross-paid individual (payerId !== ownerId)
+    const filteredIndividual = crossPaidIndividual.filter(
+      (t) => t.payerId !== t.ownerId,
+    );
 
-      // 3. Individual Expenses ONLY if paid by the other person (Debt)
-      // If I pay for myself, it's not a couple matter.
-      if (t.splitType === "INDIVIDUAL") {
-        return t.payerId !== t.ownerId;
-      }
+    // Combine and sort by date descending
+    const all = [...transfers, ...sharedExpenses, ...filteredIndividual];
+    all.sort(
+      (a, b) => new Date(b.purchaseDate).getTime() - new Date(a.purchaseDate).getTime(),
+    );
 
-      return false;
-    });
+    return all;
   }
 }
+
+// Shared select object for transaction list queries
+const transactionSelect = {
+  id: true,
+  description: true,
+  amount: true,
+  purchaseDate: true,
+  type: true,
+  splitType: true,
+  installment: true,
+  totalInstallments: true,
+  payerId: true,
+  ownerId: true,
+  User_Transaction_payerIdToUser: { select: { id: true, name: true } },
+  User_Transaction_ownerIdToUser: { select: { id: true, name: true } },
+  Category: { select: { id: true, name: true, icon: true } },
+} as const;

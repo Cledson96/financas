@@ -172,11 +172,11 @@ export default function TransactionTable({
   return (
     <div className="space-y-4">
       {selectedIds.size > 0 && (
-        <div className="flex items-center gap-4 bg-emerald-50 dark:bg-emerald-900/10 p-3 rounded-lg border border-emerald-100 dark:border-emerald-800 animate-in slide-in-from-top-2">
+        <div className="flex flex-wrap items-center gap-2 sm:gap-4 bg-emerald-50 dark:bg-emerald-900/10 p-3 rounded-lg border border-emerald-100 dark:border-emerald-800 animate-in slide-in-from-top-2">
           <span className="text-sm font-medium ml-2 text-emerald-800 dark:text-emerald-300">
             {selectedIds.size} selecionado(s)
           </span>
-          <div className="h-4 w-px bg-emerald-200 dark:bg-emerald-700" />
+          <div className="h-4 w-px bg-emerald-200 dark:bg-emerald-700 hidden sm:block" />
           <Button
             variant="outline"
             size="sm"
@@ -196,8 +196,9 @@ export default function TransactionTable({
       )}
 
       <div className="rounded-xl border border-zinc-200 dark:border-zinc-800 overflow-hidden bg-white dark:bg-zinc-950 shadow-sm">
-        <Table>
-          <TableHeader>
+        <div className="overflow-x-auto">
+          <Table>
+            <TableHeader>
             <TableRow className="bg-zinc-50/50 dark:bg-zinc-900/50 hover:bg-zinc-50/80 dark:hover:bg-zinc-900/80">
               <TableHead className="w-[40px] pl-4">
                 <Checkbox
@@ -506,6 +507,7 @@ export default function TransactionTable({
             )}
           </TableBody>
         </Table>
+        </div>
       </div>
 
       <div className="flex flex-col sm:flex-row items-center justify-between gap-4 px-2">

@@ -20,6 +20,7 @@ export interface Account {
   dueDay?: number | null;
   closingDay?: number | null;
   userId?: string | null;
+  includeInNetWorth?: boolean;
   Invoice?: Invoice[];
 }
 
@@ -107,6 +108,17 @@ export interface DashboardMetrics {
   settlement: SettlementData;
   fairness: FairnessData;
   hasSharedExpenses: boolean;
+  netWorth: number;
+}
+
+export interface Budget {
+  id: string;
+  categoryId: string;
+  categoryName?: string;
+  categoryIcon?: string;
+  amount: number;
+  month: number;
+  year: number;
 }
 
 export interface DashboardData {
@@ -117,4 +129,5 @@ export interface DashboardData {
   accounts: Account[];
   categories: Category[];
   users: User[];
+  budgets: Budget[];
 }

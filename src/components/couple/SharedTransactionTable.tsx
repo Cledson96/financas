@@ -42,7 +42,8 @@ export function SharedTransactionTable({
   return (
     <div className="space-y-3">
       <div className="rounded-xl border border-zinc-200 dark:border-zinc-800 bg-white dark:bg-zinc-900/50 shadow-sm overflow-hidden">
-        <Table>
+        <div className="overflow-x-auto">
+          <Table>
           <TableHeader>
             <TableRow className="bg-zinc-50/50 dark:bg-zinc-900/50">
               <TableHead className="w-[100px]">Data</TableHead>
@@ -138,8 +139,9 @@ export function SharedTransactionTable({
                 </TableRow>
               ))
             )}
-          </TableBody>
+            </TableBody>
         </Table>
+        </div>
       </div>
 
       {transactions.length > 0 && (

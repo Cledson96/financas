@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { useRouter } from "next/navigation";
 import { useMutation } from "@tanstack/react-query";
 import { Button } from "@/components/ui/button";
@@ -13,6 +13,7 @@ import {
   Plus,
   Eye,
   EyeOff,
+  Landmark,
 } from "lucide-react";
 import { motion } from "framer-motion";
 import KPICard from "@/components/finance/KPICard";
@@ -24,7 +25,9 @@ import FairnessGraph from "@/components/finance/FairnessGraph";
 import NextInvoiceCard from "@/components/finance/NextInvoiceCard";
 import MonthlySummaryCard from "@/components/finance/MonthlySummaryCard";
 import CreditCardUsage from "@/components/finance/CreditCardUsage";
-import { DashboardData } from "@/types/finance";
+import BudgetProgress from "@/components/finance/BudgetProgress";
+import BudgetModal from "@/components/finance/BudgetModal";
+import { DashboardData, Budget } from "@/types/finance";
 import { DashboardFilters } from "@/components/finance/DashboardFilters";
 
 async function createTransaction(data: any) {
@@ -68,6 +71,8 @@ export default function DashboardClient({
   const [modalOpen, setModalOpen] = useState(false);
   const [prefilledData, setPrefilledData] = useState<any>(null);
   const [isVisible, setIsVisible] = useState(true);
+  const [budgetModalOpen, setBudgetModalOpen] = useState(false);
+  const [budgetLoading, setBudgetLoading] = useState(false);
 
   // Load visibility preference
   useEffect(() => {
@@ -90,7 +95,10 @@ export default function DashboardClient({
     accounts,
     categories,
     users,
+    budgets,
   } = initialData;
+
+  const expenseCategories = categories.filter((c) => c.type === "EXPENSE");
 
   const createTransactionMutation = useMutation({
     mutationFn: createTransaction,
@@ -100,6 +108,57 @@ export default function DashboardClient({
       setPrefilledData(null);
     },
   });
+
+  // Budget CRUD operations
+  const handleSaveBudgets = useCallback(
+    async (data: {
+      budgets: { categoryId: string; amount: number }[];
+      month: number;
+      year: number;
+    }) => {
+      setBudgetLoading(true);
+      try {
+        // Save each budget via upsert
+        for (const b of data.budgets) {
+          const res = await fetch("/api/budgets", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+              categoryId: b.categoryId,
+              amount: b.amount,
+              month: data.month,
+              year: data.year,
+            }),
+          });
+          if (!res.ok) {
+            throw new Error("Failed to save budget");
+          }
+        }
+        setBudgetModalOpen(false);
+        router.refresh();
+      } catch (error) {
+        console.error("Failed to save budgets:", error);
+      } finally {
+        setBudgetLoading(false);
+      }
+    },
+    [router],
+  );
+
+  const handleDeleteBudget = useCallback(
+    async (budgetId: string) => {
+      try {
+        const res = await fetch(`/api/budgets/${budgetId}`, {
+          method: "DELETE",
+        });
+        if (!res.ok) throw new Error("Failed to delete budget");
+        router.refresh();
+      } catch (error) {
+        console.error("Failed to delete budget:", error);
+      }
+    },
+    [router],
+  );
 
   const handleSettle = () => {
     const debtor = users.find((u) => u.name === metrics.settlement.debtorName);
@@ -120,9 +179,6 @@ export default function DashboardClient({
   };
 
   // Credit card accounts for usage display
-  // Includes pure credit cards AND hybrid accounts (e.g. Nubank, Neon) that have a limit
-  // For hybrid accounts, invoiceAmount = sum of OPEN invoices (actual credit card spending)
-  // For pure credit cards, balance already represents what's owed
   const creditCards = accounts
     .filter((a) => a.limit && Number(a.limit) > 0)
     .map((a) => {
@@ -151,7 +207,7 @@ export default function DashboardClient({
       <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-6">
         <div className="space-y-1">
           <div className="flex items-center gap-3">
-            <h1 className="text-3xl md:text-4xl font-bold tracking-tight text-zinc-900 dark:text-zinc-50">
+            <h1 className="text-2xl md:text-4xl font-bold tracking-tight text-zinc-900 dark:text-zinc-50">
               Visão Geral
             </h1>
             <Button
@@ -167,7 +223,7 @@ export default function DashboardClient({
               )}
             </Button>
           </div>
-          <p className="text-zinc-500 dark:text-zinc-400 text-lg">
+          <p className="text-zinc-500 dark:text-zinc-400 text-base md:text-lg">
             Gerencie suas finanças com precisão.
           </p>
         </div>
@@ -181,7 +237,7 @@ export default function DashboardClient({
 
           <Button
             onClick={handleOpenModal}
-            className="gap-2 bg-primary hover:bg-primary/90 text-white shadow-lg shadow-primary/20 rounded-lg h-9 px-4 text-xs font-medium"
+            className="gap-2 bg-primary hover:bg-primary/90 text-white shadow-lg shadow-primary/20 rounded-lg h-9 px-4 text-xs font-medium w-full sm:w-auto"
           >
             <Plus className="h-3.5 w-3.5" />
             <span>Nova Transação</span>
@@ -192,8 +248,17 @@ export default function DashboardClient({
       {/* KPI Cards Row */}
       <motion.div
         variants={container}
-        className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4"
+        className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-3 sm:gap-4"
       >
+        <motion.div variants={item}>
+          <KPICard
+            title="Patrimônio Líquido"
+            value={`R$ ${metrics.netWorth.toLocaleString("pt-BR", { minimumFractionDigits: 2 })}`}
+            icon={Landmark}
+            variant={metrics.netWorth >= 0 ? "success" : "danger"}
+            isVisible={isVisible}
+          />
+        </motion.div>
         <motion.div variants={item}>
           <KPICard
             title="Saldo Atual"
@@ -257,12 +322,31 @@ export default function DashboardClient({
             isVisible={isVisible}
           />
         </motion.div>
-        {creditCards.length > 0 && (
+        {creditCards.length > 0 ? (
           <motion.div variants={item}>
             <CreditCardUsage cards={creditCards} isVisible={isVisible} />
           </motion.div>
+        ) : (
+          <motion.div variants={item}>
+            <BudgetProgress
+              budgets={budgets}
+              transactions={initialData.recentTransactions}
+              onDefineGoals={() => setBudgetModalOpen(true)}
+            />
+          </motion.div>
         )}
       </motion.div>
+
+      {/* Budget Card Row (below summary, above charts) */}
+      {creditCards.length > 0 && (
+        <motion.div variants={item}>
+          <BudgetProgress
+            budgets={budgets}
+            transactions={initialData.recentTransactions}
+            onDefineGoals={() => setBudgetModalOpen(true)}
+          />
+        </motion.div>
+      )}
 
       {/* Settlement Card (only if shared expenses exist) */}
       {metrics.hasSharedExpenses && (
@@ -325,6 +409,16 @@ export default function DashboardClient({
         accounts={accounts}
         members={users}
         isLoading={createTransactionMutation.isPending}
+      />
+
+      <BudgetModal
+        open={budgetModalOpen}
+        onOpenChange={setBudgetModalOpen}
+        categories={categories}
+        existingBudgets={budgets}
+        isLoading={budgetLoading}
+        onSubmit={handleSaveBudgets}
+        onDelete={handleDeleteBudget}
       />
     </motion.div>
   );

@@ -55,7 +55,7 @@ export default function SettlementCard({
       </CardHeader>
       <CardContent className="space-y-4">
         <div className="p-4 rounded-xl bg-blue-50 dark:bg-blue-900/20 border border-blue-100 dark:border-blue-800">
-          <div className="flex items-center justify-between mb-4">
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-4">
             <div className="flex flex-col">
               <span className="text-sm text-zinc-500 dark:text-zinc-400">
                 {settlement.debtorName} deve pagar
@@ -82,7 +82,7 @@ export default function SettlementCard({
             <Button
               size="sm"
               onClick={onSettle}
-              className="bg-blue-600 hover:bg-blue-700 text-white"
+              className="bg-blue-600 hover:bg-blue-700 text-white w-full sm:w-auto"
             >
               Quitar
             </Button>
