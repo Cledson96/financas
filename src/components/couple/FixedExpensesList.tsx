@@ -2,7 +2,7 @@
 
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { Calendar, CheckCircle2, Circle } from "lucide-react";
+import { Calendar } from "lucide-react";
 // Define a compatible interface since serialized data has number amount
 interface SerializedFixedExpense {
   id: string;

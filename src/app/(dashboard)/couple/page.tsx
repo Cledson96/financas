@@ -166,8 +166,9 @@ export default function CouplePage() {
       </div>
 
       {loading ? (
-        <div className="p-12 text-center text-zinc-500">
-          Carregando dados...
+        <div className="flex flex-col items-center justify-center py-20 gap-3">
+          <div className="w-8 h-8 border-4 border-zinc-200 border-t-blue-500 rounded-full animate-spin"></div>
+          <p className="text-zinc-500 text-sm">Carregando dados do casal...</p>
         </div>
       ) : (
         <>
