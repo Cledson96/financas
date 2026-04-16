@@ -16,12 +16,29 @@ interface CreditCardUsageProps {
     bankName?: string | null;
     balance: number;
     limit: number;
+    invoiceAmount?: number; // actual credit card spending (from OPEN invoices)
+    type?: string; // CHECKING_ACCOUNT or CREDIT_CARD
   }[];
   isVisible?: boolean;
 }
 
 function formatCurrency(value: number): string {
   return `R$ ${value.toLocaleString("pt-BR", { minimumFractionDigits: 2 })}`;
+}
+
+/**
+ * Resolve how much was actually spent on the credit card portion.
+ * - Pure CREDIT_CARD: balance already represents what's owed
+ * - Hybrid (CHECKING_ACCOUNT with limit): use invoiceAmount (sum of OPEN invoices)
+ */
+function resolveCardSpent(card: {
+  balance: number;
+  limit: number;
+  invoiceAmount?: number;
+  type?: string;
+}): number {
+  const isHybrid = card.type === "CHECKING_ACCOUNT" && card.limit > 0;
+  return isHybrid ? (card.invoiceAmount ?? 0) : Math.abs(card.balance);
 }
 
 function CompactCardRow({
@@ -34,13 +51,15 @@ function CompactCardRow({
     bankName?: string | null;
     balance: number;
     limit: number;
+    invoiceAmount?: number;
+    type?: string;
   };
   isVisible: boolean;
   dimmed?: boolean;
 }) {
-  const used = Math.abs(card.balance);
+  const cardSpent = resolveCardSpent(card);
   const usagePercent =
-    card.limit > 0 ? Math.min((used / card.limit) * 100, 100) : 0;
+    card.limit > 0 ? Math.min((cardSpent / card.limit) * 100, 100) : 0;
 
   let barColor = "bg-emerald-500";
   let barBg = "bg-emerald-100 dark:bg-emerald-900/30";
@@ -81,7 +100,7 @@ function CompactCardRow({
                 : "text-zinc-900 dark:text-zinc-100"
             )}
           >
-            {isVisible ? formatCurrency(used) : "••••••"}
+            {isVisible ? formatCurrency(cardSpent) : "••••••"}
           </p>
           <p className="text-xs text-zinc-400 dark:text-zinc-500 tabular-nums">
             de {isVisible ? formatCurrency(card.limit) : "••••••"}
@@ -89,7 +108,7 @@ function CompactCardRow({
         </div>
       </div>
       {/* Only show progress bar for cards with actual usage */}
-      {used > 0 && (
+      {cardSpent > 0 && (
         <>
           <div className={cn("h-1.5 rounded-full", barBg)}>
             <div
@@ -103,7 +122,7 @@ function CompactCardRow({
           <p className="text-xs text-zinc-400 dark:text-zinc-500">
             Disponível:{" "}
             {isVisible
-              ? formatCurrency(Math.max(card.limit - used, 0))
+              ? formatCurrency(Math.max(card.limit - cardSpent, 0))
               : "••••••"}{" "}
             ({usagePercent.toFixed(0)}% usado)
           </p>
@@ -121,13 +140,13 @@ export default function CreditCardUsage({
 
   if (cards.length === 0) return null;
 
-  // Sort: cards with balance > 0 first, then by usage descending
+  // Sort: cards with actual credit card spending first, then by spending descending
   const sorted = [...cards].sort((a, b) => {
-    const aUsed = Math.abs(a.balance);
-    const bUsed = Math.abs(b.balance);
-    if (aUsed > 0 && bUsed === 0) return -1;
-    if (aUsed === 0 && bUsed > 0) return 1;
-    return bUsed - aUsed;
+    const aSpent = resolveCardSpent(a);
+    const bSpent = resolveCardSpent(b);
+    if (aSpent > 0 && bSpent === 0) return -1;
+    if (aSpent === 0 && bSpent > 0) return 1;
+    return bSpent - aSpent;
   });
 
   const INITIAL_COUNT = 4;
@@ -135,8 +154,8 @@ export default function CreditCardUsage({
   const hiddenCards = sorted.slice(INITIAL_COUNT);
   const hasMore = hiddenCards.length > 0;
 
-  // Count cards with actual usage
-  const activeCards = sorted.filter((c) => Math.abs(c.balance) > 0).length;
+  // Count cards with actual credit card spending
+  const activeCards = sorted.filter((c) => resolveCardSpent(c) > 0).length;
   const inactiveCards = sorted.length - activeCards;
 
   return (
@@ -160,7 +179,7 @@ export default function CreditCardUsage({
             key={card.name}
             card={card}
             isVisible={isVisible}
-            dimmed={Math.abs(card.balance) === 0}
+            dimmed={resolveCardSpent(card) === 0}
           />
         ))}
 
@@ -173,7 +192,7 @@ export default function CreditCardUsage({
                   key={card.name}
                   card={card}
                   isVisible={isVisible}
-                  dimmed={Math.abs(card.balance) === 0}
+                  dimmed={resolveCardSpent(card) === 0}
                 />
               ))}
             </CollapsibleContent>

@@ -121,14 +121,24 @@ export default function DashboardClient({
 
   // Credit card accounts for usage display
   // Includes pure credit cards AND hybrid accounts (e.g. Nubank, Neon) that have a limit
+  // For hybrid accounts, invoiceAmount = sum of OPEN invoices (actual credit card spending)
+  // For pure credit cards, balance already represents what's owed
   const creditCards = accounts
-    .filter((a) => a.limit && a.limit > 0)
-    .map((a) => ({
-      name: a.name,
-      bankName: a.bankName,
-      balance: a.balance,
-      limit: a.limit || 0,
-    }));
+    .filter((a) => a.limit && Number(a.limit) > 0)
+    .map((a) => {
+      const openInvoicesTotal = (a.Invoice ?? [])
+        .filter((inv: any) => inv.status === "OPEN")
+        .reduce((sum: number, inv: any) => sum + Number(inv.amount || 0), 0);
+
+      return {
+        name: a.name,
+        bankName: a.bankName,
+        balance: Number(a.balance || 0),
+        limit: Number(a.limit || 0),
+        invoiceAmount: openInvoicesTotal,
+        type: a.type,
+      };
+    });
 
   return (
     <motion.div
