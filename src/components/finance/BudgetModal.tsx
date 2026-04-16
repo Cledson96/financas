@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useMemo } from "react";
 import {
   Dialog,
   DialogContent,
@@ -58,8 +58,11 @@ export default function BudgetModal({
   const month = defaultMonth || new Date().getMonth() + 1;
   const year = defaultYear || new Date().getFullYear();
 
-  // Only EXPENSE categories
-  const expenseCategories = categories.filter((c) => c.type === "EXPENSE");
+  // Only EXPENSE categories — memoized to avoid infinite useEffect loop
+  const expenseCategories = useMemo(
+    () => categories.filter((c) => c.type === "EXPENSE"),
+    [categories],
+  );
 
   // Build state: { categoryId: amount string }
   const [values, setValues] = useState<Record<string, string>>({});
@@ -68,6 +71,7 @@ export default function BudgetModal({
   );
 
   useEffect(() => {
+    if (!open) return;
     const init: Record<string, string> = {};
     for (const cat of expenseCategories) {
       const existing = existingBudgets.find(
@@ -77,7 +81,8 @@ export default function BudgetModal({
     }
     setValues(init);
     setInitialValues(init);
-  }, [open, existingBudgets, expenseCategories, month, year]);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [open, month, year]);
 
   const handleChange = (categoryId: string, value: string) => {
     setValues((prev) => ({ ...prev, [categoryId]: value }));
