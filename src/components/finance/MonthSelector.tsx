@@ -2,6 +2,7 @@
 
 import * as React from "react";
 import { useRouter, useSearchParams } from "next/navigation";
+import { useTransition } from "react";
 import { format, subMonths } from "date-fns";
 import { ptBR } from "date-fns/locale";
 import {
@@ -15,6 +16,7 @@ import {
 export function MonthSelector() {
   const router = useRouter();
   const searchParams = useSearchParams();
+  const [isPending, startTransition] = useTransition();
 
   const currentMonth = searchParams.get("month")
     ? parseInt(searchParams.get("month")!)
@@ -39,15 +41,21 @@ export function MonthSelector() {
     const params = new URLSearchParams(searchParams.toString());
     params.set("month", month);
     params.set("year", year);
-    router.push(`?${params.toString()}`);
+    startTransition(() => {
+      router.push(`?${params.toString()}`);
+    });
   };
 
   const selectedValue = `${currentMonth}-${currentYear}`;
 
   return (
-    <div className="flex items-center gap-2">
+    <div className="flex items-center gap-2 relative">
       <Select value={selectedValue} onValueChange={handleValueChange}>
-        <SelectTrigger className="w-[180px] bg-white dark:bg-zinc-900 capitalize h-7 text-xs border-none shadow-none focus:ring-0">
+        <SelectTrigger
+          className={`w-[180px] bg-white dark:bg-zinc-900 capitalize h-7 text-xs border-none shadow-none focus:ring-0 transition-opacity duration-150 ${
+            isPending ? "opacity-60" : "opacity-100"
+          }`}
+        >
           <SelectValue placeholder="Selecione o mês" />
         </SelectTrigger>
         <SelectContent>

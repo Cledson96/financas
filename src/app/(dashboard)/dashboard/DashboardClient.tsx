@@ -120,8 +120,9 @@ export default function DashboardClient({
   };
 
   // Credit card accounts for usage display
+  // Includes pure credit cards AND hybrid accounts (e.g. Nubank, Neon) that have a limit
   const creditCards = accounts
-    .filter((a) => a.type === "CREDIT_CARD" && a.limit && a.limit > 0)
+    .filter((a) => a.limit && a.limit > 0)
     .map((a) => ({
       name: a.name,
       bankName: a.bankName,

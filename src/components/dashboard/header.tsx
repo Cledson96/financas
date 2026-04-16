@@ -19,7 +19,7 @@ const getPageTitle = (pathname: string) => {
   const path = pathname.split("/").pop();
   switch (path) {
     case "dashboard":
-      return "Dashboard";
+      return "Visão Geral";
     case "transactions":
       return "Transações";
     case "couple":
@@ -51,7 +51,7 @@ export function Header({ onMenuClick, theme, toggleTheme }: HeaderProps) {
           </Button>
 
           <div className="flex items-center gap-3">
-            <div className="relative w-12 h-12 rounded-lg overflow-hidden flex-shrink-0 border border-zinc-200 dark:border-zinc-700 hidden lg:block">
+            <div className="relative w-10 h-10 rounded-lg overflow-hidden flex-shrink-0 border border-zinc-200 dark:border-zinc-700 hidden lg:block">
               <Image
                 src="/images/couple.jpg"
                 alt="Finanças do Casal"
@@ -59,9 +59,14 @@ export function Header({ onMenuClick, theme, toggleTheme }: HeaderProps) {
                 className="object-cover"
               />
             </div>
-            <h1 className="text-lg font-semibold text-zinc-900 dark:text-zinc-100 hidden lg:block">
-              Finanças do Casal
-            </h1>
+            <div className="hidden lg:block">
+              <h1 className="text-lg font-semibold text-zinc-900 dark:text-zinc-100 leading-tight">
+                {title}
+              </h1>
+              <p className="text-xs text-zinc-400 dark:text-zinc-500 leading-tight">
+                Finanças do Casal
+              </p>
+            </div>
             <h1 className="text-lg font-semibold text-zinc-900 dark:text-zinc-100 lg:hidden">
               {title}
             </h1>

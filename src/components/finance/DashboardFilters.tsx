@@ -42,7 +42,11 @@ export function DashboardFilters({
   };
 
   return (
-    <div className="flex items-center gap-3 bg-white dark:bg-zinc-900 p-1 rounded-lg border border-zinc-200 dark:border-zinc-800 shadow-sm w-full sm:w-auto overflow-x-auto relative">
+    <div
+      className={`flex items-center gap-3 bg-white dark:bg-zinc-900 p-1 rounded-lg border border-zinc-200 dark:border-zinc-800 shadow-sm w-full sm:w-auto overflow-x-auto relative transition-opacity duration-150 ${
+        isPending ? "opacity-60 pointer-events-none" : "opacity-100"
+      }`}
+    >
       <MonthSelector />
 
       <div className="w-px h-6 bg-zinc-200 dark:bg-zinc-800 hidden sm:block" />
@@ -91,8 +95,8 @@ export function DashboardFilters({
 
       {/* Loading Indicator */}
       {isPending && (
-        <div className="absolute right-2 top-1/2 -translate-y-1/2">
-          <Loader2 className="h-3 w-3 animate-spin text-zinc-400" />
+        <div className="flex items-center justify-center px-2">
+          <Loader2 className="h-3.5 w-3.5 animate-spin text-zinc-400" />
         </div>
       )}
     </div>

@@ -497,7 +497,7 @@ export async function getDashboardData(
     .sort((a, b) => b.value - a.value)
     .slice(0, 8);
 
-  const evolutionData = [];
+  const rawEvolutionData: { month: string; expenses: number; income: number }[] = [];
   for (let i = 5; i >= 0; i--) {
     const date = subMonths(targetDate, i);
     const mStart = startOfMonth(date);
@@ -521,11 +521,32 @@ export async function getDashboardData(
       )
       .reduce((sum, t) => sum + t.amount, 0);
 
-    evolutionData.push({
+    rawEvolutionData.push({
       month: format(date, "MMM", { locale: ptBR }),
       expenses: mExpenses,
       income: mIncome,
     });
+  }
+
+  // Remove leading months with no data (zero expenses AND zero income)
+  // to avoid showing empty bars on the left side of the chart.
+  // Keep trailing zeros (future/current months that may still get data).
+  const firstWithDataIndex = rawEvolutionData.findIndex(
+    (d) => d.expenses > 0 || d.income > 0,
+  );
+  let evolutionData: { month: string; expenses: number; income: number }[];
+  if (firstWithDataIndex === -1) {
+    // No data at all - show last 3 months as context
+    evolutionData = rawEvolutionData.slice(-3);
+  } else {
+    // Start from first month with data, but keep at least 3 months if available
+    const startIdx = Math.max(0, firstWithDataIndex);
+    evolutionData = rawEvolutionData.slice(startIdx);
+    // If we end up with fewer than 3 months, try to include one more before the firstWithData
+    if (evolutionData.length < 3 && firstWithDataIndex > 0) {
+      const extraNeeded = Math.min(3 - evolutionData.length, firstWithDataIndex);
+      evolutionData = rawEvolutionData.slice(firstWithDataIndex - extraNeeded);
+    }
   }
 
   const allCategoriesRaw = await prisma.category.findMany();

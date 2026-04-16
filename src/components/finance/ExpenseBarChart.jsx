@@ -79,7 +79,7 @@ export default function ExpenseBarChart({
   };
 
   return (
-    <Card className="bg-white dark:bg-zinc-900 border-zinc-200 dark:border-zinc-800">
+    <Card className="bg-white dark:bg-zinc-900 border-zinc-200 dark:border-zinc-800 rounded-2xl">
       <CardHeader className="pb-2">
         <CardTitle className="text-lg font-semibold text-zinc-900 dark:text-zinc-100">
           {title}

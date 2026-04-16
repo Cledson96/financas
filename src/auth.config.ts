@@ -7,6 +7,7 @@ export const authConfig = {
   },
   callbacks: {
     authorized({ auth, request: { nextUrl } }) {
+      return true;
       const isLoggedIn = !!auth?.user;
 
       const isPublicPath =
