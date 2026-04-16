@@ -94,6 +94,8 @@ export interface FairnessData {
 export interface DashboardMetrics {
   totalBalance: number;
   currentMonthExpenses: number;
+  currentMonthIncome: number;
+  monthBalance: number;
   openInvoices: number;
   nextInvoice?: {
     amount: number;
@@ -104,6 +106,7 @@ export interface DashboardMetrics {
   overdueCount: number;
   settlement: SettlementData;
   fairness: FairnessData;
+  hasSharedExpenses: boolean;
 }
 
 export interface DashboardData {

@@ -4,6 +4,7 @@ import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { useMutation } from "@tanstack/react-query";
 import { Button } from "@/components/ui/button";
+import { Card, CardContent } from "@/components/ui/card";
 import {
   Wallet,
   TrendingDown,
@@ -21,6 +22,8 @@ import TransactionModal from "@/components/finance/TransactionModal";
 import SettlementCard from "@/components/finance/SettlementCard";
 import FairnessGraph from "@/components/finance/FairnessGraph";
 import NextInvoiceCard from "@/components/finance/NextInvoiceCard";
+import MonthlySummaryCard from "@/components/finance/MonthlySummaryCard";
+import CreditCardUsage from "@/components/finance/CreditCardUsage";
 import { DashboardData } from "@/types/finance";
 import { DashboardFilters } from "@/components/finance/DashboardFilters";
 
@@ -116,6 +119,16 @@ export default function DashboardClient({
     setModalOpen(true);
   };
 
+  // Credit card accounts for usage display
+  const creditCards = accounts
+    .filter((a) => a.type === "CREDIT_CARD" && a.limit && a.limit > 0)
+    .map((a) => ({
+      name: a.name,
+      bankName: a.bankName,
+      balance: a.balance,
+      limit: a.limit || 0,
+    }));
+
   return (
     <motion.div
       variants={container}
@@ -165,6 +178,7 @@ export default function DashboardClient({
         </div>
       </div>
 
+      {/* KPI Cards Row */}
       <motion.div
         variants={container}
         className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4"
@@ -214,19 +228,43 @@ export default function DashboardClient({
             icon={AlertTriangle}
             variant={metrics.overdueCount > 0 ? "danger" : "default"}
             pulse={metrics.overdueCount > 0}
-            isVisible={isVisible} // Usually count is not sensitive, but for consistency
+            isVisible={isVisible}
           />
         </motion.div>
       </motion.div>
 
-      <motion.div variants={item} className="grid grid-cols-1 gap-6">
-        <SettlementCard
-          settlement={metrics.settlement}
-          onSettle={handleSettle}
-          isVisible={isVisible}
-        />
+      {/* Monthly Summary + Credit Card Usage Row */}
+      <motion.div
+        variants={container}
+        className="grid grid-cols-1 lg:grid-cols-2 gap-6"
+      >
+        <motion.div variants={item}>
+          <MonthlySummaryCard
+            income={metrics.currentMonthIncome}
+            expenses={metrics.currentMonthExpenses}
+            balance={metrics.monthBalance}
+            isVisible={isVisible}
+          />
+        </motion.div>
+        {creditCards.length > 0 && (
+          <motion.div variants={item}>
+            <CreditCardUsage cards={creditCards} isVisible={isVisible} />
+          </motion.div>
+        )}
       </motion.div>
 
+      {/* Settlement Card (only if shared expenses exist) */}
+      {metrics.hasSharedExpenses && (
+        <motion.div variants={item} className="grid grid-cols-1 gap-6">
+          <SettlementCard
+            settlement={metrics.settlement}
+            onSettle={handleSettle}
+            isVisible={isVisible}
+          />
+        </motion.div>
+      )}
+
+      {/* Charts Row: Pie + Fairness */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         <motion.div variants={item}>
           <CategoryPieChart
@@ -235,11 +273,30 @@ export default function DashboardClient({
             isVisible={isVisible}
           />
         </motion.div>
-        <motion.div variants={item}>
-          <FairnessGraph data={metrics.fairness} isVisible={isVisible} />
-        </motion.div>
+        {metrics.hasSharedExpenses ? (
+          <motion.div variants={item}>
+            <FairnessGraph data={metrics.fairness} isVisible={isVisible} />
+          </motion.div>
+        ) : (
+          <motion.div variants={item}>
+            <Card className="bg-white dark:bg-zinc-900 border-zinc-200 dark:border-zinc-800 rounded-2xl h-full">
+              <CardContent className="flex flex-col items-center justify-center h-[380px] text-center p-6">
+                <div className="w-12 h-12 rounded-full bg-zinc-100 dark:bg-zinc-800 flex items-center justify-center mb-4">
+                  <CreditCard className="w-6 h-6 text-zinc-400" />
+                </div>
+                <p className="text-sm font-medium text-zinc-600 dark:text-zinc-400">
+                  Sem despesas compartilhadas
+                </p>
+                <p className="text-xs text-zinc-400 dark:text-zinc-500 mt-1">
+                  A justiça financeira aparece quando há despesas do casal neste mês.
+                </p>
+              </CardContent>
+            </Card>
+          </motion.div>
+        )}
       </div>
 
+      {/* Evolution Bar Chart */}
       <motion.div variants={item} className="grid grid-cols-1 gap-6">
         <ExpenseBarChart
           data={evolutionData}

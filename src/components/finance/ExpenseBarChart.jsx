@@ -15,6 +15,33 @@ export default function ExpenseBarChart({
   title = "Evolução de Gastos",
   isVisible = true,
 }) {
+  const hasData = data && data.some((d) => d.expenses > 0 || d.income > 0);
+
+  if (!hasData) {
+    return (
+      <Card className="bg-white dark:bg-zinc-900 border-zinc-200 dark:border-zinc-800 rounded-2xl">
+        <CardHeader className="pb-2">
+          <CardTitle className="text-lg font-semibold text-zinc-900 dark:text-zinc-100">
+            {title}
+          </CardTitle>
+        </CardHeader>
+        <CardContent>
+          <div className="flex flex-col items-center justify-center h-[280px] text-center">
+            <div className="w-12 h-12 rounded-full bg-zinc-100 dark:bg-zinc-800 flex items-center justify-center mb-4">
+              <BarChart className="w-6 h-6 text-zinc-400" />
+            </div>
+            <p className="text-sm font-medium text-zinc-600 dark:text-zinc-400">
+              Sem dados neste período
+            </p>
+            <p className="text-xs text-zinc-400 dark:text-zinc-500 mt-1">
+              A evolução mensal aparecerá conforme você registrar transações.
+            </p>
+          </div>
+        </CardContent>
+      </Card>
+    );
+  }
+
   const CustomTooltip = ({ active, payload, label }) => {
     if (active && payload && payload.length) {
       return (

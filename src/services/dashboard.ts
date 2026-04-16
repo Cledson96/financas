@@ -205,13 +205,13 @@ export async function getDashboardData(
 
   // --- CALCULATIONS ---
 
-  // 1. Total Balance
+  // 1. Total Balance (checking + cash accounts)
   const totalBalance = accounts
     .filter((a) => a.type === "CHECKING_ACCOUNT" || a.type === "CASH")
     .reduce((sum, a) => sum + a.balance, 0);
 
   // 2. Current Month Expenses
-  const currentMonthExpenses = transactions
+  const currentMonthExpenses = allTransactions
     .filter(
       (t) =>
         t.type === "EXPENSE" &&
@@ -219,6 +219,27 @@ export async function getDashboardData(
         t.purchaseDate <= monthEnd,
     )
     .reduce((sum, t) => sum + t.amount, 0);
+
+  // 2b. Current Month Income
+  const currentMonthIncome = allTransactions
+    .filter(
+      (t) =>
+        t.type === "INCOME" &&
+        t.purchaseDate >= monthStart &&
+        t.purchaseDate <= monthEnd,
+    )
+    .reduce((sum, t) => sum + t.amount, 0);
+
+  // 2c. Month Balance (income - expenses)
+  const monthBalance = currentMonthIncome - currentMonthExpenses;
+
+  // 2d. Check for shared expenses in current month
+  const hasSharedExpenses = allTransactions.some(
+    (t) =>
+      (t.splitType === "SHARED" || t.splitType === "SHARED_PROPORTIONAL") &&
+      t.purchaseDate >= monthStart &&
+      t.purchaseDate <= monthEnd,
+  );
 
   // 3. Open Invoices (Sum of all OPEN invoices)
   const openInvoices = accounts
@@ -514,11 +535,14 @@ export async function getDashboardData(
     metrics: {
       totalBalance,
       currentMonthExpenses,
+      currentMonthIncome,
+      monthBalance,
       openInvoices,
       overdueCount,
       settlement,
       nextInvoice,
       fairness,
+      hasSharedExpenses,
     },
     recentTransactions: transactions.slice(0, 10),
     categoryExpenses,

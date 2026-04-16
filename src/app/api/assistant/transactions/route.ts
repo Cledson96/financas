@@ -1,5 +1,5 @@
-import { isAssistantAuthorized, unauthorizedResponse, badRequest } from "@/services/assistant/auth.js";
-import { listAssistantTransactions } from "@/services/assistant/service.js";
+import { getAssistantIdentity, isAssistantAuthorized, unauthorizedResponse, badRequest } from "@/services/assistant/auth.js";
+import { createAssistantTransaction, listAssistantTransactions } from "@/services/assistant/service.js";
 import { NextResponse } from "next/server";
 
 export async function GET(request: Request) {
@@ -17,7 +17,12 @@ export async function GET(request: Request) {
       ownerId: searchParams.get("ownerId") || undefined,
       status: searchParams.get("status") || undefined,
       source: searchParams.get("source") || undefined,
-      isHousehold: searchParams.get("isHousehold") === "true" ? true : searchParams.get("isHousehold") === "false" ? false : undefined,
+      isHousehold:
+        searchParams.get("isHousehold") === "true"
+          ? true
+          : searchParams.get("isHousehold") === "false"
+            ? false
+            : undefined,
       startDate: searchParams.get("startDate") || undefined,
       endDate: searchParams.get("endDate") || undefined,
       search: searchParams.get("search") || undefined,
@@ -30,5 +35,21 @@ export async function GET(request: Request) {
   } catch (error) {
     console.error("Assistant transactions GET error:", error);
     return badRequest("Failed to list transactions", String(error));
+  }
+}
+
+export async function POST(request: Request) {
+  if (!isAssistantAuthorized(request)) {
+    return unauthorizedResponse();
+  }
+
+  try {
+    const payload = await request.json();
+    const actor = getAssistantIdentity(request);
+    const transaction = await createAssistantTransaction(payload, actor);
+    return NextResponse.json({ transaction }, { status: 201 });
+  } catch (error) {
+    console.error("Assistant transactions POST error:", error);
+    return badRequest(error instanceof Error ? error.message : "Failed to create transaction");
   }
 }

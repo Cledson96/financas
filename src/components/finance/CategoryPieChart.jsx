@@ -24,6 +24,31 @@ export default function CategoryPieChart({
   title = "Gastos por Categoria",
   isVisible = true,
 }) {
+  if (!data || data.length === 0) {
+    return (
+      <Card className="bg-white dark:bg-zinc-900 border-zinc-200 dark:border-zinc-800 rounded-2xl">
+        <CardHeader className="pb-2">
+          <CardTitle className="text-lg font-semibold text-zinc-900 dark:text-zinc-100">
+            {title}
+          </CardTitle>
+        </CardHeader>
+        <CardContent>
+          <div className="flex flex-col items-center justify-center h-[280px] text-center">
+            <div className="w-12 h-12 rounded-full bg-zinc-100 dark:bg-zinc-800 flex items-center justify-center mb-4">
+              <PieChart className="w-6 h-6 text-zinc-400" />
+            </div>
+            <p className="text-sm font-medium text-zinc-600 dark:text-zinc-400">
+              Sem despesas neste período
+            </p>
+            <p className="text-xs text-zinc-400 dark:text-zinc-500 mt-1">
+              As categorias aparecerão conforme você registrar gastos.
+            </p>
+          </div>
+        </CardContent>
+      </Card>
+    );
+  }
+
   const CustomTooltip = ({ active, payload }) => {
     if (active && payload && payload.length) {
       return (
