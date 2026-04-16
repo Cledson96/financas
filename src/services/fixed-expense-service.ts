@@ -3,7 +3,7 @@ import { FixedExpense, SplitMethod } from "@prisma/client";
 
 export class FixedExpenseService {
   static async list(): Promise<
-    (FixedExpense & { Category: { name: string; icon: string | null } })[]
+    (FixedExpense & { Category: { name: string; icon: string | null; type: string } })[]
   > {
     return prisma.fixedExpense.findMany({
       include: {
@@ -11,6 +11,7 @@ export class FixedExpenseService {
           select: {
             name: true,
             icon: true,
+            type: true,
           },
         },
         User: {

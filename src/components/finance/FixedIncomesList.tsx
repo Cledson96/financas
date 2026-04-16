@@ -9,7 +9,6 @@ import {
   deleteFixedExpenseAction,
   toggleFixedExpenseAction,
 } from "@/app/actions/fixed-expense-actions";
-import { FixedExpenseService } from "@/services/fixed-expense-service";
 import { toast } from "sonner";
 import { Badge } from "@/components/ui/badge";
 import {
@@ -29,7 +28,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 
-interface FixedExpense {
+interface FixedIncome {
   id: string;
   description: string;
   amount: number;
@@ -46,39 +45,30 @@ interface FixedExpense {
   } | null;
 }
 
-// Since FixedExpenseService is server-side only in strict sense (imports prisma),
-// we should strictly use Server Actions or API to fetch list.
-// For this prototype, let's assume we create a Server Action to 'list' as well
-// OR we just use an API route if we want to stick to the pattern.
-// I'll add a 'getFixedExpenses' action in 'fixed-expense-actions' later.
-// For now I'll Mock fetch or assume I added it.
+import { getFixedExpensesAction } from "@/app/actions/fixed-expense-actions";
 
-// WAIT, I cannot import FixedExpenseService in a "use client" file if it imports prisma.
-// I must use a Server Action to fetch the list.
-import { getFixedExpensesAction } from "@/app/actions/fixed-expense-actions"; // I need to add this!
-
-export default function FixedExpensesList({ categories, members }: any) {
-  const [expenses, setExpenses] = useState<FixedExpense[]>([]);
+export default function FixedIncomesList({ categories, members }: any) {
+  const [incomes, setIncomes] = useState<FixedIncome[]>([]);
   const [loading, setLoading] = useState(true);
   const [isModalOpen, setIsModalOpen] = useState(false);
 
-  const fetchExpenses = () => {
+  const fetchIncomes = () => {
     setLoading(true);
     getFixedExpensesAction()
-      .then((data) => setExpenses(data.filter((e: FixedExpense) => e.Category.type === "EXPENSE")))
-      .catch(() => toast.error("Failed to load expenses"))
+      .then((data) => setIncomes(data.filter((e: FixedIncome) => e.Category.type === "INCOME")))
+      .catch(() => toast.error("Failed to load incomes"))
       .finally(() => setLoading(false));
   };
 
   useEffect(() => {
-    fetchExpenses();
+    fetchIncomes();
   }, []);
 
   const handleToggle = async (id: string, current: boolean) => {
     try {
       await toggleFixedExpenseAction(id, !current);
-      fetchExpenses();
-      toast.success(`Despesa ${!current ? "ativada" : "desativada"}`);
+      fetchIncomes();
+      toast.success(`Receita ${!current ? "ativada" : "desativada"}`);
     } catch {
       toast.error("Erro ao atualizar");
     }
@@ -88,8 +78,8 @@ export default function FixedExpensesList({ categories, members }: any) {
     if (!confirm("Tem certeza?")) return;
     try {
       await deleteFixedExpenseAction(id);
-      fetchExpenses();
-      toast.success("Despesa removida");
+      fetchIncomes();
+      toast.success("Receita removida");
     } catch {
       toast.error("Erro ao remover");
     }
@@ -98,9 +88,9 @@ export default function FixedExpensesList({ categories, members }: any) {
   return (
     <div className="space-y-4">
       <div className="flex justify-between items-center">
-        <h2 className="text-lg font-semibold">Despesas Recorrentes</h2>
+        <h2 className="text-lg font-semibold">Receitas Fixas</h2>
         <Button onClick={() => setIsModalOpen(true)} className="gap-2">
-          <Plus className="w-4 h-4" /> Nova Despesa
+          <Plus className="w-4 h-4" /> Nova Receita
         </Button>
       </div>
 
@@ -108,27 +98,28 @@ export default function FixedExpensesList({ categories, members }: any) {
         {loading ? (
           <p>Carregando...</p>
         ) : (
-          expenses.map((expense) => (
+          incomes.map((income) => (
             <Card
-              key={expense.id}
+              key={income.id}
               className="flex flex-row items-center justify-between p-4"
             >
               <div className="flex items-center gap-4">
-                <div className="bg-primary/10 p-2 rounded-full">
-                  {/* Icon placeholder */}
-                  <span className="text-xl">💰</span>
+                <div className="bg-emerald-500/10 p-2 rounded-full">
+                  <span className="text-xl">💵</span>
                 </div>
                 <div>
-                  <h4 className="font-semibold">{expense.description}</h4>
+                  <h4 className="font-semibold">{income.description}</h4>
                   <div className="flex gap-2 text-sm text-muted-foreground">
-                    <span>Dia {expense.dueDay}</span>
+                    <span>Dia {income.dueDay}</span>
                     <span>•</span>
-                    <span>R$ {Number(expense.amount).toFixed(2)}</span>
+                    <span className="text-emerald-600 dark:text-emerald-400 font-medium">
+                      R$ {Number(income.amount).toFixed(2)}
+                    </span>
                     <span>•</span>
-                    <Badge variant="outline">{expense.splitType}</Badge>
-                    {expense.splitType === "INDIVIDUAL" && expense.User && (
+                    <Badge variant="outline">{income.splitType}</Badge>
+                    {income.splitType === "INDIVIDUAL" && income.User && (
                       <Badge variant="secondary" className="ml-1 text-xs">
-                        {expense.User.name}
+                        {income.User.name}
                       </Badge>
                     )}
                   </div>
@@ -139,10 +130,10 @@ export default function FixedExpensesList({ categories, members }: any) {
                 <Button
                   size="icon"
                   variant="ghost"
-                  onClick={() => handleToggle(expense.id, expense.active)}
+                  onClick={() => handleToggle(income.id, income.active)}
                 >
-                  {expense.active ? (
-                    <Power className="text-green-500" />
+                  {income.active ? (
+                    <Power className="text-emerald-500" />
                   ) : (
                     <PowerOff className="text-zinc-400" />
                   )}
@@ -151,7 +142,7 @@ export default function FixedExpensesList({ categories, members }: any) {
                   size="icon"
                   variant="ghost"
                   className="text-rose-500"
-                  onClick={() => handleDelete(expense.id)}
+                  onClick={() => handleDelete(income.id)}
                 >
                   <Trash2 className="w-4 h-4" />
                 </Button>
@@ -161,12 +152,12 @@ export default function FixedExpensesList({ categories, members }: any) {
         )}
       </div>
 
-      <FixedExpenseModal
+      <FixedIncomeModal
         open={isModalOpen}
         onOpenChange={setIsModalOpen}
         onSuccess={() => {
           setIsModalOpen(false);
-          fetchExpenses();
+          fetchIncomes();
         }}
         categories={categories}
         members={members}
@@ -175,7 +166,7 @@ export default function FixedExpensesList({ categories, members }: any) {
   );
 }
 
-function FixedExpenseModal({
+function FixedIncomeModal({
   open,
   onOpenChange,
   onSuccess,
@@ -200,7 +191,7 @@ function FixedExpenseModal({
 
     try {
       await createFixedExpenseAction(data);
-      toast.success("Despesa criada!");
+      toast.success("Receita criada!");
       onSuccess();
     } catch {
       toast.error("Erro ao criar");
@@ -211,7 +202,7 @@ function FixedExpenseModal({
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent>
         <DialogHeader>
-          <DialogTitle>Nova Despesa Fixa</DialogTitle>
+          <DialogTitle>Nova Receita Fixa</DialogTitle>
         </DialogHeader>
         <form onSubmit={handleSubmit} className="space-y-4">
           <div>
@@ -238,7 +229,7 @@ function FixedExpenseModal({
           </div>
           <div className="grid grid-cols-2 gap-4">
             <div>
-              <Label>Dia de Vencimento</Label>
+              <Label>Dia de Recebimento</Label>
               <Input
                 type="number"
                 min="1"
@@ -262,12 +253,12 @@ function FixedExpenseModal({
                 </SelectTrigger>
                 <SelectContent>
                   {categories
-                    .filter((c: any) => c.type === "EXPENSE")
+                    .filter((c: any) => c.type === "INCOME")
                     .map((c: any) => (
-                    <SelectItem key={c.id} value={c.id}>
-                      {c.icon} {c.name}
-                    </SelectItem>
-                  ))}
+                      <SelectItem key={c.id} value={c.id}>
+                        {c.icon} {c.name}
+                      </SelectItem>
+                    ))}
                 </SelectContent>
               </Select>
             </div>
@@ -298,7 +289,7 @@ function FixedExpenseModal({
                 onValueChange={(v) => setFormData({ ...formData, ownerId: v })}
               >
                 <SelectTrigger>
-                  <SelectValue placeholder="Selecione quem paga" />
+                  <SelectValue placeholder="Selecione quem recebe" />
                 </SelectTrigger>
                 <SelectContent>
                   {members.map((m: any) => (

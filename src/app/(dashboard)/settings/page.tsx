@@ -4,7 +4,7 @@ import { useState } from "react";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Button } from "@/components/ui/button";
-import { Plus, Wallet, Users, Home, CalendarClock } from "lucide-react";
+import { Plus, Wallet, Users, Home, CalendarClock, TrendingUp } from "lucide-react";
 import { toast } from "sonner";
 import AccountCard from "@/components/finance/AccountCard";
 import AccountModal from "@/components/finance/AccountModal";
@@ -12,6 +12,7 @@ import CategoryList from "@/components/finance/CategoryList";
 import CategoryModal from "@/components/finance/CategoryModal";
 import HouseholdSettings from "@/components/finance/HouseholdSettings";
 import FixedExpensesList from "@/components/finance/FixedExpensesList";
+import FixedIncomesList from "@/components/finance/FixedIncomesList";
 import { Card, CardContent } from "@/components/ui/card";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { Input } from "@/components/ui/input";
@@ -210,6 +211,9 @@ export default function SettingsPage() {
           <TabsTrigger value="household" className="gap-2">
             <Home className="w-4 h-4" /> A Casa
           </TabsTrigger>
+          <TabsTrigger value="fixed-incomes" className="gap-2">
+            <TrendingUp className="w-4 h-4" /> Receitas
+          </TabsTrigger>
           <TabsTrigger value="fixed-expenses" className="gap-2">
             <CalendarClock className="w-4 h-4" /> Despesas Fixas
           </TabsTrigger>
@@ -226,6 +230,10 @@ export default function SettingsPage() {
 
         <TabsContent value="household">
           <HouseholdSettings members={members} />
+        </TabsContent>
+
+        <TabsContent value="fixed-incomes">
+          <FixedIncomesList categories={categories} members={members} />
         </TabsContent>
 
         <TabsContent value="fixed-expenses">
