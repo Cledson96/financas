@@ -16,7 +16,6 @@ import {
   endOfMonth,
   isWithinInterval,
   endOfDay,
-  subMonths,
   format,
 } from "date-fns";
 import { DateRange } from "react-day-picker";
@@ -96,7 +95,7 @@ export default function TransactionsPage() {
   const [statusFilter, setStatusFilter] = useState("all");
   const [buyerFilter, setBuyerFilter] = useState("all");
   const [dateRange, setDateRange] = useState<DateRange | undefined>({
-    from: startOfMonth(subMonths(new Date(), 2)),
+    from: startOfMonth(new Date()),
     to: endOfMonth(new Date()),
   });
 

@@ -103,6 +103,7 @@ export default function TransactionFilters({
     buyerFilter,
     divisionFilter,
     statusFilter,
+    dateRange?.from || dateRange?.to ? "date" : "all",
   ].filter((f) => f !== "all").length;
 
   const clearFilters = () => {
@@ -113,6 +114,7 @@ export default function TransactionFilters({
     setBuyerFilter("all");
     setDivisionFilter("all");
     setStatusFilter("all");
+    onDateRangeChange(undefined);
   };
 
   return (
@@ -132,44 +134,57 @@ export default function TransactionFilters({
             />
           </div>
 
-          <Popover>
-            <PopoverTrigger asChild>
-              <Button
-                variant="outline"
-                className={cn(
-                  "w-full sm:w-[240px] justify-start text-left font-normal h-10 bg-white dark:bg-zinc-900 border-zinc-200 dark:border-zinc-800",
-                  !dateRange && "text-zinc-500",
-                )}
-              >
-                <CalendarIcon className="mr-2 h-4 w-4 text-zinc-500" />
-                {dateRange?.from ? (
-                  dateRange.to ? (
-                    <>
-                      {format(dateRange.from, "dd/MM", { locale: ptBR })} -{" "}
-                      {format(dateRange.to, "dd/MM", { locale: ptBR })}
-                    </>
+          <div className="flex items-center gap-2">
+            <Popover>
+              <PopoverTrigger asChild>
+                <Button
+                  variant="outline"
+                  className={cn(
+                    "w-full sm:w-[240px] justify-start text-left font-normal h-10 bg-white dark:bg-zinc-900 border-zinc-200 dark:border-zinc-800",
+                    !dateRange && "text-zinc-500",
+                  )}
+                >
+                  <CalendarIcon className="mr-2 h-4 w-4 text-zinc-500" />
+                  {dateRange?.from ? (
+                    dateRange.to ? (
+                      <>
+                        {format(dateRange.from, "dd/MM", { locale: ptBR })} -{" "}
+                        {format(dateRange.to, "dd/MM", { locale: ptBR })}
+                      </>
+                    ) : (
+                      format(dateRange.from, "dd/MM/y", { locale: ptBR })
+                    )
                   ) : (
-                    format(dateRange.from, "dd/MM/y", { locale: ptBR })
-                  )
-                ) : (
-                  <span>Selecione data</span>
-                )}
-              </Button>
-            </PopoverTrigger>
-            {/* @ts-ignore */}
-            <PopoverContent className="w-auto p-0" align="start">
+                    <span>Todas as datas</span>
+                  )}
+                </Button>
+              </PopoverTrigger>
               {/* @ts-ignore */}
-              <Calendar
-                initialFocus
-                mode="range"
-                defaultMonth={dateRange?.from}
-                selected={dateRange}
-                onSelect={onDateRangeChange}
-                numberOfMonths={1}
-                locale={ptBR}
-              />
-            </PopoverContent>
-          </Popover>
+              <PopoverContent className="w-auto p-0" align="start">
+                {/* @ts-ignore */}
+                <Calendar
+                  initialFocus
+                  mode="range"
+                  defaultMonth={dateRange?.from}
+                  selected={dateRange}
+                  onSelect={onDateRangeChange}
+                  numberOfMonths={1}
+                  locale={ptBR}
+                />
+              </PopoverContent>
+            </Popover>
+
+            {dateRange && (
+              <Button
+                variant="ghost"
+                size="sm"
+                onClick={() => onDateRangeChange(undefined)}
+                className="h-10 px-3 text-zinc-500 hover:text-zinc-900 dark:hover:text-zinc-100"
+              >
+                Limpar data
+              </Button>
+            )}
+          </div>
         </div>
 
         {/* Right Side: Filters & Export */}
@@ -427,6 +442,21 @@ export default function TransactionFilters({
                 size="icon"
                 className="h-4 w-4 hover:bg-transparent"
                 onClick={() => setStatusFilter("all")}
+              >
+                <X className="h-3 w-3" />
+              </Button>
+            </Badge>
+          )}
+          {dateRange?.from && dateRange?.to && (
+            <Badge variant="secondary" className="gap-1 pr-1">
+              Data:{" "}
+              {format(dateRange.from, "dd/MM/yyyy", { locale: ptBR })} -{" "}
+              {format(dateRange.to, "dd/MM/yyyy", { locale: ptBR })}
+              <Button
+                variant="ghost"
+                size="icon"
+                className="h-4 w-4 hover:bg-transparent"
+                onClick={() => onDateRangeChange(undefined)}
               >
                 <X className="h-3 w-3" />
               </Button>
