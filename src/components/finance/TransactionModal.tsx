@@ -65,6 +65,7 @@ export default function TransactionModal({
     "EQUAL",
   );
   const [customShare, setCustomShare] = useState("50");
+  const [status, setStatus] = useState<"PENDING" | "POSTED">("PENDING");
 
   useEffect(() => {
     if (editData) {
@@ -92,6 +93,9 @@ export default function TransactionModal({
         setSplitMethod("EQUAL");
         setCustomShare("50");
       }
+      // Carregar status ao editar (mapear PAID → POSTED para o select)
+      const editStatus = editData.status || "PENDING";
+      setStatus(editStatus === "PAID" ? "POSTED" : editStatus);
     } else {
       resetForm();
     }
@@ -110,6 +114,7 @@ export default function TransactionModal({
     setIsShared(true);
     setSplitMethod("EQUAL");
     setCustomShare("50");
+    setStatus("PENDING");
   };
 
   const handleSubmit = (e: React.FormEvent) => {
@@ -146,7 +151,7 @@ export default function TransactionModal({
           ? (parseFloat(customShare) || 0) / 100
           : null,
       ownerId: !isShared ? ownerId : null,
-      status: "PENDING",
+      ...(editData ? { status } : { status: "PENDING" }),
     });
   };
 
@@ -287,6 +292,35 @@ export default function TransactionModal({
                 </SelectContent>
               </Select>
             </div>
+
+            {/* Status — só aparece ao editar */}
+            {editData && (
+              <div className="space-y-2">
+                <Label>Status</Label>
+                <Select
+                  value={status}
+                  onValueChange={(v) => setStatus(v as "PENDING" | "POSTED")}
+                >
+                  <SelectTrigger className="bg-zinc-50 dark:bg-zinc-800 border-zinc-200 dark:border-zinc-700">
+                    <SelectValue placeholder="Selecione" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="PENDING">
+                      <span className="flex items-center gap-2">
+                        <span className="h-2 w-2 rounded-full bg-orange-500" />
+                        Pendente
+                      </span>
+                    </SelectItem>
+                    <SelectItem value="POSTED">
+                      <span className="flex items-center gap-2">
+                        <span className="h-2 w-2 rounded-full bg-emerald-500" />
+                        Pago
+                      </span>
+                    </SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+            )}
           </div>
 
           <div className="space-y-2">
