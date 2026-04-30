@@ -164,13 +164,17 @@ export default function TransactionTable({
     }
   };
 
-  const getInitials = (name: string) => {
+  const getInitials = (name?: string | null) => {
+    if (!name || typeof name !== "string") return "—";
+
     return name
-      .split(" ")
+      .trim()
+      .split(/\s+/)
+      .filter(Boolean)
       .map((n) => n[0])
       .join("")
       .toUpperCase()
-      .slice(0, 2);
+      .slice(0, 2) || "—";
   };
 
   return (
