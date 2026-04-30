@@ -198,7 +198,13 @@ export default function TransactionsPage() {
       const whoName = owner?.name || payer?.name || "";
 
       const dateStr = t.purchaseDate
-        ? format(parseISO(t.purchaseDate), "dd/MM/yyyy")
+        ? (() => {
+            try {
+              return format(parseISO(t.purchaseDate), "dd/MM/yyyy");
+            } catch {
+              return "";
+            }
+          })()
         : "";
 
       const amount = Number(t.amount) || 0;
@@ -304,14 +310,18 @@ export default function TransactionsPage() {
 
       // Date Range
       if (dateRange?.from && dateRange?.to && t.purchaseDate) {
-        const date = parseISO(t.purchaseDate);
-        if (
-          !isWithinInterval(date, {
-            start: dateRange.from,
-            end: endOfDay(dateRange.to),
-          })
-        ) {
-          return false;
+        try {
+          const date = parseISO(t.purchaseDate);
+          if (
+            !isWithinInterval(date, {
+              start: dateRange.from,
+              end: endOfDay(dateRange.to),
+            })
+          ) {
+            return false;
+          }
+        } catch {
+          // ignora transações com data inválida no filtro de range
         }
       }
 

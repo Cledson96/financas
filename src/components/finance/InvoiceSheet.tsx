@@ -96,9 +96,19 @@ export default function InvoiceSheet({
                           {t.description}
                         </span>
                         <span className="text-xs text-zinc-500">
-                          {format(parseISO(t.purchaseDate), "dd/MM/yyyy", {
-                            locale: ptBR,
-                          })}{" "}
+                          {t.purchaseDate
+                            ? (() => {
+                                try {
+                                  return format(
+                                    parseISO(t.purchaseDate),
+                                    "dd/MM/yyyy",
+                                    { locale: ptBR },
+                                  );
+                                } catch {
+                                  return "";
+                                }
+                              })()
+                            : ""}{" "}
                           • {t.Category?.name || "Sem categoria"}
                         </span>
                       </div>
