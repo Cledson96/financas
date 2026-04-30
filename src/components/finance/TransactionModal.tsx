@@ -93,9 +93,12 @@ export default function TransactionModal({
         setSplitMethod("EQUAL");
         setCustomShare("50");
       }
-      // Carregar status ao editar (mapear PAID → POSTED para o select)
-      const editStatus = editData.status || "PENDING";
-      setStatus(editStatus === "PAID" ? "POSTED" : editStatus);
+      // Carregar status ao editar — usar mesma lógica da tabela
+      const isPaid =
+        editData.settled ||
+        editData.status === "PAID" ||
+        editData.isReconciled;
+      setStatus(isPaid ? "POSTED" : "PENDING");
     } else {
       resetForm();
     }
@@ -152,6 +155,8 @@ export default function TransactionModal({
           : null,
       ownerId: !isShared ? ownerId : null,
       ...(editData ? { status } : { status: "PENDING" }),
+      settled: status === "POSTED",
+      isReconciled: status === "POSTED",
     });
   };
 

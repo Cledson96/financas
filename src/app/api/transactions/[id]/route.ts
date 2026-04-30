@@ -55,6 +55,7 @@ export async function PUT(
         ownerId: data.ownerId || null,
         settled: data.settled,
         status: data.status,
+        isReconciled: data.isReconciled,
         updatedAt: new Date(),
       },
       include: {
