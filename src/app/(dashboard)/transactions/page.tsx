@@ -252,7 +252,11 @@ export default function TransactionsPage() {
     )
       return false;
     if (!transaction.paymentDate) return false;
-    return isBefore(parseISO(transaction.paymentDate), new Date());
+    try {
+      return isBefore(parseISO(transaction.paymentDate), new Date());
+    } catch {
+      return false;
+    }
   };
 
   const filteredTransactions = useMemo(() => {

@@ -123,7 +123,11 @@ export default function TransactionTable({
     if (transaction.Account?.type === "CREDIT_CARD") return false;
 
     if (!transaction.paymentDate) return false;
-    return isBefore(parseISO(transaction.paymentDate), new Date());
+    try {
+      return isBefore(parseISO(transaction.paymentDate), new Date());
+    } catch {
+      return false;
+    }
   };
 
   const filteredTransactions = [...transactions].sort((a, b) => {
@@ -310,21 +314,33 @@ export default function TransactionTable({
                       <div className="flex flex-col">
                         <span className="font-medium text-sm text-zinc-700 dark:text-zinc-300">
                           {transaction.purchaseDate &&
-                            format(
-                              parseISO(transaction.purchaseDate),
-                              "dd MMM, yy",
-                              { locale: ptBR },
-                            )}
+                            (() => {
+                              try {
+                                return format(
+                                  parseISO(transaction.purchaseDate),
+                                  "dd MMM, yy",
+                                  { locale: ptBR },
+                                );
+                              } catch {
+                                return "";
+                              }
+                            })()}
                         </span>
                         {transaction.paymentDate &&
                           transaction.paymentDate !==
                             transaction.purchaseDate && (
                             <span className="text-[10px] text-zinc-400 flex items-center gap-1">
                               Ven:{" "}
-                              {format(
-                                parseISO(transaction.paymentDate),
-                                "dd/MM",
-                              )}
+                              {(() => {
+                                try {
+                                  return format(
+                                    parseISO(transaction.paymentDate),
+                                    "dd/MM",
+                                  );
+                                } catch {
+                                  return "";
+                                }
+                              })()}
                             </span>
                           )}
                       </div>
