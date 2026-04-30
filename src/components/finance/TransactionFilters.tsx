@@ -163,10 +163,9 @@ export default function TransactionFilters({
               <PopoverContent className="w-auto p-0" align="start">
                 {/* @ts-ignore */}
                 <Calendar
-                  key={dateRange?.from ? "range-set" : "range-empty"}
                   initialFocus
                   mode="range"
-                  defaultMonth={dateRange?.from}
+                  defaultMonth={dateRange?.from || new Date()}
                   selected={dateRange}
                   onSelect={onDateRangeChange}
                   numberOfMonths={1}
