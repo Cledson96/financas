@@ -166,7 +166,7 @@ export default function TransactionFilters({
                   initialFocus
                   mode="range"
                   defaultMonth={dateRange?.from || new Date()}
-                  selected={dateRange}
+                  selected={dateRange || { from: undefined }}
                   onSelect={onDateRangeChange}
                   numberOfMonths={1}
                   locale={ptBR}
