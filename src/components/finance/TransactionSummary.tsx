@@ -6,6 +6,8 @@ import {
   CreditCard,
   Hash,
   Users,
+  Clock,
+  CheckCircle2,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 
@@ -28,9 +30,14 @@ export default function TransactionSummary({
     expenseCount,
     sharedTotal,
     sharedCount,
+    pendingTotal,
+    pendingCount,
+    paidTotal,
+    paidCount,
   } = transactions.reduce(
     (acc, t) => {
       const amount = Number(t.amount) || 0;
+      const isPaid = t.settled || t.status === "PAID" || t.isReconciled;
 
       if (t.type === "INCOME") {
         acc.income += amount;
@@ -51,6 +58,15 @@ export default function TransactionSummary({
         }
       }
 
+      // Rastrear pendentes vs pagas (todas as transações, não só despesas)
+      if (isPaid) {
+        acc.paidTotal += amount;
+        acc.paidCount += 1;
+      } else {
+        acc.pendingTotal += amount;
+        acc.pendingCount += 1;
+      }
+
       // Se estiver filtrando por fatura, somar o total da fatura
       if (invoiceFilter !== "all" && t.invoiceId === invoiceFilter) {
         acc.invoiceTotal += amount;
@@ -67,6 +83,10 @@ export default function TransactionSummary({
       expenseCount: 0,
       sharedTotal: 0,
       sharedCount: 0,
+      pendingTotal: 0,
+      pendingCount: 0,
+      paidTotal: 0,
+      paidCount: 0,
     },
   );
 
@@ -82,13 +102,13 @@ export default function TransactionSummary({
   // Determinar colunas do grid dinamicamente
   const hasInvoiceCard = invoiceFilter !== "all";
   const hasSharedCard = sharedCount > 0;
-  const totalCards = 4 + (hasInvoiceCard ? 1 : 0) + (hasSharedCard ? 1 : 0);
+  const totalCards = 6 + (hasInvoiceCard ? 1 : 0) + (hasSharedCard ? 1 : 0);
   const gridCols =
     totalCards <= 4
       ? "md:grid-cols-2 lg:grid-cols-4"
-      : totalCards === 5
-        ? "md:grid-cols-3 lg:grid-cols-5"
-        : "md:grid-cols-3 lg:grid-cols-6";
+      : totalCards <= 6
+        ? "md:grid-cols-3 lg:grid-cols-3"
+        : "md:grid-cols-3 lg:grid-cols-4";
 
   return (
     <div
@@ -220,6 +240,48 @@ export default function TransactionSummary({
             )}
           >
             Entradas - Saídas
+          </p>
+        </CardContent>
+      </Card>
+
+      {/* Card: Pendentes */}
+      <Card className="relative overflow-hidden border-orange-200/60 dark:border-orange-900/40 bg-gradient-to-br from-orange-50 to-orange-100/50 dark:from-orange-950/30 dark:to-orange-900/10">
+        <div className="absolute inset-0 bg-[linear-gradient(135deg,transparent_40%,rgba(249,115,22,.04)_100%)] dark:bg-[linear-gradient(135deg,transparent_40%,rgba(249,115,22,.06)_100%)]" />
+        <CardHeader className="relative flex flex-row items-center justify-between space-y-0 pb-2">
+          <CardTitle className="text-sm font-medium text-orange-700 dark:text-orange-400">
+            Pendentes
+          </CardTitle>
+          <div className="rounded-md bg-orange-100 p-1 dark:bg-orange-900/50">
+            <Clock className="h-4 w-4 text-orange-600 dark:text-orange-400" />
+          </div>
+        </CardHeader>
+        <CardContent className="relative">
+          <div className="text-2xl font-bold text-orange-700 dark:text-orange-400">
+            {formatCurrency(pendingTotal)}
+          </div>
+          <p className="text-xs text-orange-600/70 dark:text-orange-400/60">
+            {transacoesLabel(pendingCount)} pendente{pendingCount !== 1 && "s"}
+          </p>
+        </CardContent>
+      </Card>
+
+      {/* Card: Pagas */}
+      <Card className="relative overflow-hidden border-emerald-200/60 dark:border-emerald-900/40 bg-gradient-to-br from-emerald-50 to-emerald-100/50 dark:from-emerald-950/30 dark:to-emerald-900/10">
+        <div className="absolute inset-0 bg-[linear-gradient(135deg,transparent_40%,rgba(16,185,129,.04)_100%)] dark:bg-[linear-gradient(135deg,transparent_40%,rgba(16,185,129,.06)_100%)]" />
+        <CardHeader className="relative flex flex-row items-center justify-between space-y-0 pb-2">
+          <CardTitle className="text-sm font-medium text-emerald-700 dark:text-emerald-400">
+            Pagas
+          </CardTitle>
+          <div className="rounded-md bg-emerald-100 p-1 dark:bg-emerald-900/50">
+            <CheckCircle2 className="h-4 w-4 text-emerald-600 dark:text-emerald-400" />
+          </div>
+        </CardHeader>
+        <CardContent className="relative">
+          <div className="text-2xl font-bold text-emerald-700 dark:text-emerald-400">
+            {formatCurrency(paidTotal)}
+          </div>
+          <p className="text-xs text-emerald-600/70 dark:text-emerald-400/60">
+            {transacoesLabel(paidCount)} paga{paidCount !== 1 && "s"}
           </p>
         </CardContent>
       </Card>
